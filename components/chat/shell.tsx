@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EngineStatusBar } from "@/components/ai2/EngineStatusBar";
-import { EngineWarmupProvider } from "@/hooks/use-engine-warmup";
 import { useActiveChat } from "@/hooks/use-active-chat";
+import { EngineWarmupProvider } from "@/hooks/use-engine-warmup";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { ChatHeader } from "./chat-header";
 import { DataStreamHandler } from "./data-stream-handler";
@@ -112,12 +112,14 @@ function ChatShellInner() {
               onEditMessage={handleEditMessage}
               regenerate={regenerate}
               selectedModelId={currentModelId}
+              selectedVisibilityType={visibilityType}
+              sendMessage={sendMessage}
               setMessages={setMessages}
               status={status}
               votes={votes}
             />
 
-            <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-4 md:pb-4">
+            <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl shrink-0 gap-2 border-t border-border/20 bg-background/95 px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:px-4 md:pt-3 md:pb-4">
               {!isReadonly && (
                 <MultimodalInput
                   attachments={attachments}

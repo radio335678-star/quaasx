@@ -6,8 +6,9 @@ import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useDataStream } from "./data-stream-provider";
-import { Greeting } from "./greeting";
+import { EmptyState } from "./empty-state";
 import { PreviewMessage, ThinkingMessage } from "./message";
+import type { VisibilityType } from "./visibility-selector";
 
 type MessagesProps = {
   addToolApprovalResponse: UseChatHelpers<ChatMessage>["addToolApprovalResponse"];
@@ -17,6 +18,8 @@ type MessagesProps = {
   messages: ChatMessage[];
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
+  sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
+  selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
   isArtifactVisible: boolean;
   isLoading?: boolean;
@@ -32,6 +35,8 @@ function PureMessages({
   messages,
   setMessages,
   regenerate,
+  sendMessage,
+  selectedVisibilityType,
   isReadonly,
   isArtifactVisible,
   isLoading,
@@ -63,13 +68,22 @@ function PureMessages({
     scrollToBottom("smooth");
   }, [scrollToBottom]);
 
+  const isEmpty = messages.length === 0 && !isLoading && !isReadonly;
+
+  if (isEmpty) {
+    return (
+      <div className="relative flex min-h-0 flex-1 bg-background">
+        <EmptyState
+          chatId={chatId}
+          selectedVisibilityType={selectedVisibilityType}
+          sendMessage={sendMessage}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex-1 bg-background">
-      {messages.length === 0 && !isLoading && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-          <Greeting />
-        </div>
-      )}
       <div
         className={cn(
           "absolute inset-0 touch-pan-y overflow-y-auto",
@@ -88,28 +102,28 @@ function PureMessages({
                 ? prev.metadata.demoKind
                 : undefined;
             return (
-            <PreviewMessage
-              addToolApprovalResponse={addToolApprovalResponse}
-              chatId={chatId}
-              isLoading={
-                status === "streaming" && messages.length - 1 === index
-              }
-              isReadonly={isReadonly}
-              key={message.id}
-              message={message}
-              onEdit={onEditMessage}
-              regenerate={regenerate}
-              replyToDemoKind={replyToDemoKind}
-              requiresScrollPadding={
-                hasSentMessage && index === messages.length - 1
-              }
-              setMessages={setMessages}
-              vote={
-                votes
-                  ? votes.find((vote) => vote.messageId === message.id)
-                  : undefined
-              }
-            />
+              <PreviewMessage
+                addToolApprovalResponse={addToolApprovalResponse}
+                chatId={chatId}
+                isLoading={
+                  status === "streaming" && messages.length - 1 === index
+                }
+                isReadonly={isReadonly}
+                key={message.id}
+                message={message}
+                onEdit={onEditMessage}
+                regenerate={regenerate}
+                replyToDemoKind={replyToDemoKind}
+                requiresScrollPadding={
+                  hasSentMessage && index === messages.length - 1
+                }
+                setMessages={setMessages}
+                vote={
+                  votes
+                    ? votes.find((vote) => vote.messageId === message.id)
+                    : undefined
+                }
+              />
             );
           })}
 

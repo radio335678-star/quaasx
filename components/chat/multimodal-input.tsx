@@ -36,7 +36,6 @@ import {
   SlashCommandMenu,
   slashCommands,
 } from "./slash-commands";
-import { SuggestedActions } from "./suggested-actions";
 import type { VisibilityType } from "./visibility-selector";
 
 function PureMultimodalInput({
@@ -51,12 +50,12 @@ function PureMultimodalInput({
   setMessages,
   sendMessage,
   className,
-  selectedVisibilityType,
+  selectedVisibilityType: _selectedVisibilityType,
   selectedModelId,
-  onModelChange,
+  onModelChange: _onModelChange,
   editingMessage,
   onCancelEdit,
-  isLoading,
+  isLoading: _isLoading,
 }: {
   chatId: string;
   input: string;
@@ -417,7 +416,7 @@ function PureMultimodalInput({
   );
 
   return (
-    <div className={cn("relative flex w-full flex-col gap-4", className)}>
+    <div className={cn("relative flex w-full flex-col gap-3", className)}>
       {editingMessage && onCancelEdit ? (
         <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
           <span>Editing message</span>
@@ -430,18 +429,6 @@ function PureMultimodalInput({
           </button>
         </div>
       ) : null}
-
-      {!editingMessage &&
-        !isLoading &&
-        messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
-            sendMessage={sendMessage}
-          />
-        )}
 
       <input
         className="pointer-events-none fixed -top-4 -left-4 size-0.5 opacity-0"
@@ -596,7 +583,7 @@ const AttachmentPreviewItem = memo(PureAttachmentPreviewItem);
 
 function PureAttachmentsButton({
   fileInputRef,
-  status,
+  status: _status,
 }: {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
   status: UseChatHelpers<ChatMessage>["status"];

@@ -1,19 +1,20 @@
 "use client";
 
-import { PlayIcon } from "lucide-react";
-import { useCallback } from "react";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import { PlayIcon, XIcon } from "lucide-react";
+import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { HERO_DEMO } from "@/lib/ai2/demos";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
+import { HERO_DEMO } from "@/lib/ai2/demos";
 import type { ChatMessage } from "@/lib/types";
 
 type DemoHeroProps = {
   chatId: string;
   sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
+  onDismiss?: () => void;
 };
 
-export function DemoHero({ chatId, sendMessage }: DemoHeroProps) {
+export function DemoHero({ chatId, sendMessage, onDismiss }: DemoHeroProps) {
   const { runWarmup, status } = useEngineWarmup();
 
   const runDemo = useCallback(() => {
@@ -41,15 +42,27 @@ export function DemoHero({ chatId, sendMessage }: DemoHeroProps) {
 
   return (
     <article
-      className="w-full rounded-2xl border border-amber-500/25 bg-gradient-to-b from-amber-500/10 to-card/40 p-4 shadow-[var(--shadow-card)] sm:p-5"
+      className="relative w-full overflow-hidden rounded-2xl border border-amber-500/25 bg-gradient-to-b from-amber-500/10 to-card/40 p-4 shadow-[var(--shadow-card)] sm:p-5"
       data-testid="demo-hero"
       onFocus={handlePrefetch}
       onMouseEnter={handlePrefetch}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-amber-800/80 dark:text-amber-200/80">
+      {onDismiss ? (
+        <button
+          aria-label="Close demo"
+          className="absolute top-2.5 right-2.5 flex size-9 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors hover:bg-background/60 hover:text-foreground touch-manipulation"
+          data-testid="demo-hero-dismiss"
+          onClick={onDismiss}
+          type="button"
+        >
+          <XIcon className="size-4" />
+        </button>
+      ) : null}
+
+      <p className="pr-10 text-[10px] font-semibold uppercase tracking-widest text-amber-800/80 dark:text-amber-200/80">
         30-second demo
       </p>
-      <h3 className="mt-1 font-semibold text-base text-foreground sm:text-lg">
+      <h3 className="mt-1 pr-8 font-semibold text-base text-foreground sm:text-lg">
         {HERO_DEMO.title}
       </h3>
       <p className="mt-1.5 text-[12px] leading-relaxed text-muted-foreground sm:text-[13px]">
