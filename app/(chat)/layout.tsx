@@ -1,3 +1,4 @@
+import type { Session } from "next-auth";
 import { cookies } from "next/headers";
 import Script from "next/script";
 import { Suspense } from "react";
@@ -26,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 }
 
 async function SidebarShell({ children }: { children: React.ReactNode }) {
-  let session: Awaited<ReturnType<typeof auth>> = null;
+  let session: Session | null = null;
   try {
     session = await auth();
   } catch {
