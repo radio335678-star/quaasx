@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif_Devanagari } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { brand } from "@/lib/brand";
@@ -33,6 +33,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
+const notoDevanagari = Noto_Serif_Devanagari({
+  display: "swap",
+  subsets: ["devanagari"],
+  variable: "--font-noto-devanagari",
+});
+
 const LIGHT_THEME_COLOR = "#f7f7f7";
 const DARK_THEME_COLOR = "#0a0a0a";
 const THEME_COLOR_SCRIPT = `\
@@ -60,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${geist.variable} ${geistMono.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${notoDevanagari.variable}`}
       lang="en"
       suppressHydrationWarning
     >
