@@ -1,6 +1,7 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { ArrowDownIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
+import { useComposerCollapse } from "@/hooks/use-composer-collapse";
 import { useMessages } from "@/hooks/use-messages";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
@@ -25,6 +26,7 @@ type MessagesProps = {
   isLoading?: boolean;
   selectedModelId: string;
   onEditMessage?: (message: ChatMessage) => void;
+  onComposerCollapseChange?: (collapsed: boolean) => void;
 };
 
 function PureMessages({
@@ -42,6 +44,7 @@ function PureMessages({
   isLoading,
   selectedModelId: _selectedModelId,
   onEditMessage,
+  onComposerCollapseChange,
 }: MessagesProps) {
   const {
     containerRef: messagesContainerRef,
@@ -54,6 +57,9 @@ function PureMessages({
     status,
   });
 
+  const { collapsed, onScroll, reset: resetComposerCollapse } =
+    useComposerCollapse(messages.length > 0);
+
   useDataStream();
 
   const prevChatIdRef = useRef(chatId);
@@ -61,14 +67,36 @@ function PureMessages({
     if (prevChatIdRef.current !== chatId) {
       prevChatIdRef.current = chatId;
       reset();
+      resetComposerCollapse();
     }
-  }, [chatId, reset]);
+  }, [chatId, reset, resetComposerCollapse]);
+
+  useEffect(() => {
+    onComposerCollapseChange?.(collapsed);
+  }, [collapsed, onComposerCollapseChange]);
 
   const handleScrollToBottom = useCallback(() => {
     scrollToBottom("smooth");
   }, [scrollToBottom]);
 
+  useEffect(() => {
+    const el = messagesContainerRef.current;
+    if (!el || messages.length === 0) {
+      return;
+    }
+    const handle = () => onScroll(el.scrollTop);
+    el.addEventListener("scroll", handle, { passive: true });
+    return () => el.removeEventListener("scroll", handle);
+  }, [messages.length, messagesContainerRef, onScroll]);
+
   const isEmpty = messages.length === 0 && !isLoading && !isReadonly;
+  const hasCompare =
+    messages.some((m) => {
+      const part = m.parts?.find((p) => p.type === "data-ai2-answer");
+      const data = part?.data as { layout_type?: string } | undefined;
+      return data?.layout_type === "clinical_compare";
+    }) ||
+    messages.some((m) => m.metadata?.demoKind === "hero");
 
   if (isEmpty) {
     return (
@@ -92,7 +120,12 @@ function PureMessages({
         ref={messagesContainerRef}
         style={isArtifactVisible ? { scrollbarWidth: "none" } : undefined}
       >
-        <div className="mx-auto flex min-h-full min-w-0 max-w-4xl flex-col gap-5 px-2 py-6 md:gap-7 md:px-4">
+        <div
+          className={cn(
+            "mx-auto flex min-h-full min-w-0 flex-col gap-5 px-2 py-6 md:gap-7 md:px-4",
+            hasCompare ? "max-w-6xl" : "max-w-4xl"
+          )}
+        >
           {messages.map((message, index) => {
             const prev = index > 0 ? messages[index - 1] : undefined;
             const replyToDemoKind =

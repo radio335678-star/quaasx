@@ -43,9 +43,14 @@ function ChatShellInner() {
     null
   );
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [composerCollapsed, setComposerCollapsed] = useState(false);
 
   const stopRef = useRef(stop);
   stopRef.current = stop;
+
+  const handleComposerCollapse = useCallback((collapsed: boolean) => {
+    setComposerCollapsed(collapsed);
+  }, []);
 
   const prevChatIdRef = useRef(chatId);
   useEffect(() => {
@@ -54,6 +59,7 @@ function ChatShellInner() {
       stopRef.current();
       setEditingMessage(null);
       setAttachments([]);
+      setComposerCollapsed(false);
     }
   }, [chatId]);
 
@@ -109,6 +115,7 @@ function ChatShellInner() {
               isLoading={isLoading}
               isReadonly={isReadonly}
               messages={messages}
+              onComposerCollapseChange={handleComposerCollapse}
               onEditMessage={handleEditMessage}
               regenerate={regenerate}
               selectedModelId={currentModelId}
@@ -119,16 +126,25 @@ function ChatShellInner() {
               votes={votes}
             />
 
-            <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl shrink-0 gap-2 border-t border-border/20 bg-background/95 px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:px-4 md:pt-3 md:pb-4">
+            <div
+              className={`sticky bottom-0 z-10 mx-auto flex w-full max-w-6xl shrink-0 gap-2 border-t border-border/20 bg-background/95 px-2 backdrop-blur-sm transition-all duration-300 ease-out md:px-4 ${
+                composerCollapsed
+                  ? "max-h-14 overflow-hidden pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+                  : "max-h-[320px] pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:pt-3 md:pb-4"
+              }`}
+              data-composer-collapsed={composerCollapsed ? "true" : "false"}
+            >
               {!isReadonly && (
                 <MultimodalInput
                   attachments={attachments}
                   chatId={chatId}
+                  collapsed={composerCollapsed}
                   editingMessage={editingMessage}
                   input={input}
                   isLoading={isLoading}
                   messages={messages}
                   onCancelEdit={handleCancelEdit}
+                  onExpandComposer={() => setComposerCollapsed(false)}
                   onModelChange={setCurrentModelId}
                   selectedModelId={currentModelId}
                   selectedVisibilityType={visibilityType}

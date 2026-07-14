@@ -18,7 +18,7 @@ export const HERO_DEMO: DemoPrompt = {
   id: "jwara-charaka-sushruta",
   kind: "hero",
   title: "Jwara — Charaka vs Sushruta",
-  subtitle: "Side-by-side classical citations · ~30 sec",
+  subtitle: "Side-by-side classical citations · live engine",
   query:
     "Compare Charaka and Sushruta on jwara (fever): nidana, lakshana, and chikitsa with primary shlokas side by side.",
   expectedLayout: "clinical_compare",

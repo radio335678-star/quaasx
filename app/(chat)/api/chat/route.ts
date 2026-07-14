@@ -16,13 +16,19 @@ const BACKEND_URL =
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const HOBBY_BUDGET = process.env.AI2_HOBBY_SAFE === "1";
 
-function backendHeaders(demoKind?: string): Record<string, string> {
+function backendHeaders(
+  demoKind?: string,
+  demoId?: string
+): Record<string, string> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (HOBBY_BUDGET) {
     headers["X-AI2-Budget"] = "hobby";
   }
   if (demoKind === "hero" || demoKind === "example") {
     headers["X-AI2-Demo"] = demoKind;
+  }
+  if (demoId) {
+    headers["X-AI2-Demo-Id"] = demoId;
   }
   return headers;
 }
@@ -33,6 +39,11 @@ function extractDemoKind(body: PostRequestBody): string | undefined {
     return kind;
   }
   return undefined;
+}
+
+function extractDemoId(body: PostRequestBody): string | undefined {
+  const id = body.message?.metadata?.demoId;
+  return typeof id === "string" && id.length > 0 ? id : undefined;
 }
 
 function waitingMessage(demoKind?: string): string {
@@ -179,6 +190,7 @@ export async function POST(request: Request) {
 
   const textId = generateUUID();
   const demoKind = extractDemoKind(requestBody);
+  const demoId = extractDemoId(requestBody);
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
@@ -200,7 +212,7 @@ export async function POST(request: Request) {
             session_id: requestBody.id,
             stream: true,
           }),
-          headers: backendHeaders(demoKind),
+          headers: backendHeaders(demoKind, demoId),
           method: "POST",
         });
 

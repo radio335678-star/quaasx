@@ -379,6 +379,9 @@ const PurePreviewMessage = ({
       <AdaptiveAnswer
         isLoading={isLoading && !ai2Layout?.citations?.length}
         layout={ai2Layout}
+        preferCompareSkeleton={
+          replyToDemoKind === "hero" || replyToDemoKind === "example"
+        }
       />
     ) : null;
 

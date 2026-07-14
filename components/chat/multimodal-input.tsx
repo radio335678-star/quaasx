@@ -56,6 +56,8 @@ function PureMultimodalInput({
   editingMessage,
   onCancelEdit,
   isLoading: _isLoading,
+  collapsed = false,
+  onExpandComposer,
 }: {
   chatId: string;
   input: string;
@@ -76,6 +78,8 @@ function PureMultimodalInput({
   editingMessage?: ChatMessage | null;
   onCancelEdit?: () => void;
   isLoading?: boolean;
+  collapsed?: boolean;
+  onExpandComposer?: () => void;
 }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
@@ -417,6 +421,28 @@ function PureMultimodalInput({
 
   return (
     <div className={cn("relative flex w-full flex-col gap-3", className)}>
+      {collapsed && !editingMessage ? (
+        <button
+          className="flex h-10 w-full items-center gap-2 rounded-2xl border border-border/40 bg-card/80 px-3.5 text-left text-[13px] text-muted-foreground/70 shadow-[var(--shadow-composer)] transition-colors hover:bg-card touch-manipulation"
+          data-testid="composer-collapsed"
+          onClick={onExpandComposer}
+          type="button"
+        >
+          <span className="truncate flex-1">
+            {input.trim() ? input : "Ask anything..."}
+          </span>
+          <ArrowUpIcon className="size-3.5 shrink-0 opacity-40" />
+        </button>
+      ) : null}
+
+      <div
+        className={cn(
+          "flex w-full flex-col gap-3 transition-all duration-300",
+          collapsed && !editingMessage
+            ? "pointer-events-none absolute inset-x-0 bottom-0 opacity-0"
+            : "relative opacity-100"
+        )}
+      >
       {editingMessage && onCancelEdit ? (
         <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
           <span>Editing message</span>
@@ -482,9 +508,10 @@ function PureMultimodalInput({
           </div>
         )}
         <PromptInputTextarea
-          className="min-h-24 text-[13px] leading-relaxed px-4 pt-3.5 pb-1.5 placeholder:text-muted-foreground/35"
+          className="min-h-16 text-[13px] leading-relaxed px-4 pt-3.5 pb-1.5 placeholder:text-muted-foreground/35 sm:min-h-20"
           data-testid="multimodal-input"
           onChange={handleInput}
+          onFocus={onExpandComposer}
           onKeyDown={handleTextareaKeyDown}
           placeholder={
             editingMessage ? "Edit your message..." : "Ask anything..."
@@ -522,6 +549,7 @@ function PureMultimodalInput({
           )}
         </PromptInputFooter>
       </PromptInput>
+      </div>
     </div>
   );
 }
@@ -551,6 +579,9 @@ export const MultimodalInput = memo(
       return false;
     }
     if (prevProps.messages.length !== nextProps.messages.length) {
+      return false;
+    }
+    if (prevProps.collapsed !== nextProps.collapsed) {
       return false;
     }
 
