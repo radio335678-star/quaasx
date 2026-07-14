@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Ai2Warmup } from "@/components/ai2/Ai2Warmup";
+import { EngineStatusBar } from "@/components/ai2/EngineStatusBar";
+import { EngineWarmupProvider } from "@/hooks/use-engine-warmup";
 import { useActiveChat } from "@/hooks/use-active-chat";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { ChatHeader } from "./chat-header";
@@ -11,6 +12,14 @@ import { Messages } from "./messages";
 import { MultimodalInput } from "./multimodal-input";
 
 export function ChatShell() {
+  return (
+    <EngineWarmupProvider>
+      <ChatShellInner />
+    </EngineWarmupProvider>
+  );
+}
+
+function ChatShellInner() {
   const {
     chatId,
     messages,
@@ -83,7 +92,6 @@ export function ChatShell() {
 
   return (
     <>
-      <Ai2Warmup />
       <div className="flex h-dvh w-full flex-row overflow-hidden">
         <div className="flex min-w-0 w-full flex-col bg-sidebar">
           <ChatHeader
@@ -91,6 +99,7 @@ export function ChatShell() {
             isReadonly={isReadonly}
             selectedVisibilityType={visibilityType}
           />
+          <EngineStatusBar />
 
           <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-background md:rounded-tl-[12px] md:border-t md:border-l md:border-border/40">
             <Messages
@@ -108,7 +117,7 @@ export function ChatShell() {
               votes={votes}
             />
 
-            <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background px-2 pb-3 md:px-4 md:pb-4">
+            <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-4xl gap-2 border-t-0 bg-background px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-4 md:pb-4">
               {!isReadonly && (
                 <MultimodalInput
                   attachments={attachments}

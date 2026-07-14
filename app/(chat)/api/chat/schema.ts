@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { messageMetadataSchema } from "@/lib/types";
 
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),
@@ -18,6 +19,7 @@ const userMessageSchema = z.object({
   id: z.uuid(),
   parts: z.array(partSchema),
   role: z.enum(["user"]),
+  metadata: messageMetadataSchema.optional(),
 });
 
 const toolApprovalMessageSchema = z.object({

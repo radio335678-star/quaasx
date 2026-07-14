@@ -10,6 +10,8 @@ import type { Ai2AnswerLayout } from "./ai2/types";
 
 export const messageMetadataSchema = z.object({
   createdAt: z.string(),
+  demoId: z.string().optional(),
+  demoKind: z.enum(["hero", "example"]).optional(),
 });
 
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;

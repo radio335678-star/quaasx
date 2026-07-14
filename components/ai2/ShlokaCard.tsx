@@ -8,6 +8,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Ai2Citation } from "@/lib/ai2/types";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ export function ShlokaCard({
   const [lang, setLang] = useState<LangMode>(
     defaultLang === "hi" ? "hi" : "en"
   );
+  const isMobile = useIsMobile();
 
   const pad = citation.padaccheda ?? [];
 
@@ -109,7 +111,7 @@ export function ShlokaCard({
       ) : null}
 
       {pad.length > 0 ? (
-        <Collapsible className="mt-3">
+        <Collapsible className="mt-3" defaultOpen={!isMobile}>
           <CollapsibleTrigger className="text-xs font-medium text-primary hover:underline">
             Padaccheda ({pad.length} words)
           </CollapsibleTrigger>

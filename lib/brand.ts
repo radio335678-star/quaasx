@@ -14,9 +14,8 @@ export const brand = {
   tagline: "Ancient Intelligence × Artificial Intelligence",
   headline: "Classical Ayurveda. Grounded answers.",
   equation: "Ancient Intelligence × Artificial Intelligence",
-  greeting: "What can I help with?",
-  greetingSubtitle:
-    "Ask about shlokas, herbs, diagnosis, or any classical Ayurvedic text.",
+  greeting: "Classical Ayurveda, grounded in the texts",
+  greetingSubtitle: "Tap the demo below, or ask your own question.",
   disclaimer:
     "AI² is a research assistant. Verify classical citations before clinical use.",
   claim:
@@ -31,12 +30,8 @@ export const brand = {
   headerCtaHref: "",
 } as const;
 
-export const brandSuggestions = [
-  "What does Charaka say about jwara?",
-  "Explain the concept of Agni with citations",
-  "Compare Sushruta and Charaka on raktamokshana",
-  "List rasa and virya of Triphala",
-] as const;
+/** @deprecated Use EXAMPLE_DEMOS from lib/ai2/demos.ts */
+export const brandSuggestions = [] as const;
 
 /** Query-ready corpus snapshot (update after rebuild) */
 export const corpusCoverage = {

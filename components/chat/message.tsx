@@ -2,7 +2,9 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { useCallback } from "react";
 import { AdaptiveAnswer } from "@/components/ai2/AdaptiveAnswer";
+import { DemoAnswerLabel, DemoBadge } from "@/components/ai2/DemoBadge";
 import type { Vote } from "@/lib/db/schema";
+import type { DemoKind } from "@/lib/ai2/demos";
 import type { Ai2AnswerLayout } from "@/lib/ai2/types";
 import type { ChatMessage } from "@/lib/types";
 import { cn, sanitizeText } from "@/lib/utils";
@@ -94,6 +96,7 @@ const PurePreviewMessage = ({
   isReadonly,
   requiresScrollPadding: _requiresScrollPadding,
   onEdit,
+  replyToDemoKind,
 }: {
   addToolApprovalResponse: UseChatHelpers<ChatMessage>["addToolApprovalResponse"];
   chatId: string;
@@ -105,6 +108,7 @@ const PurePreviewMessage = ({
   isReadonly: boolean;
   requiresScrollPadding: boolean;
   onEdit?: (message: ChatMessage) => void;
+  replyToDemoKind?: DemoKind;
 }) => {
   const attachmentsFromMessage = message.parts.filter(
     (part) => part.type === "file"
@@ -124,6 +128,8 @@ const PurePreviewMessage = ({
       part.type.startsWith("tool-")
   );
   const isThinking = isAssistant && isLoading && !hasAnyContent;
+
+  const userDemoKind = isUser ? message.metadata?.demoKind : undefined;
 
   const ai2Layout = message.parts?.find(
     (part) => part.type === "data-ai2-answer"
@@ -193,6 +199,11 @@ const PurePreviewMessage = ({
           data-testid="message-content"
           key={key}
         >
+          {userDemoKind ? (
+            <div className="mb-1.5 flex justify-end">
+              <DemoBadge kind={userDemoKind} />
+            </div>
+          ) : null}
           <MessageResponse>{sanitizeText(part.text)}</MessageResponse>
         </MessageContent>
       );
@@ -376,6 +387,9 @@ const PurePreviewMessage = ({
   ) : (
     <>
       {attachments}
+      {isAssistant && replyToDemoKind ? (
+        <DemoAnswerLabel kind={replyToDemoKind} />
+      ) : null}
       {parts}
       {ai2AnswerBlock}
       {actions}

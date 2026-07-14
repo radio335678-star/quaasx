@@ -79,7 +79,15 @@ function PureMessages({
         style={isArtifactVisible ? { scrollbarWidth: "none" } : undefined}
       >
         <div className="mx-auto flex min-h-full min-w-0 max-w-4xl flex-col gap-5 px-2 py-6 md:gap-7 md:px-4">
-          {messages.map((message, index) => (
+          {messages.map((message, index) => {
+            const prev = index > 0 ? messages[index - 1] : undefined;
+            const replyToDemoKind =
+              message.role === "assistant" &&
+              prev?.role === "user" &&
+              prev.metadata?.demoKind
+                ? prev.metadata.demoKind
+                : undefined;
+            return (
             <PreviewMessage
               addToolApprovalResponse={addToolApprovalResponse}
               chatId={chatId}
@@ -91,6 +99,7 @@ function PureMessages({
               message={message}
               onEdit={onEditMessage}
               regenerate={regenerate}
+              replyToDemoKind={replyToDemoKind}
               requiresScrollPadding={
                 hasSentMessage && index === messages.length - 1
               }
@@ -101,7 +110,8 @@ function PureMessages({
                   : undefined
               }
             />
-          ))}
+            );
+          })}
 
           {status === "submitted" && messages.at(-1)?.role !== "assistant" && (
             <ThinkingMessage />

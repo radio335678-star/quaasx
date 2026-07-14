@@ -32,7 +32,9 @@ function Column({
 }) {
   return (
     <div className="min-w-0 flex-1 space-y-3">
-      <h4 className="text-sm font-semibold text-foreground">{title}</h4>
+      <h4 className="sticky top-0 z-[1] bg-background/95 py-1 text-sm font-semibold text-foreground backdrop-blur-sm md:static md:bg-transparent md:py-0">
+        {title}
+      </h4>
       {citations.length === 0 ? (
         <p className="text-xs text-muted-foreground">No grounded hits in corpus.</p>
       ) : (
@@ -55,7 +57,7 @@ export function CompareLayout({
 
   return (
     <div className="space-y-4" data-testid="compare-layout">
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 max-md:grid-cols-1 md:grid-cols-2">
         <Column citations={charaka} defaultLang={defaultLang} title="Charaka Samhita" />
         <Column citations={sushruta} defaultLang={defaultLang} title="Sushruta Samhita" />
       </div>

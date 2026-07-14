@@ -16,12 +16,36 @@ const BACKEND_URL =
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const HOBBY_BUDGET = process.env.AI2_HOBBY_SAFE === "1";
 
-function backendHeaders(): Record<string, string> {
+function backendHeaders(demoKind?: string): Record<string, string> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (HOBBY_BUDGET) {
     headers["X-AI2-Budget"] = "hobby";
   }
+  if (demoKind === "hero" || demoKind === "example") {
+    headers["X-AI2-Demo"] = demoKind;
+  }
   return headers;
+}
+
+function extractDemoKind(body: PostRequestBody): string | undefined {
+  const kind = body.message?.metadata?.demoKind;
+  if (kind === "hero" || kind === "example") {
+    return kind;
+  }
+  return undefined;
+}
+
+function waitingMessage(demoKind?: string): string {
+  if (demoKind === "hero") {
+    return "Running demo — grounding Charaka and Sushruta…";
+  }
+  if (demoKind === "example") {
+    return "Running example — consulting classical corpus…";
+  }
+  if (IS_PRODUCTION) {
+    return "Consulting AI² Hybrid Engine…";
+  }
+  return "Consulting AI² Hybrid Engine...";
 }
 
 function extractTextFromMessage(message: {
@@ -154,14 +178,13 @@ export async function POST(request: Request) {
   }
 
   const textId = generateUUID();
+  const demoKind = extractDemoKind(requestBody);
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       writer.write({
         data: {
-          message: IS_PRODUCTION
-            ? "Waking AI² engine (cold start may take a minute)..."
-            : "Consulting AI² Hybrid Engine...",
+          message: waitingMessage(demoKind),
           modelId: "ai2-hybrid",
           modelName: "AI² Hybrid Engine",
           phase: "waiting",
@@ -177,7 +200,7 @@ export async function POST(request: Request) {
             session_id: requestBody.id,
             stream: true,
           }),
-          headers: backendHeaders(),
+          headers: backendHeaders(demoKind),
           method: "POST",
         });
 
