@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Ai2Warmup } from "@/components/ai2/Ai2Warmup";
 import { useActiveChat } from "@/hooks/use-active-chat";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { ChatHeader } from "./chat-header";
@@ -82,6 +83,7 @@ export function ChatShell() {
 
   return (
     <>
+      <Ai2Warmup />
       <div className="flex h-dvh w-full flex-row overflow-hidden">
         <div className="flex min-w-0 w-full flex-col bg-sidebar">
           <ChatHeader
