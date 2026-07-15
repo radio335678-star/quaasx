@@ -18,6 +18,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
+import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
 import { brand } from "@/lib/brand";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,8 @@ function PureMultimodalInput({
   isLoading: _isLoading,
   collapsed = false,
   onExpandComposer,
+  audienceMode = "scholar",
+  onAudienceModeChange,
 }: {
   chatId: string;
   input: string;
@@ -80,6 +83,8 @@ function PureMultimodalInput({
   isLoading?: boolean;
   collapsed?: boolean;
   onExpandComposer?: () => void;
+  audienceMode?: "patient" | "scholar";
+  onAudienceModeChange?: (mode: "patient" | "scholar") => void;
 }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
@@ -212,6 +217,10 @@ function PureMultimodalInput({
         },
       ],
       role: "user",
+      metadata: {
+        createdAt: new Date().toISOString(),
+        audienceMode,
+      },
     });
 
     setAttachments([]);
@@ -230,6 +239,7 @@ function PureMultimodalInput({
     setLocalStorageInput,
     width,
     chatId,
+    audienceMode,
   ]);
 
   const uploadFile = useCallback(async (file: File) => {
@@ -527,6 +537,12 @@ function PureMultimodalInput({
               status={status}
             />
             <Ai2EngineBadge />
+            {onAudienceModeChange ? (
+              <AudienceModeToggle
+                onChange={onAudienceModeChange}
+                value={audienceMode}
+              />
+            ) : null}
           </PromptInputTools>
 
           {status === "submitted" ? (
@@ -582,6 +598,9 @@ export const MultimodalInput = memo(
       return false;
     }
     if (prevProps.collapsed !== nextProps.collapsed) {
+      return false;
+    }
+    if (prevProps.audienceMode !== nextProps.audienceMode) {
       return false;
     }
 

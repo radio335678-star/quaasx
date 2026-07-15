@@ -12,6 +12,7 @@ export const messageMetadataSchema = z.object({
   createdAt: z.string(),
   demoId: z.string().optional(),
   demoKind: z.enum(["hero", "example"]).optional(),
+  audienceMode: z.enum(["patient", "scholar"]).optional(),
 });
 
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;

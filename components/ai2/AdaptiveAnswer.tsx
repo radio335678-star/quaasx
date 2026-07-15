@@ -4,12 +4,14 @@ import type { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Ai2AnswerLayout } from "@/lib/ai2/types";
 import { cn } from "@/lib/utils";
+import { ClinicalSafetyBanner } from "./ClinicalSafetyBanner";
 import { CompareLayout } from "./CompareLayout";
 import { CrossAcharyaBar } from "./CrossAcharyaBar";
 import { ExamModePanel } from "./ExamModePanel";
 import { RetrievalTrace } from "./RetrievalTrace";
 import { SampraptiMap } from "./SampraptiMap";
 import { ShlokaCard } from "./ShlokaCard";
+import { TreatmentPlanPanel } from "./TreatmentPlanPanel";
 
 function tantrayuktiText(
   value: Ai2AnswerLayout["tantrayukti"]
@@ -97,7 +99,10 @@ export function AdaptiveAnswer({
   const hasExam =
     layout.layout_type === "mcq_exam" ||
     Boolean(layout.direct_answer && /\([A-D]\)/i.test(layout.direct_answer));
-  const hasExtras = hasSamprapti || Boolean(yuktiNote) || hasExam;
+  const hasSafety = Boolean(layout.safety_banner);
+  const hasTreatment = Boolean(layout.treatment_plan?.stages?.length);
+  const hasExtras =
+    hasSamprapti || Boolean(yuktiNote) || hasExam || hasSafety || hasTreatment;
 
   if (!citations.length && !hasExtras) {
     return null;
@@ -106,12 +111,19 @@ export function AdaptiveAnswer({
   const defaultLang = layout.ui_hints?.default_lang ?? "en";
   const layoutType = layout.layout_type ?? "general";
   const isCompare = layoutType === "clinical_compare";
+  const patientMode =
+    layout.audience_mode === "patient" ||
+    layout.ui_hints?.audience === "patient";
 
   let citationCards: ReactNode = null;
   if (citations.length > 0) {
     if (isCompare) {
       citationCards = (
-        <CompareLayout citations={citations} defaultLang={defaultLang} />
+        <CompareLayout
+          citations={citations}
+          defaultLang={defaultLang}
+          patientMode={patientMode}
+        />
       );
     } else if (layoutType === "citation_lookup" && citations[0]) {
       citationCards = (
@@ -119,6 +131,7 @@ export function AdaptiveAnswer({
           citation={citations[0]}
           defaultLang={defaultLang}
           hero
+          patientMode={patientMode}
         />
       );
     } else if (layoutType === "quick_fact") {
@@ -129,6 +142,7 @@ export function AdaptiveAnswer({
               citation={c}
               defaultLang={defaultLang}
               key={c.citation_id}
+              patientMode={patientMode}
             />
           ))}
         </div>
@@ -141,6 +155,7 @@ export function AdaptiveAnswer({
               citation={c}
               defaultLang={defaultLang}
               key={c.citation_id}
+              patientMode={patientMode}
             />
           ))}
         </div>
@@ -165,6 +180,12 @@ export function AdaptiveAnswer({
         {layout.clinical_caution ??
           "Research disclaimer — verify classical citations before clinical use. Not medical advice."}
       </p>
+      {layout.safety_banner ? (
+        <ClinicalSafetyBanner banner={layout.safety_banner} />
+      ) : null}
+      {layout.treatment_plan ? (
+        <TreatmentPlanPanel treatment_plan={layout.treatment_plan} />
+      ) : null}
       <ExamModePanel layout={layout} />
       {layout.samprapti_map ? (
         <SampraptiMap map={layout.samprapti_map} />

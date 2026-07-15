@@ -5,6 +5,7 @@ export type Ai2LayoutType =
   | "quick_fact"
   | "citation_lookup"
   | "mcq_exam"
+  | "treatment_plan"
   | "general";
 
 export type PadacchedaEntry = {
@@ -66,6 +67,29 @@ export type CriticData = {
   text?: string;
 };
 
+export type SafetyHerb = {
+  common?: string;
+  botanical?: string;
+  class?: string;
+};
+
+export type ClinicalSafetyBannerData = {
+  level?: string;
+  title?: string;
+  body?: string;
+  herbs?: SafetyHerb[];
+};
+
+export type TreatmentPlanStage = {
+  id: string;
+  title: string;
+  summary?: string;
+};
+
+export type TreatmentPlanData = {
+  stages?: TreatmentPlanStage[];
+};
+
 export type Ai2AnswerLayout = {
   layout_type: Ai2LayoutType;
   headline?: string;
@@ -75,6 +99,8 @@ export type Ai2AnswerLayout = {
   ui_hints?: {
     default_lang?: "en" | "hi";
     emphasize?: "compare" | "verse" | "summary";
+    audience?: "patient" | "scholar";
+    hide_padaccheda_default?: boolean;
   };
   strategies?: string[];
   quality_gate_passed?: boolean;
@@ -82,6 +108,10 @@ export type Ai2AnswerLayout = {
   samprapti_map?: SampraptiMapData;
   tantrayukti?: TantrayuktiData | string;
   critic?: CriticData | string;
+  audience_mode?: "patient" | "scholar";
+  safety_banner?: ClinicalSafetyBannerData;
+  safety_warnings?: string[];
+  treatment_plan?: TreatmentPlanData;
 };
 
 export type BackendMetaEvent = {
@@ -98,6 +128,10 @@ export type BackendMetaEvent = {
   samprapti_map?: SampraptiMapData;
   tantrayukti?: TantrayuktiData | string;
   critic?: CriticData | string;
+  audience_mode?: "patient" | "scholar";
+  safety_banner?: ClinicalSafetyBannerData;
+  safety_warnings?: string[];
+  treatment_plan?: TreatmentPlanData;
   tools?: unknown[];
   session_id?: string;
 };
@@ -116,5 +150,9 @@ export function metaToLayout(meta: BackendMetaEvent): Ai2AnswerLayout {
     samprapti_map: meta.samprapti_map,
     tantrayukti: meta.tantrayukti,
     critic: meta.critic,
+    audience_mode: meta.audience_mode,
+    safety_banner: meta.safety_banner,
+    safety_warnings: meta.safety_warnings,
+    treatment_plan: meta.treatment_plan,
   };
 }

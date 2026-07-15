@@ -72,9 +72,11 @@ function CommentaryItem({ entry }: { entry: Ai2Commentary }) {
 export function CommentaryPanel({
   commentaries,
   className,
+  hideHeader = false,
 }: {
   commentaries: Ai2Commentary[];
   className?: string;
+  hideHeader?: boolean;
 }) {
   if (!commentaries.length) {
     return null;
@@ -88,9 +90,11 @@ export function CommentaryPanel({
       )}
       data-testid="commentary-panel"
     >
-      <p className="border-b border-border/40 px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-        Commentaries ({commentaries.length})
-      </p>
+      {hideHeader ? null : (
+        <p className="border-b border-border/40 px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          Commentaries ({commentaries.length})
+        </p>
+      )}
       <div className="divide-y divide-border/30 py-0.5">
         {commentaries.map((entry) => (
           <CommentaryItem

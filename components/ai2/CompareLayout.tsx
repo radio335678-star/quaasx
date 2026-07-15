@@ -43,11 +43,13 @@ function Column({
   citations,
   defaultLang,
   compact,
+  patientMode,
 }: {
   title: string;
   citations: Ai2Citation[];
   defaultLang?: "en" | "hi";
   compact?: boolean;
+  patientMode?: boolean;
 }) {
   return (
     <section className="min-w-0 flex-1 space-y-3">
@@ -72,6 +74,7 @@ function Column({
             compact={compact}
             defaultLang={defaultLang}
             key={c.citation_id}
+            patientMode={patientMode}
           />
         ))
       )}
@@ -84,9 +87,11 @@ type TabId = "charaka" | "sushruta" | "other";
 export function CompareLayout({
   citations,
   defaultLang,
+  patientMode,
 }: {
   citations: Ai2Citation[];
   defaultLang?: "en" | "hi";
+  patientMode?: boolean;
 }) {
   const { charaka, sushruta, other } = useMemo(
     () => bucketBySource(citations),
@@ -136,6 +141,7 @@ export function CompareLayout({
             citations={charaka}
             compact
             defaultLang={defaultLang}
+            patientMode={patientMode}
             title="Charaka Samhita"
           />
         ) : null}
@@ -144,6 +150,7 @@ export function CompareLayout({
             citations={sushruta}
             compact
             defaultLang={defaultLang}
+            patientMode={patientMode}
             title="Sushruta Samhita"
           />
         ) : null}
@@ -152,6 +159,7 @@ export function CompareLayout({
             citations={other}
             compact
             defaultLang={defaultLang}
+            patientMode={patientMode}
             title="Other texts"
           />
         ) : null}
@@ -163,12 +171,14 @@ export function CompareLayout({
           citations={charaka}
           compact
           defaultLang={defaultLang}
+          patientMode={patientMode}
           title="Charaka Samhita"
         />
         <Column
           citations={sushruta}
           compact
           defaultLang={defaultLang}
+          patientMode={patientMode}
           title="Sushruta Samhita"
         />
       </div>
@@ -182,6 +192,7 @@ export function CompareLayout({
                 compact
                 defaultLang={defaultLang}
                 key={c.citation_id}
+                patientMode={patientMode}
               />
             ))}
           </div>

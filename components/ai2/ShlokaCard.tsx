@@ -67,16 +67,19 @@ export function ShlokaCard({
   defaultLang = "en",
   hero = false,
   compact = false,
+  patientMode = false,
 }: {
   citation: Ai2Citation;
   defaultLang?: "en" | "hi";
   hero?: boolean;
   compact?: boolean;
+  patientMode?: boolean;
 }) {
   const [lang, setLang] = useState<LangMode>(
-    defaultLang === "hi" ? "hi" : "en"
+    patientMode ? "en" : defaultLang === "hi" ? "hi" : "en"
   );
   const [copied, setCopied] = useState(false);
+  const [commentariesOpen, setCommentariesOpen] = useState(!patientMode);
   const isMobile = useIsMobile();
 
   if (normalizeTrust(citation.trust) === "hallucinated") {
@@ -85,6 +88,8 @@ export function ShlokaCard({
 
   const pad = citation.padaccheda ?? [];
   const commentaries = citation.commentaries ?? [];
+  const padacchedaDefaultOpen =
+    !patientMode && !isMobile && !compact;
 
   const copyCitation = async () => {
     const text = formatCitationRef(citation);
@@ -145,7 +150,8 @@ export function ShlokaCard({
         <p
           className={cn(
             "mb-2.5 font-[family-name:var(--font-noto-devanagari)] leading-relaxed text-foreground",
-            hero ? "text-xl" : compact ? "text-base" : "text-lg"
+            patientMode && (hero ? "text-lg" : "text-base"),
+            !patientMode && (hero ? "text-xl" : compact ? "text-base" : "text-lg")
           )}
           lang="sa"
         >
@@ -197,7 +203,7 @@ export function ShlokaCard({
       ) : null}
 
       {pad.length > 0 ? (
-        <Collapsible className="mt-3" defaultOpen={!isMobile && !compact}>
+        <Collapsible className="mt-3" defaultOpen={padacchedaDefaultOpen}>
           <CollapsibleTrigger className="text-xs font-medium text-primary hover:underline">
             Padaccheda ({pad.length} words)
           </CollapsibleTrigger>
@@ -221,7 +227,22 @@ export function ShlokaCard({
       ) : null}
 
       {commentaries.length > 0 ? (
-        <CommentaryPanel commentaries={commentaries} />
+        patientMode ? (
+          <Collapsible
+            className="mt-3"
+            onOpenChange={setCommentariesOpen}
+            open={commentariesOpen}
+          >
+            <CollapsibleTrigger className="text-xs font-medium text-primary hover:underline">
+              Commentaries ({commentaries.length})
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CommentaryPanel commentaries={commentaries} hideHeader />
+            </CollapsibleContent>
+          </Collapsible>
+        ) : (
+          <CommentaryPanel commentaries={commentaries} />
+        )
       ) : null}
     </article>
   );

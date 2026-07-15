@@ -9,6 +9,7 @@ import {
   type Dispatch,
   type ReactNode,
   type SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -47,6 +48,8 @@ type ActiveChatContextValue = {
   votes: Vote[] | undefined;
   currentModelId: string;
   setCurrentModelId: (id: string) => void;
+  audienceMode: "patient" | "scholar";
+  setAudienceMode: (mode: "patient" | "scholar") => void;
 };
 
 const ActiveChatContext = createContext<ActiveChatContextValue | null>(null);
@@ -80,6 +83,27 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
   }, [currentModelId]);
 
   const [input, setInput] = useState("");
+  const [audienceMode, setAudienceModeState] = useState<"patient" | "scholar">(
+    () => {
+      if (typeof window === "undefined") {
+        return "scholar";
+      }
+      const stored = window.localStorage.getItem("ai2-audience-mode");
+      if (stored === "patient" || stored === "scholar") {
+        return stored;
+      }
+      return "scholar";
+    }
+  );
+  const audienceModeRef = useRef(audienceMode);
+  useEffect(() => {
+    audienceModeRef.current = audienceMode;
+  }, [audienceMode]);
+
+  const setAudienceMode = useCallback((mode: "patient" | "scholar") => {
+    setAudienceModeState(mode);
+    window.localStorage.setItem("ai2-audience-mode", mode);
+  }, []);
 
   const { data: localChat, isLoading } = useSWR(
     isNewChat ? null : `ai2-local-chat:${chatId}`,
@@ -227,6 +251,10 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
       sendMessage({
         parts: [{ text: query, type: "text" }],
         role: "user" as const,
+        metadata: {
+          createdAt: new Date().toISOString(),
+          audienceMode: audienceModeRef.current,
+        },
       });
     }
   }, [sendMessage, chatId]);
@@ -240,6 +268,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ActiveChatContextValue>(
     () => ({
       addToolApprovalResponse,
+      audienceMode,
       chatId,
       currentModelId,
       input,
@@ -248,6 +277,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
       messages,
       regenerate,
       sendMessage,
+      setAudienceMode,
       setCurrentModelId,
       setInput,
       setMessages,
@@ -272,6 +302,8 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
       isLoading,
       votes,
       currentModelId,
+      audienceMode,
+      setAudienceMode,
     ]
   );
 

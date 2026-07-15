@@ -37,6 +37,8 @@ function ChatShellInner() {
     votes,
     currentModelId,
     setCurrentModelId,
+    audienceMode,
+    setAudienceMode,
   } = useActiveChat();
 
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(
@@ -137,12 +139,14 @@ function ChatShellInner() {
               {!isReadonly && (
                 <MultimodalInput
                   attachments={attachments}
+                  audienceMode={audienceMode}
                   chatId={chatId}
                   collapsed={composerCollapsed}
                   editingMessage={editingMessage}
                   input={input}
                   isLoading={isLoading}
                   messages={messages}
+                  onAudienceModeChange={setAudienceMode}
                   onCancelEdit={handleCancelEdit}
                   onExpandComposer={() => setComposerCollapsed(false)}
                   onModelChange={setCurrentModelId}
