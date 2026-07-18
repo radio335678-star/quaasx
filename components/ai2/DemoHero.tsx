@@ -15,9 +15,12 @@ type DemoHeroProps = {
 };
 
 export function DemoHero({ chatId, sendMessage, onDismiss }: DemoHeroProps) {
-  const { runWarmup, status } = useEngineWarmup();
+  const { isComposerEnabled, wake } = useEngineWarmup();
 
-  const runDemo = useCallback(() => {
+  const runDemo = useCallback(async () => {
+    if (!isComposerEnabled) {
+      await wake();
+    }
     window.history.pushState(
       {},
       "",
@@ -32,20 +35,12 @@ export function DemoHero({ chatId, sendMessage, onDismiss }: DemoHeroProps) {
       parts: [{ text: HERO_DEMO.query, type: "text" }],
       role: "user",
     });
-  }, [chatId, sendMessage]);
-
-  const handlePrefetch = useCallback(() => {
-    if (status !== "ready" && status !== "warming") {
-      void runWarmup();
-    }
-  }, [runWarmup, status]);
+  }, [chatId, isComposerEnabled, sendMessage, wake]);
 
   return (
     <article
       className="relative w-full overflow-hidden rounded-2xl border border-amber-500/25 bg-gradient-to-b from-amber-500/10 to-card/40 p-4 shadow-[var(--shadow-card)] sm:p-5"
       data-testid="demo-hero"
-      onFocus={handlePrefetch}
-      onMouseEnter={handlePrefetch}
     >
       {onDismiss ? (
         <button
@@ -71,7 +66,7 @@ export function DemoHero({ chatId, sendMessage, onDismiss }: DemoHeroProps) {
       <Button
         className="mt-4 h-12 min-h-[48px] w-full touch-manipulation text-sm font-semibold sm:w-auto sm:px-8"
         data-testid="demo-hero-run"
-        onClick={runDemo}
+        onClick={() => void runDemo()}
         type="button"
       >
         <PlayIcon className="mr-2 size-4" />

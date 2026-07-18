@@ -20,7 +20,9 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
+import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
 import type { AudienceMode } from "@/lib/ai2/audience-mode";
+import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { filterWorks } from "@/lib/ai2/works";
 import { resolveScopedWorksFromInput } from "@/lib/ai2/parse-mentions";
 import { brand } from "@/lib/brand";
@@ -102,18 +104,26 @@ function PureMultimodalInput({
 }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
+  const {
+    heartbeat,
+    isComposerEnabled,
+    markIdle,
+    markTyping,
+    wake,
+  } = useEngineWarmup();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
   const hasAutoFocused = useRef(false);
   useEffect(() => {
-    if (!hasAutoFocused.current && width) {
-      const timer = setTimeout(() => {
-        textareaRef.current?.focus();
-        hasAutoFocused.current = true;
-      }, 100);
-      return () => clearTimeout(timer);
+    if (!isComposerEnabled || hasAutoFocused.current || !width) {
+      return;
     }
-  }, [width]);
+    const timer = setTimeout(() => {
+      textareaRef.current?.focus();
+      hasAutoFocused.current = true;
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [isComposerEnabled, width]);
 
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
     "input",
@@ -196,6 +206,10 @@ function PureMultimodalInput({
       const val = event.target.value;
       setInput(val);
       syncWorksFromText(val);
+      if (isComposerEnabled) {
+        markTyping();
+        heartbeat();
+      }
       const cursor = event.target.selectionStart ?? val.length;
       const mention = getMentionState(val, cursor);
 
@@ -217,8 +231,21 @@ function PureMultimodalInput({
         setSlashOpen(false);
       }
     },
-    [setInput, syncWorksFromText]
+    [heartbeat, isComposerEnabled, markTyping, setInput, syncWorksFromText]
   );
+
+  const handleTextareaFocus = useCallback(() => {
+    onExpandComposer?.();
+    if (isComposerEnabled) {
+      markTyping();
+    }
+  }, [isComposerEnabled, markTyping, onExpandComposer]);
+
+  const handleTextareaBlur = useCallback(() => {
+    if (!input.trim()) {
+      markIdle();
+    }
+  }, [input, markIdle]);
 
   const handleMentionSelect = useCallback(
     (work: LibraryWork) => {
@@ -481,7 +508,7 @@ function PureMultimodalInput({
     setSlashOpen(false);
   }, []);
 
-  const handlePromptSubmit = useCallback(() => {
+  const handlePromptSubmit = useCallback(async () => {
     if (input.startsWith("/")) {
       const query = input.slice(1).trim();
       const cmd = slashCommands.find((c) => c.name === query);
@@ -493,12 +520,24 @@ function PureMultimodalInput({
     if (!input.trim() && attachments.length === 0 && selectedWorks.length === 0) {
       return;
     }
+    if (!isComposerEnabled) {
+      await wake();
+    }
     if (status === "ready" || status === "error") {
       submitForm();
     } else {
       toast.error("Please wait for the model to finish its response!");
     }
-  }, [attachments.length, handleSlashSelect, input, selectedWorks.length, status, submitForm]);
+  }, [
+    attachments.length,
+    handleSlashSelect,
+    input,
+    isComposerEnabled,
+    selectedWorks.length,
+    status,
+    submitForm,
+    wake,
+  ]);
 
   const handleTextareaKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -600,6 +639,9 @@ function PureMultimodalInput({
             : "relative opacity-100"
         )}
       >
+      {!isComposerEnabled && messages.length > 0 ? (
+        <SleepWakeCard className="mb-1" compact />
+      ) : null}
       {editingMessage && onCancelEdit ? (
         <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
           <span>Editing message</span>
@@ -643,7 +685,10 @@ function PureMultimodalInput({
       </div>
 
       <PromptInput
-        className="[&>div]:rounded-2xl [&>div]:border [&>div]:border-border/30 [&>div]:bg-card/70 [&>div]:shadow-[var(--shadow-composer)] [&>div]:transition-shadow [&>div]:duration-300 [&>div]:focus-within:shadow-[var(--shadow-composer-focus)]"
+        className={cn(
+          "[&>div]:rounded-2xl [&>div]:border [&>div]:border-border/30 [&>div]:bg-card/70 [&>div]:shadow-[var(--shadow-composer)] [&>div]:transition-shadow [&>div]:duration-300 [&>div]:focus-within:shadow-[var(--shadow-composer-focus)]",
+          !isComposerEnabled && "pointer-events-none opacity-50"
+        )}
         onSubmit={handlePromptSubmit}
       >
         {(attachments.length > 0 || uploadQueue.length > 0) && (
@@ -680,14 +725,19 @@ function PureMultimodalInput({
         <PromptInputTextarea
           className="min-h-16 text-[13px] leading-relaxed px-4 pt-3.5 pb-1.5 placeholder:text-muted-foreground/35 sm:min-h-20"
           data-testid="multimodal-input"
+          disabled={!isComposerEnabled}
+          onBlur={handleTextareaBlur}
           onChange={handleInput}
-          onFocus={onExpandComposer}
+          onFocus={handleTextareaFocus}
           onKeyDown={handleTextareaKeyDown}
           placeholder={
             editingMessage
               ? "Edit your message..."
-              : "Ask anything… type @ to scope a work"
+              : isComposerEnabled
+                ? "Ask anything… type @ to scope a work"
+                : "Wake me up to ask a question…"
           }
+          readOnly={!isComposerEnabled}
           ref={textareaRef}
           value={input}
         />
@@ -723,7 +773,11 @@ function PureMultimodalInput({
                   : "bg-muted text-muted-foreground/25 cursor-not-allowed"
               )}
               data-testid="send-button"
-              disabled={(!input.trim() && selectedWorks.length === 0) || uploadQueue.length > 0}
+              disabled={
+                !isComposerEnabled ||
+                ((!input.trim() && selectedWorks.length === 0) ||
+                  uploadQueue.length > 0)
+              }
               status={status}
               variant="secondary"
             >

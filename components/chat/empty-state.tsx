@@ -6,6 +6,8 @@ import { ChevronDownIcon } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { DemoBadge } from "@/components/ai2/DemoBadge";
 import { DemoHero } from "@/components/ai2/DemoHero";
+import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
+import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { type DemoPrompt, EXAMPLE_DEMOS } from "@/lib/ai2/demos";
 import type { ChatMessage } from "@/lib/types";
 import { Suggestion } from "../ai-elements/suggestion";
@@ -61,6 +63,7 @@ function ExampleDemoCard({
 }
 
 function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
+  const { isComposerEnabled, wake } = useEngineWarmup();
   const [demoVisible, setDemoVisible] = useState(true);
   const [hydrated, setHydrated] = useState(false);
   const [showScrollCue, setShowScrollCue] = useState(false);
@@ -127,7 +130,10 @@ function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
   }, []);
 
   const handleDemoClick = useCallback(
-    (demo: DemoPrompt) => {
+    async (demo: DemoPrompt) => {
+      if (!isComposerEnabled) {
+        await wake();
+      }
       window.history.pushState(
         {},
         "",
@@ -143,7 +149,7 @@ function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
         role: "user",
       });
     },
-    [chatId, sendMessage]
+    [chatId, isComposerEnabled, sendMessage, wake]
   );
 
   return (
@@ -159,7 +165,11 @@ function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-3 pb-6 pt-4 sm:gap-6 sm:px-4 sm:pb-8 sm:pt-6 md:pt-8">
           <Greeting />
 
-          {hydrated && demoVisible ? (
+          {!isComposerEnabled ? (
+            <SleepWakeCard />
+          ) : null}
+
+          {hydrated && demoVisible && isComposerEnabled ? (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               initial={{ opacity: 0, y: 12 }}
@@ -177,23 +187,25 @@ function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
             </motion.div>
           ) : null}
 
-          <div data-testid="suggested-actions">
-            <p className="mb-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
-              {hydrated && !demoVisible
-                ? "Try an example"
-                : "Or try an example"}
-            </p>
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-              {EXAMPLE_DEMOS.map((demo, index) => (
-                <ExampleDemoCard
-                  demo={demo}
-                  index={index}
-                  key={demo.id}
-                  onSelect={handleDemoClick}
-                />
-              ))}
+          {isComposerEnabled ? (
+            <div data-testid="suggested-actions">
+              <p className="mb-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
+                {hydrated && !demoVisible
+                  ? "Try an example"
+                  : "Or try an example"}
+              </p>
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                {EXAMPLE_DEMOS.map((demo, index) => (
+                  <ExampleDemoCard
+                    demo={demo}
+                    index={index}
+                    key={demo.id}
+                    onSelect={handleDemoClick}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
 
