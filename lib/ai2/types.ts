@@ -167,7 +167,7 @@ export type Ai2AnswerLayout = {
   ui_hints?: {
     default_lang?: "en" | "hi";
     emphasize?: "compare" | "verse" | "summary";
-    audience?: "patient" | "scholar";
+    audience?: "patient" | "scholar" | "clinician";
     hide_padaccheda_default?: boolean;
   };
   strategies?: string[];
@@ -176,7 +176,7 @@ export type Ai2AnswerLayout = {
   samprapti_map?: SampraptiMapData;
   tantrayukti?: TantrayuktiData | string;
   critic?: CriticData | string;
-  audience_mode?: "patient" | "scholar";
+  audience_mode?: "patient" | "scholar" | "clinician";
   safety_banner?: ClinicalSafetyBannerData;
   safety_warnings?: string[];
   treatment_plan?: TreatmentPlanData;
@@ -204,7 +204,7 @@ export type BackendMetaEvent = {
   samprapti_map?: SampraptiMapData;
   tantrayukti?: TantrayuktiData | string;
   critic?: CriticData | string;
-  audience_mode?: "patient" | "scholar";
+  audience_mode?: "patient" | "scholar" | "clinician";
   safety_banner?: ClinicalSafetyBannerData;
   safety_warnings?: string[];
   treatment_plan?: TreatmentPlanData;

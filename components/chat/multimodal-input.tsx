@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
+import type { AudienceMode } from "@/lib/ai2/audience-mode";
 import { filterWorks } from "@/lib/ai2/works";
 import { resolveScopedWorksFromInput } from "@/lib/ai2/parse-mentions";
 import { brand } from "@/lib/brand";
@@ -96,8 +97,8 @@ function PureMultimodalInput({
   isLoading?: boolean;
   collapsed?: boolean;
   onExpandComposer?: () => void;
-  audienceMode?: "patient" | "scholar";
-  onAudienceModeChange?: (mode: "patient" | "scholar") => void;
+  audienceMode?: AudienceMode;
+  onAudienceModeChange?: (mode: AudienceMode) => void;
 }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();

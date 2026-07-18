@@ -21,6 +21,10 @@ import { useDataStream } from "@/components/chat/data-stream-provider";
 import { getChatHistoryPaginationKey } from "@/components/chat/sidebar-history";
 import { toast } from "@/components/chat/toast";
 import type { VisibilityType } from "@/components/chat/visibility-selector";
+import {
+  type AudienceMode,
+  isAudienceMode,
+} from "@/lib/ai2/audience-mode";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import type { Vote } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
@@ -48,8 +52,8 @@ type ActiveChatContextValue = {
   votes: Vote[] | undefined;
   currentModelId: string;
   setCurrentModelId: (id: string) => void;
-  audienceMode: "patient" | "scholar";
-  setAudienceMode: (mode: "patient" | "scholar") => void;
+  audienceMode: AudienceMode;
+  setAudienceMode: (mode: AudienceMode) => void;
 };
 
 const ActiveChatContext = createContext<ActiveChatContextValue | null>(null);
@@ -83,24 +87,22 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
   }, [currentModelId]);
 
   const [input, setInput] = useState("");
-  const [audienceMode, setAudienceModeState] = useState<"patient" | "scholar">(
-    () => {
-      if (typeof window === "undefined") {
-        return "scholar";
-      }
-      const stored = window.localStorage.getItem("ai2-audience-mode");
-      if (stored === "patient" || stored === "scholar") {
-        return stored;
-      }
+  const [audienceMode, setAudienceModeState] = useState<AudienceMode>(() => {
+    if (typeof window === "undefined") {
       return "scholar";
     }
-  );
+    const stored = window.localStorage.getItem("ai2-audience-mode");
+    if (stored && isAudienceMode(stored)) {
+      return stored;
+    }
+    return "scholar";
+  });
   const audienceModeRef = useRef(audienceMode);
   useEffect(() => {
     audienceModeRef.current = audienceMode;
   }, [audienceMode]);
 
-  const setAudienceMode = useCallback((mode: "patient" | "scholar") => {
+  const setAudienceMode = useCallback((mode: AudienceMode) => {
     setAudienceModeState(mode);
     window.localStorage.setItem("ai2-audience-mode", mode);
   }, []);
