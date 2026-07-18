@@ -112,15 +112,15 @@
       ],
       "books": [
         {
-          "name": "Madhava Nidana",
-          "db_text_name": "Madhava Nidana",
+          "name": "Vrindamadhava (Siddhayoga)",
+          "db_text_name": "Vrindamadhava (Siddhayoga)",
           "abbrev": "MN",
           "tier": "db",
           "total_shlokas": 7734,
           "translation_status": {
-            "missing": 7734
+            "gold": 7734
           },
-          "category": null
+          "category": "Therapeutic"
         },
         {
           "name": "Sharangadhara Samhita",
