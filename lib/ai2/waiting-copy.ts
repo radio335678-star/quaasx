@@ -9,8 +9,9 @@ const WAITING_LINES = [
 const THINKING_LINES = [
   "Tracing the answer through ancient texts…",
   "Weaving Sanskrit evidence into plain words…",
-  "Cross-reading Charaka, Sushruta, and the corpus…",
+  "Cross-reading Charaka, Sushruta, and Ashtanga…",
   "Finding the verses that fit your question…",
+  "Rendering Sanskrit gold into clear English…",
   "Synthesizing a grounded reply…",
 ] as const;
 

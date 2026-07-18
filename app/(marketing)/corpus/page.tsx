@@ -9,12 +9,21 @@ export const metadata = {
     "Subject-wise Ayurveda books on the AI² Modal library — DB query tier vs raw CORPUS editions.",
 };
 
-function translationNote(book: { tier: string; total_shlokas: number | null; translation_status?: Record<string, number> | null }) {
+function translationNote(book: {
+  tier: string;
+  abbrev?: string | null;
+  total_shlokas: number | null;
+  translation_status?: Record<string, number> | null;
+}) {
   if (book.tier !== "db") {
     return "Raw `.txt` editions on volume";
   }
   const t = primaryTranslation(book);
   if (t === "gold") {
+    // AH/AS are Sanskrit-canonical gold (no stored English); others are English gold.
+    if (book.abbrev === "AH" || book.abbrev === "AS") {
+      return "Sanskrit gold — English from model when needed";
+    }
     return "Verified English (gold)";
   }
   if (t === "machine") {

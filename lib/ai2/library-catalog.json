@@ -54,7 +54,7 @@
           "tier": "db",
           "total_shlokas": 15439,
           "translation_status": {
-            "missing": 15439
+            "gold": 15439
           },
           "category": null
         },
@@ -65,7 +65,7 @@
           "tier": "db",
           "total_shlokas": 22659,
           "translation_status": {
-            "missing": 22659
+            "gold": 22659
           },
           "category": null
         }

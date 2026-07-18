@@ -38,8 +38,8 @@ export const corpusCoverage = {
   queryReady: [
     { name: "Charaka Samhita", shlokas: 4653, translation: "gold" },
     { name: "Sushruta Samhita", shlokas: 5241, translation: "gold" },
-    { name: "Ashtanga Hridayam", shlokas: 15439, translation: "missing" },
-    { name: "Ashtanga Sangraha", shlokas: 22_659, translation: "missing" },
+    { name: "Ashtanga Hridayam", shlokas: 15439, translation: "gold" },
+    { name: "Ashtanga Sangraha", shlokas: 22_659, translation: "gold" },
     { name: "Madhava Nidana", shlokas: 7734, translation: "missing" },
     { name: "Cakradatta", shlokas: 11278, translation: "missing" },
   ],
