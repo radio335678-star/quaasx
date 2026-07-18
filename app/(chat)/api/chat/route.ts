@@ -2,6 +2,9 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
 } from "ai";
+import type { AudienceMode } from "@/lib/ai2/audience-mode";
+import { isAudienceMode } from "@/lib/ai2/audience-mode";
+import { applyAudiencePrompt } from "@/lib/ai2/audience-prompts";
 import {
   buildAgentQuestion,
   callRustEnvAgent,
@@ -61,6 +64,26 @@ function buildBackendMessages(body: PostRequestBody): Array<{
   return [];
 }
 
+function extractAudienceMode(body: PostRequestBody): AudienceMode {
+  const fromMessage = body.message?.metadata?.audienceMode;
+  if (fromMessage && isAudienceMode(fromMessage)) {
+    return fromMessage;
+  }
+
+  if (body.messages?.length) {
+    for (let i = body.messages.length - 1; i >= 0; i -= 1) {
+      const meta = body.messages[i]?.metadata as
+        | { audienceMode?: string }
+        | undefined;
+      if (meta?.audienceMode && isAudienceMode(meta.audienceMode)) {
+        return meta.audienceMode;
+      }
+    }
+  }
+
+  return "scholar";
+}
+
 function productionErrorMessage(error: unknown): string {
   const detail =
     error instanceof Error ? error.message : "AI² Rust Env unavailable";
@@ -116,7 +139,11 @@ export async function POST(request: Request) {
   }
 
   const textId = generateUUID();
-  const question = buildAgentQuestion(messages);
+  const audienceMode = extractAudienceMode(requestBody);
+  const question = applyAudiencePrompt(
+    buildAgentQuestion(messages),
+    audienceMode
+  );
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
