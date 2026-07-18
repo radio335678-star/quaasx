@@ -11,7 +11,7 @@ import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { generateUUID } from "@/lib/utils";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
 
-export const maxDuration = 600;
+export const maxDuration = 300;
 
 const BACKEND_URL =
   process.env.AI2_BACKEND_URL?.replace(/\/$/, "") || "http://127.0.0.1:8090";
