@@ -32,8 +32,32 @@ export async function fetchWithErrorHandlers(
     const response = await fetch(input, init);
 
     if (!response.ok) {
-      const { code, cause } = await response.json();
-      throw new ChatbotError(code as ErrorCode, cause);
+      const raw = await response.text();
+      try {
+        const parsed = JSON.parse(raw) as {
+          code?: string;
+          cause?: string;
+          message?: string;
+          error?: string;
+        };
+        if (parsed.code) {
+          throw new ChatbotError(parsed.code as ErrorCode, parsed.cause);
+        }
+        throw new Error(
+          parsed.message ||
+            parsed.error ||
+            raw.slice(0, 200) ||
+            `Request failed (${response.status})`,
+        );
+      } catch (error: unknown) {
+        if (error instanceof ChatbotError) {
+          throw error;
+        }
+        const snippet = raw.replace(/\s+/g, " ").trim().slice(0, 160);
+        throw new Error(
+          snippet || `Request failed (${response.status} ${response.statusText})`,
+        );
+      }
     }
 
     return response;
