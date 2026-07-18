@@ -31,6 +31,9 @@ type WorkPickerPopoverProps = {
   disabled?: boolean;
 };
 
+/** Work scoping UI is locked for now — + stays visible but does not open. */
+const WORK_PICKER_LOCKED = true;
+
 export function WorkPickerPopover({
   selectedWorks,
   onToggleWork,
@@ -43,6 +46,7 @@ export function WorkPickerPopover({
     [selectedWorks]
   );
   const filtered = useMemo(() => filterWorks(search), [search]);
+  const locked = WORK_PICKER_LOCKED || Boolean(disabled);
 
   const handleSelect = useCallback(
     (work: LibraryWork) => {
@@ -60,13 +64,32 @@ export function WorkPickerPopover({
   );
 
   return (
-    <Popover onOpenChange={setOpen} open={open}>
+    <Popover
+      onOpenChange={(next) => {
+        if (locked) {
+          setOpen(false);
+          return;
+        }
+        setOpen(next);
+      }}
+      open={locked ? false : open}
+    >
       <PopoverTrigger asChild>
         <Button
-          className="h-7 w-7 rounded-lg border border-border/40 p-1 text-muted-foreground/60 hover:text-foreground"
+          aria-disabled={locked}
+          className={cn(
+            "h-7 w-7 rounded-lg border border-border/40 p-1",
+            locked
+              ? "cursor-not-allowed text-muted-foreground/25 opacity-40 hover:bg-transparent hover:text-muted-foreground/25"
+              : "text-muted-foreground/60 hover:text-foreground"
+          )}
           data-testid="work-picker-button"
-          disabled={disabled}
-          title="Scope to classical works (max 5)"
+          disabled={locked}
+          title={
+            locked
+              ? "Work scoping coming soon"
+              : "Scope to classical works (max 5)"
+          }
           type="button"
           variant="ghost"
         >
