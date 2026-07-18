@@ -7,10 +7,10 @@ const COPY: Record<
   ReturnType<typeof useEngineWarmup>["status"],
   string | null
 > = {
-  degraded: "First answer after idle may take ~15s",
+  degraded: "First reply after a break may take a little longer",
   idle: null,
-  ready: "Engine ready",
-  warming: "Waking classical engine…",
+  ready: "Ready when you are",
+  warming: "Waking up…",
 };
 
 export function EngineStatusBar() {

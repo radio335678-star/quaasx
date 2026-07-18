@@ -9,6 +9,11 @@ import {
   buildAgentQuestion,
   callRustEnvAgent,
 } from "@/lib/ai2/rustenv-exec";
+import {
+  AI2_STREAM_LABEL,
+  pickThinkingLine,
+  pickWaitingLine,
+} from "@/lib/ai2/waiting-copy";
 import { ChatbotError } from "@/lib/errors";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { generateUUID } from "@/lib/utils";
@@ -21,11 +26,22 @@ const BACKEND_URL =
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-function waitingMessage(): string {
+function productionErrorMessage(error: unknown): string {
+  const detail =
+    error instanceof Error ? error.message : "AI² could not reach the server";
+
   if (IS_PRODUCTION) {
-    return "Consulting AI² Rust Env…";
+    return (
+      `**AI² is temporarily unavailable**\n\n` +
+      `Please wait a moment and try again — the first answer after idle can take a minute or two.\n\n` +
+      `If this keeps happening, try refreshing the page.`
+    );
   }
-  return "Consulting AI² Rust Env...";
+
+  return (
+    `**AI² unreachable**\n\n${detail}\n\n` +
+    `Dev: set \`AI2_BACKEND_URL\` in \`.env.local\`.`
+  );
 }
 
 function extractTextFromMessage(message: {
@@ -65,45 +81,12 @@ function buildBackendMessages(body: PostRequestBody): Array<{
 }
 
 function extractAudienceMode(body: PostRequestBody): AudienceMode {
+  // Normal chat sends `message` with metadata; `messages` is tool-approval only (no metadata).
   const fromMessage = body.message?.metadata?.audienceMode;
   if (fromMessage && isAudienceMode(fromMessage)) {
     return fromMessage;
   }
-
-  if (body.messages?.length) {
-    for (let i = body.messages.length - 1; i >= 0; i -= 1) {
-      const meta = body.messages[i]?.metadata as
-        | { audienceMode?: string }
-        | undefined;
-      if (meta?.audienceMode && isAudienceMode(meta.audienceMode)) {
-        return meta.audienceMode;
-      }
-    }
-  }
-
   return "scholar";
-}
-
-function productionErrorMessage(error: unknown): string {
-  const detail =
-    error instanceof Error ? error.message : "AI² Rust Env unavailable";
-
-  if (IS_PRODUCTION) {
-    return (
-      `**AI² is temporarily unavailable**\n\n` +
-      `${detail}\n\n` +
-      `The Rust Env agent may be cold-starting (first request can take up to 2–3 minutes). ` +
-      `Please wait a moment and try again.\n\n` +
-      `If this persists, verify \`AI2_BACKEND_URL\` points at the ai2-rust-env Modal endpoint.`
-    );
-  }
-
-  return (
-    `**AI² Rust Env unreachable**\n\n${detail}\n\n` +
-    `Set \`AI2_BACKEND_URL\` to the live Modal app, e.g.\n` +
-    `\`https://quaasx--ai2-rust-env-rustenvgateway-web.modal.run\`\n\n` +
-    `Smoke: \`python scripts/smoke_rustenv.py\``
-  );
 }
 
 export async function POST(request: Request) {
@@ -144,14 +127,15 @@ export async function POST(request: Request) {
     buildAgentQuestion(messages),
     audienceMode
   );
+  const statusSeed = question.length + audienceMode.length;
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       writer.write({
         data: {
-          message: waitingMessage(),
-          modelId: "ai2-rust-env",
-          modelName: "AI² Rust Env",
+          message: pickWaitingLine(statusSeed),
+          modelId: "ai2",
+          modelName: AI2_STREAM_LABEL,
           phase: "waiting",
         },
         transient: true,
@@ -161,9 +145,9 @@ export async function POST(request: Request) {
       try {
         writer.write({
           data: {
-            message: "Running library agent (db_sql + tools)…",
-            modelId: "ai2-rust-env",
-            modelName: "AI² Rust Env",
+            message: pickThinkingLine(statusSeed + 1),
+            modelId: "ai2",
+            modelName: AI2_STREAM_LABEL,
             phase: "thinking",
           },
           transient: true,

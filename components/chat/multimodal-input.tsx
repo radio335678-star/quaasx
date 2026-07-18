@@ -845,7 +845,7 @@ function Ai2EngineBadge() {
         width={16}
       />
       <span className="truncate font-medium tracking-tight">
-        {brand.fullName}
+        {brand.name}
       </span>
     </div>
   );
