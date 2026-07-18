@@ -1,49 +1,43 @@
-# AI² Production (Vercel + Modal)
+# AI² Production (Vercel + Modal ai2-rust-env)
 
 ## Vercel environment
 
-Set on the Vercel project only:
+Set on the Vercel project:
 
 ```env
-AI2_BACKEND_URL=https://quaasx--ai2-hybrid-engine-chatgateway-web.modal.run
+AI2_BACKEND_URL=https://quaasx--ai2-rust-env-rustenvgateway-web.modal.run
 AUTH_SECRET=<openssl rand -base64 32>
-AI2_HOBBY_SAFE=1
 ```
 
-`AI2_HOBBY_SAFE=1` caps synthesis for Vercel Hobby's 60s limit (3 citations, 40s Gemini timeout). Omit or set `0` on Pro/self-hosted for full shloka mode.
+Chat does **not** use the old Hybrid Engine `/v1/chat` SSE API. The frontend calls Modal `POST /exec` (runs `/workspace/agent_run.py`) and shows the agent's `answer` text. Warmup: `GET /api/warmup` → Modal `GET /health`.
+
+**Stubbed for now (UI present, backend ignored):** `@` work scoping, patient/scholar audience, demo budgets, citation cards / CompareLayout (`AdaptiveAnswer` needs Hybrid `meta` SSE — wire later).
 
 ## Cold start + warmup
 
-Modal chat uses **CPU memory snapshots**; L4 reranker uses **GPU memory snapshots**. Both scale to zero after ~10s idle.
+`ai2-rust-env` uses CPU memory snapshots; scales down after ~9s idle.
 
-- Opening `/app` triggers `GET /api/warmup` → Modal `/v1/warmup` (restores chat + wakes L4).
-- Each chat request also spawns a non-blocking L4 `ping` in parallel with CPU retrieval.
+- Opening `/app` triggers `GET /api/warmup` → Modal `/health` (restores snapshot + starts cage-bro).
+- First chat after idle may take ~50–90s (cold restore + agent ~44s).
 
-Deploy both Modal apps after backend changes:
+Modal deploy (when backend changes — not required for frontend-only adapter):
 
 ```powershell
-python -m modal deploy backend/deploy_bge_quaasx.py
-python -m modal deploy backend/deploy_ai2_modal.py
+python -m modal deploy backend/deploy_ai2_rustenv.py
 ```
 
-Measure cold start: `python tests/test_cold_start.py`
+Smoke from repo root: `python scripts/smoke_rustenv.py`
 
-## OpenRouter key rotation (required before public launch)
+## OpenRouter key (Modal only)
 
-The key was exposed in chat during development. Before launch:
-
-1. Revoke the old key in [OpenRouter dashboard](https://openrouter.ai/keys).
-2. Create a new key.
-3. On your machine: `$env:OPENROUTER_API_KEY="sk-or-v1-..."`
-4. Run: `python scripts/enable_openrouter_secret.py`
-5. Redeploy Modal: `python -m modal deploy backend/deploy_ai2_modal.py`
+OpenRouter runs inside Modal (`openrouter-key` secret). Rotate on Modal if exposed; Vercel does not hold the key.
 
 ## Deploy checklist
 
-1. Modal deploy (backend structured SSE + full shloka mode).
-2. Vercel deploy from `frontend/` with env above.
-3. Smoke: jwara, raktamokshana, agni — verify citation cards + stream + IndexedDB history.
-4. First request after idle may cold-start Modal (2–3 min); UI shows cold-start copy.
+1. Ensure `ai2-rust-env` is deployed on Modal.
+2. Vercel deploy from `frontend/` with `AI2_BACKEND_URL` above.
+3. Smoke: open `/app`, ask a fever/jwara question — wait for agent, verify answer text + IndexedDB sidebar history.
+4. Citation cards will not appear until structured `meta` is wired (answers may still cite inline in markdown).
 
 ## Rate limiting
 
@@ -51,4 +45,4 @@ The key was exposed in chat during development. Before launch:
 
 ## Clinical disclaimer
 
-Every answer includes a research disclaimer under citation cards. Not medical advice.
+Answers should include classical research context. Not medical advice.

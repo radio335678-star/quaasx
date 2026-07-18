@@ -1,0 +1,863 @@
+{
+  "version": 1,
+  "generated_at": "2026-07-17T17:03:54.861659+00:00",
+  "volume_root": "/data",
+  "primary_db": "/data/ai2_unified.db",
+  "corpus_root": "/data/CORPUS",
+  "total_subjects": 8,
+  "total_scoped_works": 35,
+  "total_corpus_files": 115,
+  "subjects": [
+    {
+      "group_id": "01_brihat_trayi",
+      "subject": "Brihat Trayi — foundational samhitas (Maulika / classical core)",
+      "short_name": "Brihat Trayi",
+      "display_name": "Brihat Trayi Acharya",
+      "agent_id": "brihat-trayi-acharya",
+      "corpus_path": "/data/CORPUS/01_brihat_trayi",
+      "authors": [
+        "Agnivesha",
+        "Charaka",
+        "Sushruta",
+        "Vagbhata",
+        "Chakrapani",
+        "Dalhana",
+        "Arunadatta"
+      ],
+      "books": [
+        {
+          "name": "Charaka Samhita",
+          "db_text_name": "Charaka Samhita",
+          "abbrev": "Ca",
+          "tier": "db",
+          "total_shlokas": 4653,
+          "translation_status": {
+            "gold": 4653
+          },
+          "category": null
+        },
+        {
+          "name": "Sushruta Samhita",
+          "db_text_name": "Sushruta Samhita",
+          "abbrev": "Su",
+          "tier": "db",
+          "total_shlokas": 5241,
+          "translation_status": {
+            "gold": 5241
+          },
+          "category": null
+        },
+        {
+          "name": "Ashtanga Hridayam",
+          "db_text_name": "Ashtanga Hridayam",
+          "abbrev": "AH",
+          "tier": "db",
+          "total_shlokas": 15439,
+          "translation_status": {
+            "missing": 15439
+          },
+          "category": null
+        },
+        {
+          "name": "Ashtanga Sangraha",
+          "db_text_name": "Ashtanga Sangraha",
+          "abbrev": "AS",
+          "tier": "db",
+          "total_shlokas": 22659,
+          "translation_status": {
+            "missing": 22659
+          },
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "ashtanga_hridaya_vagbhata",
+          "file_count": 10,
+          "corpus_path": "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "ashtanga_sangraha_vagbhata",
+          "file_count": 10,
+          "corpus_path": "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "charaka_samhita_agnivesha_charaka",
+          "file_count": 10,
+          "corpus_path": "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "sushruta_samhita",
+          "file_count": 10,
+          "corpus_path": "/data/CORPUS/01_brihat_trayi/sushruta_samhita",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 41
+    },
+    {
+      "group_id": "02_laghu_trayi",
+      "subject": "Laghu Trayi — nidana, formulations, dravyaguna overview",
+      "short_name": "Laghu Trayi",
+      "display_name": "Laghu Trayi Vaidya",
+      "agent_id": "laghu-trayi-vaidya",
+      "corpus_path": "/data/CORPUS/02_laghu_trayi",
+      "authors": [
+        "Madhavakara",
+        "Sharangadhara",
+        "Bhava Mishra"
+      ],
+      "books": [
+        {
+          "name": "Madhava Nidana",
+          "db_text_name": "Madhava Nidana",
+          "abbrev": "MN",
+          "tier": "db",
+          "total_shlokas": 7734,
+          "translation_status": {
+            "missing": 7734
+          },
+          "category": null
+        },
+        {
+          "name": "Sharangadhara Samhita",
+          "db_text_name": "Sharangadhara Samhita",
+          "abbrev": "SS",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Bhava Prakasha",
+          "db_text_name": "Bhava Prakasha",
+          "abbrev": "BP",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "bhava_prakasha_bhava_mishra",
+          "file_count": 6,
+          "corpus_path": "/data/CORPUS/02_laghu_trayi/bhava_prakasha_bhava_mishra",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "madhava_nidana_madhavakara",
+          "file_count": 6,
+          "corpus_path": "/data/CORPUS/02_laghu_trayi/madhava_nidana_madhavakara",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "sharangadhara_samhita",
+          "file_count": 6,
+          "corpus_path": "/data/CORPUS/02_laghu_trayi/sharangadhara_samhita",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 20
+    },
+    {
+      "group_id": "03_other_samhitas",
+      "subject": "Other samhitas — Kashyapa, Harita, Bhela, Chakradatta",
+      "short_name": "Other Samhitas",
+      "display_name": "Samhita Minor Scholar",
+      "agent_id": "samhita-minor-scholar",
+      "corpus_path": "/data/CORPUS/03_other_samhitas",
+      "authors": [
+        "Vriddha Jivaka",
+        "Kashyapa",
+        "Harita",
+        "Bhela",
+        "Chakrapani Datta"
+      ],
+      "books": [
+        {
+          "name": "Kashyapa Samhita",
+          "db_text_name": "Kashyapa Samhita",
+          "abbrev": "Ks",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Harita Samhita",
+          "db_text_name": "Harita Samhita",
+          "abbrev": "Ha",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Bhela Samhita",
+          "db_text_name": "Bhela Samhita",
+          "abbrev": "Bh",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Chakradatta",
+          "db_text_name": "Cakradatta",
+          "abbrev": "Ck",
+          "tier": "db",
+          "total_shlokas": 11278,
+          "translation_status": {
+            "missing": 11278
+          },
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "bhela_samhita",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/03_other_samhitas/bhela_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "chakradatta_chakrapani",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/03_other_samhitas/chakradatta_chakrapani",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "harita_samhita",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/03_other_samhitas/harita_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "kashyapa_samhita_vriddha_jivaka",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/03_other_samhitas/kashyapa_samhita_vriddha_jivaka",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 14
+    },
+    {
+      "group_id": "04_chikitsa_granthas",
+      "subject": "Chikitsa granthas — therapeutic yoga & compound medicines",
+      "short_name": "Chikitsa Granthas",
+      "display_name": "Chikitsa Yoga Expert",
+      "agent_id": "chikitsa-yoga-expert",
+      "corpus_path": "/data/CORPUS/04_chikitsa_granthas",
+      "authors": [
+        "Govinda Das"
+      ],
+      "books": [
+        {
+          "name": "Bhaishajya Ratnavali",
+          "db_text_name": "Bhaishajya Ratnavali",
+          "abbrev": "BR",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "bhaishajya_ratnavali_govinda_das",
+          "file_count": 9,
+          "corpus_path": "/data/CORPUS/04_chikitsa_granthas/bhaishajya_ratnavali_govinda_das",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 9
+    },
+    {
+      "group_id": "05_nighantus",
+      "subject": "Nighantus — dravyaguna & materia medica lexicons",
+      "short_name": "Nighantus",
+      "display_name": "Nighantu Dravyaguna",
+      "agent_id": "nighantu-dravyaguna",
+      "corpus_path": "/data/CORPUS/05_nighantus",
+      "authors": [
+        "Dhanvantari",
+        "Madanapala",
+        "Narahari",
+        "Shaligram"
+      ],
+      "books": [
+        {
+          "name": "Dhanvantari Nighantu",
+          "db_text_name": "Dhanvantari Nighantu",
+          "abbrev": "DN",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Madanapala Nighantu",
+          "db_text_name": "Madanapala Nighantu",
+          "abbrev": "MNi",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Raja Nighantu",
+          "db_text_name": "Raja Nighantu",
+          "abbrev": "RN",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Shaligram Nighantu",
+          "db_text_name": "Shaligram Nighantu",
+          "abbrev": "SN",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "dhanvantari_nighantu",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/05_nighantus/dhanvantari_nighantu",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "madanapala_nighantu",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/05_nighantus/madanapala_nighantu",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "raja_nighantu_narahari",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/05_nighantus/raja_nighantu_narahari",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "shaligram_nighantu",
+          "file_count": 3,
+          "corpus_path": "/data/CORPUS/05_nighantus/shaligram_nighantu",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 12
+    },
+    {
+      "group_id": "06_rasa_shastra",
+      "subject": "Rasa Shastra — minerals, bhasma, rasayana kalpas",
+      "short_name": "Rasa Shastra",
+      "display_name": "Rasa Shastra Acharya",
+      "agent_id": "rasa-shastra-acharya",
+      "corpus_path": "/data/CORPUS/06_rasa_shastra",
+      "authors": [
+        "Yogaratnakara tradition",
+        "Ram Prasad Vaidya"
+      ],
+      "books": [
+        {
+          "name": "Yogaratnakara",
+          "db_text_name": "Yogaratnakara",
+          "abbrev": "YS",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Rasendra Sara Sangraha",
+          "db_text_name": "Rasendra Sara Sangraha",
+          "abbrev": "RSS",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "rasendra_sara_sangraha",
+          "file_count": 2,
+          "corpus_path": "/data/CORPUS/06_rasa_shastra/rasendra_sara_sangraha",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "yogaratnakara",
+          "file_count": 2,
+          "corpus_path": "/data/CORPUS/06_rasa_shastra/yogaratnakara",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 4
+    },
+    {
+      "group_id": "07_vedic_jyotisha",
+      "subject": "Vedic roots & Jyotisha — Atharva, Rig, Taittiriya, Varahamihira, allied texts",
+      "short_name": "Vedic & Jyotisha",
+      "display_name": "Vedic Jyotisha Rishi",
+      "agent_id": "vedic-jyotisha-rishi",
+      "corpus_path": "/data/CORPUS/07_vedic_jyotisha",
+      "authors": [
+        "Vasishtha",
+        "Garga",
+        "Varahamihira",
+        "Sayana",
+        "Sandilya"
+      ],
+      "books": [
+        {
+          "name": "Atharva Veda Samhita",
+          "db_text_name": "Atharva Veda Samhita",
+          "abbrev": "AV",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Rig / Rik Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Taittiriya Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Bhrigu Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Brihat Samhita",
+          "db_text_name": "Brihat Samhita",
+          "abbrev": "BS",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Garga Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Dhanurveda",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Sandilya Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Lakshminarayana Samhita",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "atharva_veda_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/atharva_veda_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "bhrigu_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/bhrigu_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "brihat_samhita_varahamihira",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/brihat_samhita_varahamihira",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "dhanurveda_samhita_vasishtha",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/dhanurveda_samhita_vasishtha",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "garga_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/garga_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "lakshminarayana_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/lakshminarayana_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "rik_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/rik_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "sandilya_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/sandilya_samhita",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "taittiriya_samhita",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/07_vedic_jyotisha/taittiriya_samhita",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 9
+    },
+    {
+      "group_id": "08_reference",
+      "subject": "Reference — kosha, itihas, catalogs, periodicals",
+      "short_name": "Reference",
+      "display_name": "Reference Kosha",
+      "agent_id": "reference-kosha",
+      "corpus_path": "/data/CORPUS/08_reference",
+      "authors": [
+        "Ganga Prasad Sharma",
+        "Suram Chandra",
+        "cataloguers"
+      ],
+      "books": [
+        {
+          "name": "Ayurveda Shabdarnava",
+          "db_text_name": "Ayurveda Shabdarnava",
+          "abbrev": "ASb",
+          "tier": "db",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Ayurveda Ka Itihas",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Library catalogs",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        },
+        {
+          "name": "Periodicals",
+          "db_text_name": null,
+          "abbrev": null,
+          "tier": "corpus_only",
+          "total_shlokas": null,
+          "translation_status": null,
+          "category": null
+        }
+      ],
+      "corpus_editions": [
+        {
+          "folder": "ayurveda_ka_itihas",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/ayurveda_ka_itihas",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "ayurveda_shabdarnava",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/ayurveda_shabdarnava",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "library_catalogs",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/library_catalogs",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "modern_product_treatises",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/modern_product_treatises",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "modern_reinterpretations",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/modern_reinterpretations",
+          "source": "regroup_snapshot"
+        },
+        {
+          "folder": "periodicals",
+          "file_count": 1,
+          "corpus_path": "/data/CORPUS/08_reference/periodicals",
+          "source": "regroup_snapshot"
+        }
+      ],
+      "corpus_file_count": 6
+    }
+  ],
+  "scoped_works": [
+    {
+      "name": "Charaka Samhita",
+      "group_id": "01_brihat_trayi",
+      "db_ready": true,
+      "db_text_name": "Charaka Samhita"
+    },
+    {
+      "name": "Sushruta Samhita",
+      "group_id": "01_brihat_trayi",
+      "db_ready": true,
+      "db_text_name": "Sushruta Samhita"
+    },
+    {
+      "name": "Ashtanga Hridayam",
+      "group_id": "01_brihat_trayi",
+      "db_ready": true,
+      "db_text_name": "Ashtanga Hridayam"
+    },
+    {
+      "name": "Ashtanga Sangraha",
+      "group_id": "01_brihat_trayi",
+      "db_ready": true,
+      "db_text_name": "Ashtanga Sangraha"
+    },
+    {
+      "name": "Madhava Nidana",
+      "group_id": "02_laghu_trayi",
+      "db_ready": true,
+      "db_text_name": "Madhava Nidana"
+    },
+    {
+      "name": "Sharangadhara Samhita",
+      "group_id": "02_laghu_trayi",
+      "db_ready": true,
+      "db_text_name": "Sharangadhara Samhita"
+    },
+    {
+      "name": "Bhava Prakasha",
+      "group_id": "02_laghu_trayi",
+      "db_ready": true,
+      "db_text_name": "Bhava Prakasha"
+    },
+    {
+      "name": "Cakradatta",
+      "group_id": "03_other_samhitas",
+      "db_ready": true,
+      "db_text_name": "Cakradatta"
+    },
+    {
+      "name": "Kashyapa Samhita",
+      "group_id": "03_other_samhitas",
+      "db_ready": true,
+      "db_text_name": "Kashyapa Samhita"
+    },
+    {
+      "name": "Harita Samhita",
+      "group_id": "03_other_samhitas",
+      "db_ready": true,
+      "db_text_name": "Harita Samhita"
+    },
+    {
+      "name": "Bhela Samhita",
+      "group_id": "03_other_samhitas",
+      "db_ready": true,
+      "db_text_name": "Bhela Samhita"
+    },
+    {
+      "name": "Bhaishajya Ratnavali",
+      "group_id": "04_chikitsa_granthas",
+      "db_ready": true,
+      "db_text_name": "Bhaishajya Ratnavali"
+    },
+    {
+      "name": "Dhanvantari Nighantu",
+      "group_id": "05_nighantus",
+      "db_ready": true,
+      "db_text_name": "Dhanvantari Nighantu"
+    },
+    {
+      "name": "Madanapala Nighantu",
+      "group_id": "05_nighantus",
+      "db_ready": true,
+      "db_text_name": "Madanapala Nighantu"
+    },
+    {
+      "name": "Raja Nighantu",
+      "group_id": "05_nighantus",
+      "db_ready": true,
+      "db_text_name": "Raja Nighantu"
+    },
+    {
+      "name": "Shaligram Nighantu",
+      "group_id": "05_nighantus",
+      "db_ready": true,
+      "db_text_name": "Shaligram Nighantu"
+    },
+    {
+      "name": "Yogaratnakara",
+      "group_id": "06_rasa_shastra",
+      "db_ready": true,
+      "db_text_name": "Yogaratnakara"
+    },
+    {
+      "name": "Rasendra Sara Sangraha",
+      "group_id": "06_rasa_shastra",
+      "db_ready": true,
+      "db_text_name": "Rasendra Sara Sangraha"
+    },
+    {
+      "name": "Atharva Veda Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": true,
+      "db_text_name": "Atharva Veda Samhita"
+    },
+    {
+      "name": "Rig Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Rik Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Taittiriya Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Bhrigu Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Brihat Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": true,
+      "db_text_name": "Brihat Samhita"
+    },
+    {
+      "name": "Garga Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Dhanurveda",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Dhanurveda Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Sandilya Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Lakshminarayana Samhita",
+      "group_id": "07_vedic_jyotisha",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Ayurveda Shabdarnava",
+      "group_id": "08_reference",
+      "db_ready": true,
+      "db_text_name": "Ayurveda Shabdarnava"
+    },
+    {
+      "name": "Ayurveda Ka Itihas",
+      "group_id": "08_reference",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Library catalogs",
+      "group_id": "08_reference",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Periodicals",
+      "group_id": "08_reference",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Modern product treatises",
+      "group_id": "08_reference",
+      "db_ready": false,
+      "db_text_name": null
+    },
+    {
+      "name": "Modern reinterpretations",
+      "group_id": "08_reference",
+      "db_ready": false,
+      "db_text_name": null
+    }
+  ]
+}

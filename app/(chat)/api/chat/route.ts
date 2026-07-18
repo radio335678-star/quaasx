@@ -2,73 +2,27 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
 } from "ai";
-import { metaToLayout, type BackendMetaEvent } from "@/lib/ai2/types";
+import {
+  buildAgentQuestion,
+  callRustEnvAgent,
+} from "@/lib/ai2/rustenv-exec";
 import { ChatbotError } from "@/lib/errors";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { generateUUID } from "@/lib/utils";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
 
-export const maxDuration = 300;
+export const maxDuration = 600;
 
 const BACKEND_URL =
   process.env.AI2_BACKEND_URL?.replace(/\/$/, "") || "http://127.0.0.1:8090";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-const HOBBY_BUDGET = process.env.AI2_HOBBY_SAFE === "1";
 
-function backendHeaders(
-  demoKind?: string,
-  demoId?: string,
-  audienceMode?: string
-): Record<string, string> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (HOBBY_BUDGET) {
-    headers["X-AI2-Budget"] = "hobby";
-  }
-  if (demoKind === "hero" || demoKind === "example") {
-    headers["X-AI2-Demo"] = demoKind;
-  }
-  if (demoId) {
-    headers["X-AI2-Demo-Id"] = demoId;
-  }
-  if (audienceMode === "patient" || audienceMode === "scholar") {
-    headers["X-AI2-Audience"] = audienceMode;
-  }
-  return headers;
-}
-
-function extractDemoKind(body: PostRequestBody): string | undefined {
-  const kind = body.message?.metadata?.demoKind;
-  if (kind === "hero" || kind === "example") {
-    return kind;
-  }
-  return undefined;
-}
-
-function extractDemoId(body: PostRequestBody): string | undefined {
-  const id = body.message?.metadata?.demoId;
-  return typeof id === "string" && id.length > 0 ? id : undefined;
-}
-
-function extractAudienceMode(body: PostRequestBody): string | undefined {
-  const mode = body.message?.metadata?.audienceMode;
-  if (mode === "patient" || mode === "scholar") {
-    return mode;
-  }
-  return undefined;
-}
-
-function waitingMessage(demoKind?: string): string {
-  if (demoKind === "hero") {
-    return "Running demo — grounding Charaka and Sushruta…";
-  }
-  if (demoKind === "example") {
-    return "Running example — consulting classical corpus…";
-  }
+function waitingMessage(): string {
   if (IS_PRODUCTION) {
-    return "Consulting AI² Hybrid Engine…";
+    return "Consulting AI² Rust Env…";
   }
-  return "Consulting AI² Hybrid Engine...";
+  return "Consulting AI² Rust Env...";
 }
 
 function extractTextFromMessage(message: {
@@ -107,64 +61,25 @@ function buildBackendMessages(body: PostRequestBody): Array<{
   return [];
 }
 
-async function* readBackendSse(
-  response: Response
-): AsyncGenerator<BackendMetaEvent | { type: string; delta?: string }> {
-  const reader = response.body?.getReader();
-  if (!reader) {
-    return;
-  }
-  const decoder = new TextDecoder();
-  let buffer = "";
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-    buffer += decoder.decode(value, { stream: true });
-    const chunks = buffer.split("\n\n");
-    buffer = chunks.pop() ?? "";
-    for (const chunk of chunks) {
-      const line = chunk
-        .split("\n")
-        .map((l) => l.trim())
-        .find((l) => l.startsWith("data:"));
-      if (!line) {
-        continue;
-      }
-      const raw = line.slice(5).trim();
-      try {
-        yield JSON.parse(raw) as BackendMetaEvent | { type: string; delta?: string };
-      } catch {
-        /* ignore malformed */
-      }
-    }
-  }
-}
-
 function productionErrorMessage(error: unknown): string {
   const detail =
-    error instanceof Error ? error.message : "AI² backend unavailable";
+    error instanceof Error ? error.message : "AI² Rust Env unavailable";
 
   if (IS_PRODUCTION) {
     return (
       `**AI² is temporarily unavailable**\n\n` +
       `${detail}\n\n` +
-      `The classical engine may be cold-starting (first request can take up to 2–3 minutes). ` +
+      `The Rust Env agent may be cold-starting (first request can take up to 2–3 minutes). ` +
       `Please wait a moment and try again.\n\n` +
-      `If this persists, the Modal deployment may need attention — ` +
-      `operators should verify \`AI2_BACKEND_URL\` on Vercel.`
+      `If this persists, verify \`AI2_BACKEND_URL\` points at the ai2-rust-env Modal endpoint.`
     );
   }
 
   return (
-    `**AI² backend unreachable**\n\n${detail}\n\n` +
-    `Local dev:\n\`\`\`\n` +
-    `cd c:\\ayurAI-standalone\n` +
-    `set AI2_DATA_ROOT=c:\\ayurAI-standalone\n` +
-    `python -m uvicorn backend.local_server:app --host 127.0.0.1 --port 8090\n` +
-    `\`\`\`\n\n` +
-    `Or set \`AI2_BACKEND_URL\` to your Modal endpoint.`
+    `**AI² Rust Env unreachable**\n\n${detail}\n\n` +
+    `Set \`AI2_BACKEND_URL\` to the live Modal app, e.g.\n` +
+    `\`https://quaasx--ai2-rust-env-rustenvgateway-web.modal.run\`\n\n` +
+    `Smoke: \`python scripts/smoke_rustenv.py\``
   );
 }
 
@@ -201,17 +116,15 @@ export async function POST(request: Request) {
   }
 
   const textId = generateUUID();
-  const demoKind = extractDemoKind(requestBody);
-  const demoId = extractDemoId(requestBody);
-  const audienceMode = extractAudienceMode(requestBody);
+  const question = buildAgentQuestion(messages);
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       writer.write({
         data: {
-          message: waitingMessage(demoKind),
-          modelId: "ai2-hybrid",
-          modelName: "AI² Hybrid Engine",
+          message: waitingMessage(),
+          modelId: "ai2-rust-env",
+          modelName: "AI² Rust Env",
           phase: "waiting",
         },
         transient: true,
@@ -219,53 +132,25 @@ export async function POST(request: Request) {
       });
 
       try {
-        const upstream = await fetch(`${BACKEND_URL}/v1/chat`, {
-          body: JSON.stringify({
-            messages,
-            session_id: requestBody.id,
-            stream: true,
-          }),
-          headers: backendHeaders(demoKind, demoId, audienceMode),
-          method: "POST",
-        });
-
-        if (!upstream.ok) {
-          const errText = await upstream.text().catch(() => "");
-          throw new Error(
-            `AI² backend error ${upstream.status}: ${errText.slice(0, 200)}`
-          );
-        }
-
-        writer.write({ type: "text-start", id: textId });
         writer.write({
           data: {
-            message: "Grounding in classical corpus...",
-            modelId: "ai2-hybrid",
-            modelName: "AI² Hybrid Engine",
+            message: "Running library agent (db_sql + tools)…",
+            modelId: "ai2-rust-env",
+            modelName: "AI² Rust Env",
             phase: "thinking",
           },
           transient: true,
           type: "data-waiting-status",
         });
 
-        let metaSent = false;
+        const { answer } = await callRustEnvAgent(BACKEND_URL, question);
 
-        for await (const event of readBackendSse(upstream)) {
-          if (event.type === "meta" && !metaSent) {
-            metaSent = true;
-            writer.write({
-              type: "data-ai2-answer",
-              data: metaToLayout(event as BackendMetaEvent),
-            });
-          }
-          if (event.type === "text-delta" && "delta" in event && event.delta) {
-            writer.write({
-              type: "text-delta",
-              id: textId,
-              delta: event.delta,
-            });
-          }
-        }
+        writer.write({ type: "text-start", id: textId });
+        writer.write({
+          type: "text-delta",
+          id: textId,
+          delta: answer,
+        });
         writer.write({ type: "text-end", id: textId });
       } catch (error) {
         writer.write({ type: "text-start", id: textId });
@@ -286,4 +171,3 @@ export async function POST(request: Request) {
 export async function DELETE() {
   return new Response(null, { status: 204 });
 }
-

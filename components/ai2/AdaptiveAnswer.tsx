@@ -10,6 +10,7 @@ import { CrossAcharyaBar } from "./CrossAcharyaBar";
 import { ExamModePanel } from "./ExamModePanel";
 import { RetrievalTrace } from "./RetrievalTrace";
 import { SampraptiMap } from "./SampraptiMap";
+import { ScopedWorksBar } from "./ScopedWorksBar";
 import { ShlokaCard } from "./ShlokaCard";
 import { TreatmentPlanPanel } from "./TreatmentPlanPanel";
 
@@ -98,11 +99,21 @@ export function AdaptiveAnswer({
   const hasSamprapti = Boolean(layout.samprapti_map?.stages?.length);
   const hasExam =
     layout.layout_type === "mcq_exam" ||
+    Boolean(layout.exam) ||
+    Boolean(layout.exam_verdict) ||
+    layout.query_understanding?.intent?.startsWith("exam_") ||
+    layout.engine_trace?.intent?.startsWith("exam_") ||
     Boolean(layout.direct_answer && /\([A-D]\)/i.test(layout.direct_answer));
   const hasSafety = Boolean(layout.safety_banner);
   const hasTreatment = Boolean(layout.treatment_plan?.stages?.length);
+  const hasScopedWorks = Boolean(layout.scoped_works?.length);
   const hasExtras =
-    hasSamprapti || Boolean(yuktiNote) || hasExam || hasSafety || hasTreatment;
+    hasSamprapti ||
+    Boolean(yuktiNote) ||
+    hasExam ||
+    hasSafety ||
+    hasTreatment ||
+    hasScopedWorks;
 
   if (!citations.length && !hasExtras) {
     return null;
@@ -176,6 +187,9 @@ export function AdaptiveAnswer({
           {layout.headline}
         </p>
       ) : null}
+      {layout.scoped_works?.length ? (
+        <ScopedWorksBar variant="answer" works={layout.scoped_works} />
+      ) : null}
       <p className="text-[11px] leading-relaxed text-muted-foreground/80">
         {layout.clinical_caution ??
           "Research disclaimer — verify classical citations before clinical use. Not medical advice."}
@@ -206,8 +220,11 @@ export function AdaptiveAnswer({
       {citationCards}
       <CrossAcharyaBar cross={layout.cross_acharya} />
       <RetrievalTrace
+        engineTrace={layout.engine_trace}
         qualityGatePassed={layout.quality_gate_passed}
+        retrievalPlan={layout.retrieval_plan}
         strategies={layout.strategies}
+        understanding={layout.query_understanding}
       />
     </div>
   );

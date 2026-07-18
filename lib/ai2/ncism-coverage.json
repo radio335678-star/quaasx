@@ -1,0 +1,1057 @@
+{
+  "version": 1,
+  "generated_at": "2026-07-17T17:03:54.984486+00:00",
+  "total_subjects": 38,
+  "summary": {
+    "green": 34,
+    "amber": 1,
+    "red": 0,
+    "modern_na": 3
+  },
+  "classical_subjects": 35,
+  "modern_na_subjects": 3,
+  "subjects": [
+    {
+      "code": "AyUG-SN & AI",
+      "subject": "Sanskrit and Ayurveda Itihas",
+      "level": "UG I Prof",
+      "professional_year": "I",
+      "required_texts": [
+        "Ayurveda Shabdarnava",
+        "Ayurveda Ka Itihas"
+      ],
+      "corpus_groups": [
+        "08_reference"
+      ],
+      "text_ids": [
+        "shabdarnava",
+        "itihas"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/08_reference/ayurveda_shabdarnava/ayurveda_shabdarnava_by_ganga_prasad_sharma_edited_by_bhimse_cnmz_ayurveda-shabdarnava-by-ganga-prasad-sharma-edited-by-bhimsen-sharma-sanskr.txt",
+        "/data/CORPUS/08_reference/ayurveda_ka_itihas/ayurveda_ka_itihas_vol_1_by_suram_chandra_1952_shimla_kavira_bfig_ayurveda-ka-itihas-vol-1-by-suram-chandra-1952-shimla-kaviraj-suram-chandra.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "corpus"
+    },
+    {
+      "code": "AyUG-SA1",
+      "subject": "Samhita Adhyayan-1",
+      "level": "UG I Prof",
+      "professional_year": "I",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-PV",
+      "subject": "Padartha Vigyan",
+      "level": "UG I Prof",
+      "professional_year": "I",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-KS",
+      "subject": "Kriya Sharir",
+      "level": "UG I Prof",
+      "professional_year": "I",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-RS",
+      "subject": "Rachana Sharir",
+      "level": "UG I Prof",
+      "professional_year": "I",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-DG",
+      "subject": "Dravyaguna Vigyan",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Dhanvantari Nighantu",
+        "Madanapala Nighantu",
+        "Raja Nighantu",
+        "Shaligram Nighantu",
+        "Bhava Prakasha"
+      ],
+      "corpus_groups": [
+        "05_nighantus",
+        "02_laghu_trayi"
+      ],
+      "text_ids": [
+        "dhanvantari_nighantu",
+        "madanapala_nighantu",
+        "raja_nighantu",
+        "shaligram_nighantu",
+        "bhava_prakasha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/05_nighantus/dhanvantari_nighantu/nighantu_tatha_nirukt_with_hindi_translation_by_shastri_veda_fmlm_nighantu-tatha-nirukt-with-hindi-translation-by-shastri-vedalankar-1967-varanasi-motilal-banara.txt",
+        "/data/CORPUS/05_nighantus/madanapala_nighantu/madanapala_nighantu_bhasha_tika_commentator_ramaprasada_by_m_cqzr_madanapala-nighantu-bhasha-tika-commentator-ramaprasada-by-madanapala-sansk.txt",
+        "/data/CORPUS/05_nighantus/raja_nighantu_narahari/raja_nighantu_by_indra_dev_tripathi_1982_benaras_krishnadas_ezfD_raja-nighantu-by-indra-dev-tripathi-1982-benaras-krishnadas-academy.txt",
+        "/data/CORPUS/05_nighantus/shaligram_nighantu/shaligram_nighantu_bhushanam_part_7_8_ed_by_kshemraj_shri_kr_klnl_shaligram-nighantu-bhushanam-part-7-8-ed-by-kshemraj-shri-krishnadas-bombay.txt",
+        "/data/CORPUS/02_laghu_trayi/bhava_prakasha_bhava_mishra/bhava_prakasha_of_bhava_mishra_with_vidyotini_hindi_commenta_lwOv_bhava-prakasha-of-bhava-mishra-with-vidyotini-hindi-commentary-by-pt.-shri-brahm.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-RB",
+      "subject": "Rasashastra evam Bhaishajyakalpana",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Rasendra Sara Sangraha",
+        "Yogaratnakara",
+        "Bhaishajya Ratnavali",
+        "Sharangadhara Samhita"
+      ],
+      "corpus_groups": [
+        "06_rasa_shastra",
+        "04_chikitsa_granthas",
+        "02_laghu_trayi"
+      ],
+      "text_ids": [
+        "rasendra",
+        "yogaratnakara",
+        "bhaishajya_ratnavali",
+        "sharangadhara"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/06_rasa_shastra/rasendra_sara_sangraha/rasendra_sara_sangraha_ram_prasad_vaidya_rasendra-sara-sangraha-ram-prasad-vaidya.txt",
+        "/data/CORPUS/06_rasa_shastra/yogaratnakara/yogaratnakara_anna_moresvar_kunte_1889_ASS004YogaratnakaraAnnaMoresvarKunte1889.txt",
+        "/data/CORPUS/04_chikitsa_granthas/bhaishajya_ratnavali_govinda_das/bhaishajya_ratnavali_vidyotini_hindi_commentary_by_shri_govi_wadc_bhaishajya-ratnavali-vidyotini-hindi-commentary-by-shri-govindadasa-comment.txt",
+        "/data/CORPUS/02_laghu_trayi/sharangadhara_samhita/sharngadhara_samhita_of_bhisgvar_sharngadhar_mumbai_1963_khe_vbni_sharngadhara-samhita-of-bhisgvar-sharngadhar-mumbai-1963-khemraj-sri-krishna-das.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-RN",
+      "subject": "Roga Nidan evam Vikriti Vigyan",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Madhava Nidana",
+        "Charaka Samhita",
+        "Bhava Prakasha"
+      ],
+      "corpus_groups": [
+        "02_laghu_trayi",
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "madhava_nidana",
+        "charaka",
+        "bhava_prakasha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/02_laghu_trayi/madhava_nidana_madhavakara/madhava_nidana_madhavakara_madhukosa_srikanta_datta_vidyotan_madhavanidanamadhavakaramadhukosasrikantadattavidyotanihindiyadunandaupadhyayavol2chowkambha_392_A.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/02_laghu_trayi/bhava_prakasha_bhava_mishra/bhava_prakasha_of_bhava_mishra_with_vidyotini_hindi_commenta_lwOv_bhava-prakasha-of-bhava-mishra-with-vidyotini-hindi-commentary-by-pt.-shri-brahm.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-AT",
+      "subject": "Agad Tantra evam Vidhi Vaidyaka",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-SA2",
+      "subject": "Samhita Adhyayan-2",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita",
+        "Ashtanga Sangraha"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta",
+        "ashtanga_sangraha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata/ashtanga_sangraha_in.ernet.dli.2015.383455.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-SW",
+      "subject": "Swasthavritta evam Yoga",
+      "level": "UG II Prof",
+      "professional_year": "II",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-KC",
+      "subject": "Kayachikitsa",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam",
+        "Chakradatta",
+        "Bhaishajya Ratnavali"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi",
+        "03_other_samhitas",
+        "04_chikitsa_granthas"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya",
+        "chakradatta",
+        "bhaishajya_ratnavali"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt",
+        "/data/CORPUS/03_other_samhitas/chakradatta_chakrapani/chakra_datta_in.ernet.dli.2015.403012.txt",
+        "/data/CORPUS/04_chikitsa_granthas/bhaishajya_ratnavali_govinda_das/bhaishajya_ratnavali_vidyotini_hindi_commentary_by_shri_govi_wadc_bhaishajya-ratnavali-vidyotini-hindi-commentary-by-shri-govindadasa-comment.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-PK",
+      "subject": "Panchakarma & Upakarma",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita",
+        "Ashtanga Hridayam",
+        "Sharangadhara Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi",
+        "02_laghu_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta",
+        "ashtanga_hridaya",
+        "sharangadhara"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt",
+        "/data/CORPUS/02_laghu_trayi/sharangadhara_samhita/sharngadhara_samhita_of_bhisgvar_sharngadhar_mumbai_1963_khe_vbni_sharngadhara-samhita-of-bhisgvar-sharngadhar-mumbai-1963-khemraj-sri-krishna-das.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-ST",
+      "subject": "Shalya Tantra",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Sangraha"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_sangraha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata/ashtanga_sangraha_in.ernet.dli.2015.383455.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-SL",
+      "subject": "Shalakya Tantra",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-PS",
+      "subject": "Prasuti Tantra evam Stree Roga",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Hridayam",
+        "Kashyapa Samhita",
+        "Harita Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi",
+        "03_other_samhitas"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_hridaya",
+        "kashyapa",
+        "harita"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt",
+        "/data/CORPUS/03_other_samhitas/kashyapa_samhita_vriddha_jivaka/kashyapa_samhita_vriddha_jivakiya_tantra_with_vidyotini_hind_kxmM_kashyapa-samhita-vriddha-jivakiya-tantra-with-vidyotini-hindi-commentary-and-tra.txt",
+        "/data/CORPUS/03_other_samhitas/harita_samhita/harita_samhita_bhasha_tika_kaliprasad_tripathi_by_harita_mun_kuut_harita-samhita-bhasha-tika-kaliprasad-tripathi-by-harita-muni-sanskrit-and-.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-KB",
+      "subject": "Kaumarabhritya",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Kashyapa Samhita",
+        "Harita Samhita",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "03_other_samhitas",
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "kashyapa",
+        "harita",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/03_other_samhitas/kashyapa_samhita_vriddha_jivaka/kashyapa_samhita_vriddha_jivakiya_tantra_with_vidyotini_hind_kxmM_kashyapa-samhita-vriddha-jivakiya-tantra-with-vidyotini-hindi-commentary-and-tra.txt",
+        "/data/CORPUS/03_other_samhitas/harita_samhita/harita_samhita_bhasha_tika_kaliprasad_tripathi_by_harita_mun_kuut_harita-samhita-bhasha-tika-kaliprasad-tripathi-by-harita-muni-sanskrit-and-.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-SA3",
+      "subject": "Samhita Adhyayan-3",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita",
+        "Ashtanga Sangraha"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta",
+        "ashtanga_sangraha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata/ashtanga_sangraha_in.ernet.dli.2015.383455.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AyUG-EM",
+      "subject": "Atyayikachikitsa (Emergency Medicine)",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [],
+      "corpus_groups": [],
+      "text_ids": [],
+      "tier": "modern_na",
+      "canonical_paths": [],
+      "coverage_status": "modern_na",
+      "query_tier": "corpus"
+    },
+    {
+      "code": "AyUG-RM",
+      "subject": "Research Methodology & Medical Statistics",
+      "level": "UG III Prof",
+      "professional_year": "III",
+      "required_texts": [],
+      "corpus_groups": [],
+      "text_ids": [],
+      "tier": "modern_na",
+      "canonical_paths": [],
+      "coverage_status": "modern_na",
+      "query_tier": "corpus"
+    },
+    {
+      "code": "AYPG-SS",
+      "subject": "Ayurveda Samhita and Siddhanta",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita",
+        "Ashtanga Hridayam",
+        "Ashtanga Sangraha"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta",
+        "ashtanga_hridaya",
+        "ashtanga_sangraha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata/ashtanga_sangraha_in.ernet.dli.2015.383455.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Ayurveda Biology",
+      "subject": "Ayurveda Biology",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [],
+      "corpus_groups": [],
+      "text_ids": [],
+      "tier": "modern_na",
+      "canonical_paths": [],
+      "coverage_status": "modern_na",
+      "query_tier": "corpus"
+    },
+    {
+      "code": "MD Rachana Sharir",
+      "subject": "Rachana Sharir",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Kriya Sharir",
+      "subject": "Kriya Sharir",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Dravyaguna",
+      "subject": "Dravyaguna Vigyan",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Dhanvantari Nighantu",
+        "Madanapala Nighantu",
+        "Raja Nighantu",
+        "Bhava Prakasha"
+      ],
+      "corpus_groups": [
+        "05_nighantus",
+        "02_laghu_trayi"
+      ],
+      "text_ids": [
+        "dhanvantari_nighantu",
+        "madanapala_nighantu",
+        "raja_nighantu",
+        "bhava_prakasha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/05_nighantus/dhanvantari_nighantu/nighantu_tatha_nirukt_with_hindi_translation_by_shastri_veda_fmlm_nighantu-tatha-nirukt-with-hindi-translation-by-shastri-vedalankar-1967-varanasi-motilal-banara.txt",
+        "/data/CORPUS/05_nighantus/madanapala_nighantu/madanapala_nighantu_bhasha_tika_commentator_ramaprasada_by_m_cqzr_madanapala-nighantu-bhasha-tika-commentator-ramaprasada-by-madanapala-sansk.txt",
+        "/data/CORPUS/05_nighantus/raja_nighantu_narahari/raja_nighantu_by_indra_dev_tripathi_1982_benaras_krishnadas_ezfD_raja-nighantu-by-indra-dev-tripathi-1982-benaras-krishnadas-academy.txt",
+        "/data/CORPUS/02_laghu_trayi/bhava_prakasha_bhava_mishra/bhava_prakasha_of_bhava_mishra_with_vidyotini_hindi_commenta_lwOv_bhava-prakasha-of-bhava-mishra-with-vidyotini-hindi-commentary-by-pt.-shri-brahm.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "AYPG-RB",
+      "subject": "Rasashastra and Bhaishajya Kalpana",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Rasendra Sara Sangraha",
+        "Yogaratnakara",
+        "Bhaishajya Ratnavali"
+      ],
+      "corpus_groups": [
+        "06_rasa_shastra",
+        "04_chikitsa_granthas"
+      ],
+      "text_ids": [
+        "rasendra",
+        "yogaratnakara",
+        "bhaishajya_ratnavali"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/06_rasa_shastra/rasendra_sara_sangraha/rasendra_sara_sangraha_ram_prasad_vaidya_rasendra-sara-sangraha-ram-prasad-vaidya.txt",
+        "/data/CORPUS/06_rasa_shastra/yogaratnakara/yogaratnakara_anna_moresvar_kunte_1889_ASS004YogaratnakaraAnnaMoresvarKunte1889.txt",
+        "/data/CORPUS/04_chikitsa_granthas/bhaishajya_ratnavali_govinda_das/bhaishajya_ratnavali_vidyotini_hindi_commentary_by_shri_govi_wadc_bhaishajya-ratnavali-vidyotini-hindi-commentary-by-shri-govindadasa-comment.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Roga Nidan",
+      "subject": "Roga Nidan and Vikriti Vigyan",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Madhava Nidana",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "02_laghu_trayi",
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "madhava_nidana",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/02_laghu_trayi/madhava_nidana_madhavakara/madhava_nidana_madhavakara_madhukosa_srikanta_datta_vidyotan_madhavanidanamadhavakaramadhukosasrikantadattavidyotanihindiyadunandaupadhyayavol2chowkambha_392_A.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Agad Tantra",
+      "subject": "Agad Tantra and Vidhi Vaidyaka",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Charaka Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "charaka"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Swasthavritta",
+      "subject": "Swasthavritta and Yoga",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Kayachikitsa",
+      "subject": "Kayachikitsa",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Chakradatta",
+        "Bhaishajya Ratnavali"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi",
+        "03_other_samhitas",
+        "04_chikitsa_granthas"
+      ],
+      "text_ids": [
+        "charaka",
+        "chakradatta",
+        "bhaishajya_ratnavali"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/03_other_samhitas/chakradatta_chakrapani/chakra_datta_in.ernet.dli.2015.403012.txt",
+        "/data/CORPUS/04_chikitsa_granthas/bhaishajya_ratnavali_govinda_das/bhaishajya_ratnavali_vidyotini_hindi_commentary_by_shri_govi_wadc_bhaishajya-ratnavali-vidyotini-hindi-commentary-by-shri-govindadasa-comment.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Panchakarma",
+      "subject": "Panchakarma",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Kaumarabhritya",
+      "subject": "Kaumarabhritya (Bala Roga)",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Kashyapa Samhita",
+        "Harita Samhita",
+        "Bhela Samhita"
+      ],
+      "corpus_groups": [
+        "03_other_samhitas"
+      ],
+      "text_ids": [
+        "kashyapa",
+        "harita",
+        "bhela"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/03_other_samhitas/kashyapa_samhita_vriddha_jivaka/kashyapa_samhita_vriddha_jivakiya_tantra_with_vidyotini_hind_kxmM_kashyapa-samhita-vriddha-jivakiya-tantra-with-vidyotini-hindi-commentary-and-tra.txt",
+        "/data/CORPUS/03_other_samhitas/harita_samhita/harita_samhita_bhasha_tika_kaliprasad_tripathi_by_harita_mun_kuut_harita-samhita-bhasha-tika-kaliprasad-tripathi-by-harita-muni-sanskrit-and-.txt",
+        "/data/CORPUS/03_other_samhitas/bhela_samhita/bhela_samhita_01sutra_bhelasamhita01sutra.txt"
+      ],
+      "coverage_status": "amber",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Manasroga",
+      "subject": "Manovigyan avum Manas Roga",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Rasayana Vajikaran",
+      "subject": "Rasayana and Vajikaran",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Charaka Samhita",
+        "Sushruta Samhita"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "charaka",
+        "sushruta"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_vol1_in.ernet.dli.2015.429875.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_of_agnivesa_1938_in.ernet.dli.2015.426254.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/english/charaka_samhita_vol_3_chakrapani_datta_agnivesha_rk_sharma_bhagwan_dash_sanskrit_english_ayurveda_varanasi_2003_chowkhamba_sanskrit_series_office_charaka-samhita-vol-3-chakrapani-datta-agnivesha-r.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/commentaries_chakrapani/charaka_samhita_of_agni_vesha_with_ayurveda_dipika_and_jalpa_SQxD_charaka-samhita-of-agni-vesha-with-ayurveda-dipika-and-jalpa-kalpataru-commentar.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_jivananda_vidyasagar_1877_charakasamhitajivanandavidyasagar1877_226_N.txt",
+        "/data/CORPUS/01_brihat_trayi/charaka_samhita_agnivesha_charaka/sanskrit/charaka_samhita_agnivesa_ed_yadava_sharma_nirnaya_sagar_press_charakasamhitaagnivesaed.yadavasharmanirnayasagarpress_976_U.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MD Stri Roga Prasuti",
+      "subject": "Stri Roga and Prasuti Tantra",
+      "level": "PG MD",
+      "professional_year": "PG",
+      "required_texts": [
+        "Kashyapa Samhita",
+        "Harita Samhita",
+        "Sushruta Samhita"
+      ],
+      "corpus_groups": [
+        "03_other_samhitas",
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "kashyapa",
+        "harita",
+        "sushruta"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/03_other_samhitas/kashyapa_samhita_vriddha_jivaka/kashyapa_samhita_vriddha_jivakiya_tantra_with_vidyotini_hind_kxmM_kashyapa-samhita-vriddha-jivakiya-tantra-with-vidyotini-hindi-commentary-and-tra.txt",
+        "/data/CORPUS/03_other_samhitas/harita_samhita/harita_samhita_bhasha_tika_kaliprasad_tripathi_by_harita_mun_kuut_harita-samhita-bhasha-tika-kaliprasad-tripathi-by-harita-muni-sanskrit-and-.txt",
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MS Shalya Tantra",
+      "subject": "Shalya Tantra",
+      "level": "PG MS",
+      "professional_year": "PG",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Sangraha"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_sangraha"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_sangraha_vagbhata/ashtanga_sangraha_in.ernet.dli.2015.383455.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MS Shalakya Netra",
+      "subject": "Shalakya Tantra — Netra Roga",
+      "level": "PG MS",
+      "professional_year": "PG",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    },
+    {
+      "code": "MS Shalakya KNM",
+      "subject": "Shalakya — Karna Nasa Mukha",
+      "level": "PG MS",
+      "professional_year": "PG",
+      "required_texts": [
+        "Sushruta Samhita",
+        "Ashtanga Hridayam"
+      ],
+      "corpus_groups": [
+        "01_brihat_trayi"
+      ],
+      "text_ids": [
+        "sushruta",
+        "ashtanga_hridaya"
+      ],
+      "canonical_paths": [
+        "/data/CORPUS/01_brihat_trayi/sushruta_samhita/sanskrit/sushruta_samhita_choukhamba_kPfY_sushruta-samhita-choukhamba.txt",
+        "/data/CORPUS/01_brihat_trayi/ashtanga_hridaya_vagbhata/ashtanga_hridaya_vagbhatta_with_vidyottini_tika_of_atridev_g_ashtangahridayavagbhattawithvidyottinitikaofatridevguptaed.yadunandanupadhyayachowkambha_882_.txt"
+      ],
+      "coverage_status": "green",
+      "query_tier": "both"
+    }
+  ],
+  "canonical_source": "C:\\ayurAI-standalone\\CANONICAL_EDITIONS.json"
+}

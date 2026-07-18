@@ -10,6 +10,7 @@ import {
   type ChangeEvent,
   type Dispatch,
   memo,
+  useMemo,
   type SetStateAction,
   useCallback,
   useEffect,
@@ -19,6 +20,8 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
+import { filterWorks } from "@/lib/ai2/works";
+import { resolveScopedWorksFromInput } from "@/lib/ai2/parse-mentions";
 import { brand } from "@/lib/brand";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -37,6 +40,16 @@ import {
   SlashCommandMenu,
   slashCommands,
 } from "./slash-commands";
+import {
+  getMentionState,
+  WorkMentionMenu,
+} from "./work-mention-menu";
+import {
+  MAX_SCOPED_WORKS,
+  type LibraryWork,
+  WorkPickerPopover,
+  WorkScopeChips,
+} from "./work-picker";
 import type { VisibilityType } from "./visibility-selector";
 
 function PureMultimodalInput({
@@ -123,11 +136,77 @@ function PureMultimodalInput({
   const [slashOpen, setSlashOpen] = useState(false);
   const [slashQuery, setSlashQuery] = useState("");
   const [slashIndex, setSlashIndex] = useState(0);
+  const [mentionOpen, setMentionOpen] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [mentionIndex, setMentionIndex] = useState(0);
+  const [mentionStart, setMentionStart] = useState(0);
+  const [selectedWorks, setSelectedWorks] = useState<LibraryWork[]>([]);
+
+  const selectedWorkIds = useMemo(
+    () => new Set(selectedWorks.map((w) => w.id)),
+    [selectedWorks]
+  );
+
+  const addSelectedWork = useCallback((work: LibraryWork) => {
+    setSelectedWorks((current) => {
+      if (current.some((w) => w.id === work.id)) {
+        return current;
+      }
+      if (current.length >= MAX_SCOPED_WORKS) {
+        toast.error(`Maximum ${MAX_SCOPED_WORKS} works per query`);
+        return current;
+      }
+      return [...current, work];
+    });
+  }, []);
+
+  const toggleSelectedWork = useCallback((work: LibraryWork) => {
+    setSelectedWorks((current) => {
+      if (current.some((w) => w.id === work.id)) {
+        return current.filter((w) => w.id !== work.id);
+      }
+      if (current.length >= MAX_SCOPED_WORKS) {
+        toast.error(`Maximum ${MAX_SCOPED_WORKS} works per query`);
+        return current;
+      }
+      return [...current, work];
+    });
+  }, []);
+
+  const removeSelectedWork = useCallback((work: LibraryWork) => {
+    setSelectedWorks((current) => current.filter((w) => w.id !== work.id));
+  }, []);
+
+  const syncWorksFromText = useCallback((val: string) => {
+    setSelectedWorks((current) => {
+      const { merged } = resolveScopedWorksFromInput(val, current);
+      if (
+        current.length === merged.length &&
+        current.every((w, i) => w.id === merged[i]?.id)
+      ) {
+        return current;
+      }
+      return merged;
+    });
+  }, []);
 
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
       const val = event.target.value;
       setInput(val);
+      syncWorksFromText(val);
+      const cursor = event.target.selectionStart ?? val.length;
+      const mention = getMentionState(val, cursor);
+
+      if (mention) {
+        setMentionOpen(true);
+        setMentionQuery(mention.query);
+        setMentionStart(mention.startIndex);
+        setMentionIndex(0);
+        setSlashOpen(false);
+        return;
+      }
+      setMentionOpen(false);
 
       if (val.startsWith("/") && !val.includes(" ")) {
         setSlashOpen(true);
@@ -137,9 +216,30 @@ function PureMultimodalInput({
         setSlashOpen(false);
       }
     },
-    [setInput]
+    [setInput, syncWorksFromText]
   );
 
+  const handleMentionSelect = useCallback(
+    (work: LibraryWork) => {
+      const cursor = textareaRef.current?.selectionStart ?? input.length;
+      const before = input.slice(0, mentionStart);
+      const after = input.slice(cursor);
+      const insertion = `@${work.name} `;
+      setInput(`${before}${insertion}${after}`);
+      addSelectedWork(work);
+      setMentionOpen(false);
+      requestAnimationFrame(() => {
+        const pos = before.length + insertion.length;
+        textareaRef.current?.setSelectionRange(pos, pos);
+        textareaRef.current?.focus();
+      });
+    },
+    [addSelectedWork, input, mentionStart]
+  );
+
+  const handleMentionClose = useCallback(() => {
+    setMentionOpen(false);
+  }, []);
   const handleSlashSelect = useCallback(
     (cmd: SlashCommand) => {
       setSlashOpen(false);
@@ -203,6 +303,17 @@ function PureMultimodalInput({
       `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/chat/${chatId}`
     );
 
+    const { merged: resolvedWorks } = resolveScopedWorksFromInput(
+      input,
+      selectedWorks
+    );
+
+    const messageText =
+      input.trim() ||
+      (resolvedWorks.length
+        ? `Consult ${resolvedWorks.map((w) => w.name).join(", ")}`
+        : "");
+
     sendMessage({
       parts: [
         ...attachments.map((attachment) => ({
@@ -212,7 +323,7 @@ function PureMultimodalInput({
           url: attachment.url,
         })),
         {
-          text: input,
+          text: messageText,
           type: "text",
         },
       ],
@@ -220,10 +331,12 @@ function PureMultimodalInput({
       metadata: {
         createdAt: new Date().toISOString(),
         audienceMode,
+        scopedWorks: resolvedWorks.map((w) => w.name),
       },
     });
 
     setAttachments([]);
+    setSelectedWorks([]);
     setLocalStorageInput("");
     setInput("");
 
@@ -240,6 +353,7 @@ function PureMultimodalInput({
     width,
     chatId,
     audienceMode,
+    selectedWorks,
   ]);
 
   const uploadFile = useCallback(async (file: File) => {
@@ -375,7 +489,7 @@ function PureMultimodalInput({
       }
       return;
     }
-    if (!input.trim() && attachments.length === 0) {
+    if (!input.trim() && attachments.length === 0 && selectedWorks.length === 0) {
       return;
     }
     if (status === "ready" || status === "error") {
@@ -383,10 +497,37 @@ function PureMultimodalInput({
     } else {
       toast.error("Please wait for the model to finish its response!");
     }
-  }, [attachments.length, handleSlashSelect, input, status, submitForm]);
+  }, [attachments.length, handleSlashSelect, input, selectedWorks.length, status, submitForm]);
 
   const handleTextareaKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (mentionOpen) {
+        const filtered = filterWorks(mentionQuery).filter(
+          (w) => !selectedWorkIds.has(w.id)
+        );
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          setMentionIndex((i) => Math.min(i + 1, Math.max(filtered.length - 1, 0)));
+          return;
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          setMentionIndex((i) => Math.max(i - 1, 0));
+          return;
+        }
+        if (e.key === "Enter" || e.key === "Tab") {
+          e.preventDefault();
+          if (filtered[mentionIndex]) {
+            handleMentionSelect(filtered[mentionIndex]);
+          }
+          return;
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setMentionOpen(false);
+          return;
+        }
+      }
       if (slashOpen) {
         const filtered = slashCommands.filter((cmd) =>
           cmd.name.startsWith(slashQuery.toLowerCase())
@@ -421,8 +562,13 @@ function PureMultimodalInput({
     },
     [
       editingMessage,
+      handleMentionSelect,
       handleSlashSelect,
+      mentionIndex,
+      mentionOpen,
+      mentionQuery,
       onCancelEdit,
+      selectedWorkIds,
       slashIndex,
       slashOpen,
       slashQuery,
@@ -476,6 +622,15 @@ function PureMultimodalInput({
       />
 
       <div className="relative">
+        {mentionOpen ? (
+          <WorkMentionMenu
+            onClose={handleMentionClose}
+            onSelect={handleMentionSelect}
+            query={mentionQuery}
+            selectedIds={selectedWorkIds}
+            selectedIndex={mentionIndex}
+          />
+        ) : null}
         {slashOpen ? (
           <SlashCommandMenu
             onClose={handleSlashClose}
@@ -517,6 +672,10 @@ function PureMultimodalInput({
             ))}
           </div>
         )}
+        <WorkScopeChips
+          onRemove={removeSelectedWork}
+          selectedWorks={selectedWorks}
+        />
         <PromptInputTextarea
           className="min-h-16 text-[13px] leading-relaxed px-4 pt-3.5 pb-1.5 placeholder:text-muted-foreground/35 sm:min-h-20"
           data-testid="multimodal-input"
@@ -524,13 +683,20 @@ function PureMultimodalInput({
           onFocus={onExpandComposer}
           onKeyDown={handleTextareaKeyDown}
           placeholder={
-            editingMessage ? "Edit your message..." : "Ask anything..."
+            editingMessage
+              ? "Edit your message..."
+              : "Ask anything… type @ to scope a work"
           }
           ref={textareaRef}
           value={input}
         />
         <PromptInputFooter className="px-3 pb-3">
           <PromptInputTools>
+            <WorkPickerPopover
+              disabled={status !== "ready" && status !== "error"}
+              onToggleWork={toggleSelectedWork}
+              selectedWorks={selectedWorks}
+            />
             <AttachmentsButton
               fileInputRef={fileInputRef}
               selectedModelId={selectedModelId}
@@ -551,12 +717,12 @@ function PureMultimodalInput({
             <PromptInputSubmit
               className={cn(
                 "h-7 w-7 rounded-xl transition-all duration-200",
-                input.trim()
+                input.trim() || selectedWorks.length > 0
                   ? "bg-foreground text-background hover:opacity-85 active:scale-95"
                   : "bg-muted text-muted-foreground/25 cursor-not-allowed"
               )}
               data-testid="send-button"
-              disabled={!input.trim() || uploadQueue.length > 0}
+              disabled={(!input.trim() && selectedWorks.length === 0) || uploadQueue.length > 0}
               status={status}
               variant="secondary"
             >

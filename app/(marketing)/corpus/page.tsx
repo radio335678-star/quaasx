@@ -1,25 +1,37 @@
 import Link from "next/link";
-import { brand, corpusCoverage } from "@/lib/brand";
+import { brand } from "@/lib/brand";
+import { libraryCatalog, primaryTranslation, tierLabel } from "@/lib/ai2/library-subjects";
+import { NcismCoverageSection } from "@/components/ncism-coverage-section";
 
 export const metadata = {
   title: `Corpus — ${brand.name}`,
   description:
-    "Query-ready classical coverage vs raw corpus still being ingested.",
+    "Subject-wise Ayurveda books on the AI² Modal library — DB query tier vs raw CORPUS editions.",
 };
 
-function statusLabel(translation: string) {
-  if (translation === "gold") {
+function translationNote(book: { tier: string; total_shlokas: number | null; translation_status?: Record<string, number> | null }) {
+  if (book.tier !== "db") {
+    return "Raw `.txt` editions on volume";
+  }
+  const t = primaryTranslation(book);
+  if (t === "gold") {
     return "Verified English (gold)";
   }
-  if (translation === "machine") {
+  if (t === "machine") {
     return "Working translation";
   }
-  return "Sanskrit only (translation pending)";
+  if (book.total_shlokas) {
+    return "Sanskrit in DB (translation pending)";
+  }
+  return "In unified DB";
 }
 
 export default function CorpusPage() {
-  const totalReady = corpusCoverage.queryReady.reduce(
-    (sum, t) => sum + t.shlokas,
+  const dbBooks = libraryCatalog.subjects.flatMap((s) =>
+    s.books.filter((b) => b.tier === "db")
+  );
+  const totalReady = dbBooks.reduce(
+    (sum, b) => sum + (b.total_shlokas ?? 0),
     0
   );
 
@@ -29,59 +41,110 @@ export default function CorpusPage() {
         Corpus
       </p>
       <h1 className="font-semibold text-3xl tracking-tight md:text-4xl">
-        What is query-ready
+        Ayurveda library by subject
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-        {brand.name} answers from a quality-gated unified corpus — cite-first
-        classical text, not the entire tradition at once. Counts below reflect
-        what is searchable today.
+        {brand.name} mounts a single Modal volume at{" "}
+        <code className="text-foreground text-sm">/data</code> — unified DB for
+        cite-first answers, plus raw classical editions grouped by Ayurveda
+        subject.
       </p>
 
-      <p className="mt-8 text-muted-foreground text-sm">
-        Query-ready shlokas:{" "}
-        <span className="font-medium text-foreground">
-          {totalReady.toLocaleString()}
-        </span>
-      </p>
+      <dl className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-lg border border-border/50 px-4 py-3">
+          <dt className="text-muted-foreground text-xs uppercase tracking-wide">
+            Subjects
+          </dt>
+          <dd className="mt-1 font-semibold text-2xl">
+            {libraryCatalog.total_subjects}
+          </dd>
+        </div>
+        <div className="rounded-lg border border-border/50 px-4 py-3">
+          <dt className="text-muted-foreground text-xs uppercase tracking-wide">
+            DB shlokas
+          </dt>
+          <dd className="mt-1 font-semibold text-2xl">
+            {totalReady > 0 ? totalReady.toLocaleString() : "67,004+"}
+          </dd>
+        </div>
+        <div className="rounded-lg border border-border/50 px-4 py-3">
+          <dt className="text-muted-foreground text-xs uppercase tracking-wide">
+            Raw edition files
+          </dt>
+          <dd className="mt-1 font-semibold text-2xl">
+            {libraryCatalog.total_corpus_files}
+          </dd>
+        </div>
+      </dl>
 
-      <section className="mt-10">
-        <h2 className="mb-4 border-b border-border/40 pb-2 font-medium text-foreground">
-          Query-ready texts
-        </h2>
-        <ul className="space-y-3">
-          {corpusCoverage.queryReady.map((text) => (
-            <li
-              className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between"
-              key={text.name}
-            >
-              <span className="text-foreground text-sm">{text.name}</span>
-              <span className="text-muted-foreground text-sm">
-                {text.shlokas.toLocaleString()} · {statusLabel(text.translation)}
+      <div className="mt-12 space-y-14">
+        {libraryCatalog.subjects.map((subject) => (
+          <section key={subject.group_id}>
+            <h2 className="border-b border-border/40 pb-2 font-medium text-foreground text-xl">
+              {subject.short_name}
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+              {subject.subject}
+            </p>
+            <p className="mt-1 text-muted-foreground text-xs">
+              Agent:{" "}
+              <span className="font-mono text-foreground/80">
+                {subject.agent_id}
               </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+              {" · "}
+              {subject.corpus_file_count} raw file
+              {subject.corpus_file_count === 1 ? "" : "s"}
+            </p>
 
-      <section className="mt-12">
-        <h2 className="mb-4 border-b border-border/40 pb-2 font-medium text-foreground">
-          Raw corpus (not fully query-ready)
-        </h2>
-        <p className="mb-3 text-muted-foreground text-sm">
-          Present in the broader CORPUS archive; not yet fully loaded into the
-          unified query index.
-        </p>
-        <ul className="space-y-2">
-          {corpusCoverage.rawOnly.map((item) => (
-            <li
-              className="text-muted-foreground text-sm leading-relaxed"
-              key={item}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      </section>
+            <ul className="mt-4 space-y-3">
+              {subject.books.map((book) => (
+                <li
+                  className="flex flex-col gap-0.5 border-border/30 border-l-2 pl-3 sm:flex-row sm:items-baseline sm:justify-between"
+                  key={`${subject.group_id}-${book.name}`}
+                >
+                  <span className="text-foreground text-sm">
+                    {book.name}
+                    {book.abbrev ? (
+                      <span className="ml-2 text-muted-foreground text-xs">
+                        ({book.abbrev})
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    {tierLabel(book.tier)}
+                    {book.total_shlokas != null
+                      ? ` · ${book.total_shlokas.toLocaleString()} shlokas`
+                      : ""}
+                    {" · "}
+                    {translationNote(book)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {subject.corpus_editions.length > 0 ? (
+              <details className="mt-4">
+                <summary className="cursor-pointer text-muted-foreground text-sm hover:text-foreground">
+                  Edition folders on volume ({subject.corpus_editions.length})
+                </summary>
+                <ul className="mt-2 space-y-1 pl-2">
+                  {subject.corpus_editions.map((ed) => (
+                    <li
+                      className="font-mono text-muted-foreground text-xs"
+                      key={ed.corpus_path}
+                    >
+                      {ed.folder}
+                      {ed.file_count > 0 ? ` — ${ed.file_count} file(s)` : ""}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : null}
+          </section>
+        ))}
+      </div>
+
+      <NcismCoverageSection />
 
       <div className="mt-14">
         <Link

@@ -3,7 +3,7 @@ const BACKEND_URL =
 
 export async function GET() {
   try {
-    const res = await fetch(`${BACKEND_URL}/v1/warmup`, {
+    const res = await fetch(`${BACKEND_URL}/health`, {
       method: "GET",
       next: { revalidate: 0 },
     });

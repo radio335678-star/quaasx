@@ -1,3 +1,17 @@
+export type ScopedWorkEntry = {
+  name: string;
+  tier: "db" | "corpus" | "unknown";
+  group_id?: string;
+  agent_id?: string;
+  short_group?: string;
+};
+
+export type ScopedCoverageSummary = {
+  skip_fts_preflight?: boolean;
+  db_works?: string[];
+  corpus_works?: string[];
+};
+
 export type Ai2LayoutType =
   | "clinical_compare"
   | "shloka_study"
@@ -90,6 +104,60 @@ export type TreatmentPlanData = {
   stages?: TreatmentPlanStage[];
 };
 
+export type ExamSlots = {
+  format?: string;
+  stem?: string;
+  options?: { label?: string; text?: string }[];
+  left_column?: string[];
+  right_column?: string[];
+  blanks?: string[];
+  require_citation_for_answer?: boolean;
+};
+
+export type ExamVerdict = {
+  status?: "insufficient_evidence" | "answered" | "evidence_only" | string;
+  chosen_option?: string | null;
+  reason?: string;
+  supporting_citation_ids?: string[];
+};
+
+export type EngineTrace = {
+  phase?: string;
+  intent?: string;
+  classifier_source?: string;
+  confidence?: number;
+  plan_type?: string;
+  deepened?: boolean;
+  react_recovery?: boolean;
+  retrieval_query?: string;
+  audience_mode?: string;
+  epistemic_mode?: string;
+  epistemic_escalated?: boolean;
+  epistemic_verified_count?: number;
+  epistemic_rejected?: string[];
+};
+
+export type QueryUnderstandingSummary = {
+  intent?: string;
+  confidence?: number;
+  classifier_source?: string;
+  phase?: string;
+};
+
+export type RetrievalPlanSummary = {
+  plan_type?: string;
+  strategies?: string[];
+  schema_version?: string;
+};
+
+export type EpistemicSummary = {
+  mode?: string;
+  escalated?: boolean;
+  accepted_ids?: string[];
+  rejected_ids?: string[];
+  verified_count?: number;
+};
+
 export type Ai2AnswerLayout = {
   layout_type: Ai2LayoutType;
   headline?: string;
@@ -112,6 +180,14 @@ export type Ai2AnswerLayout = {
   safety_banner?: ClinicalSafetyBannerData;
   safety_warnings?: string[];
   treatment_plan?: TreatmentPlanData;
+  engine_trace?: EngineTrace;
+  query_understanding?: QueryUnderstandingSummary;
+  retrieval_plan?: RetrievalPlanSummary;
+  epistemic?: EpistemicSummary;
+  exam?: ExamSlots;
+  exam_verdict?: ExamVerdict;
+  scoped_works?: ScopedWorkEntry[];
+  scoped_coverage?: ScopedCoverageSummary;
 };
 
 export type BackendMetaEvent = {
@@ -132,6 +208,14 @@ export type BackendMetaEvent = {
   safety_banner?: ClinicalSafetyBannerData;
   safety_warnings?: string[];
   treatment_plan?: TreatmentPlanData;
+  engine_trace?: EngineTrace;
+  query_understanding?: QueryUnderstandingSummary;
+  retrieval_plan?: RetrievalPlanSummary;
+  epistemic?: EpistemicSummary;
+  exam?: ExamSlots;
+  exam_verdict?: ExamVerdict;
+  scoped_works?: ScopedWorkEntry[];
+  scoped_coverage?: ScopedCoverageSummary;
   tools?: unknown[];
   session_id?: string;
 };
@@ -154,5 +238,13 @@ export function metaToLayout(meta: BackendMetaEvent): Ai2AnswerLayout {
     safety_banner: meta.safety_banner,
     safety_warnings: meta.safety_warnings,
     treatment_plan: meta.treatment_plan,
+    engine_trace: meta.engine_trace,
+    query_understanding: meta.query_understanding,
+    retrieval_plan: meta.retrieval_plan,
+    epistemic: meta.epistemic,
+    exam: meta.exam,
+    exam_verdict: meta.exam_verdict,
+    scoped_works: meta.scoped_works,
+    scoped_coverage: meta.scoped_coverage,
   };
 }

@@ -6,6 +6,8 @@ import { DemoAnswerLabel, DemoBadge } from "@/components/ai2/DemoBadge";
 import type { Vote } from "@/lib/db/schema";
 import type { DemoKind } from "@/lib/ai2/demos";
 import type { Ai2AnswerLayout } from "@/lib/ai2/types";
+import { libraryWorksFromNames } from "@/lib/ai2/parse-mentions";
+import { ScopedWorksBar } from "@/components/ai2/ScopedWorksBar";
 import type { ChatMessage } from "@/lib/types";
 import { cn, sanitizeText } from "@/lib/utils";
 import { MessageContent, MessageResponse } from "../ai-elements/message";
@@ -131,6 +133,16 @@ const PurePreviewMessage = ({
 
   const userDemoKind = isUser ? message.metadata?.demoKind : undefined;
 
+  const userScopedWorks = isUser
+    ? libraryWorksFromNames(message.metadata?.scopedWorks ?? []).map((w) => ({
+        name: w.name,
+        tier: w.dbReady ? ("db" as const) : ("corpus" as const),
+        group_id: w.groupId,
+        agent_id: w.agentId,
+        short_group: w.shortGroup,
+      }))
+    : [];
+
   const ai2Layout = message.parts?.find(
     (part) => part.type === "data-ai2-answer"
   )?.data as Ai2AnswerLayout | undefined;
@@ -202,6 +214,11 @@ const PurePreviewMessage = ({
           {userDemoKind ? (
             <div className="mb-1.5 flex justify-end">
               <DemoBadge kind={userDemoKind} />
+            </div>
+          ) : null}
+          {userScopedWorks.length > 0 ? (
+            <div className="mb-2">
+              <ScopedWorksBar variant="user" works={userScopedWorks} />
             </div>
           ) : null}
           <MessageResponse>{sanitizeText(part.text)}</MessageResponse>
