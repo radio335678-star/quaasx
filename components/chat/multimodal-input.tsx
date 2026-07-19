@@ -247,6 +247,17 @@ function PureMultimodalInput({
     }
   }, [input, markIdle]);
 
+  // Keep the engine awake for the whole duration of a request/stream so the
+  // sleep card doesn't reappear while an answer is being generated or read.
+  useEffect(() => {
+    if (status !== "submitted" && status !== "streaming") {
+      return;
+    }
+    markTyping();
+    const keepAwake = setInterval(markTyping, 30_000);
+    return () => clearInterval(keepAwake);
+  }, [status, markTyping]);
+
   const handleMentionSelect = useCallback(
     (work: LibraryWork) => {
       const cursor = textareaRef.current?.selectionStart ?? input.length;

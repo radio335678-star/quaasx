@@ -15,7 +15,7 @@ Chat does **not** use the old Hybrid Engine `/v1/chat` SSE API. The frontend cal
 
 ## Cold start + warmup
 
-`ai2-rust-env` uses CPU memory snapshots; scales down after ~9s idle.
+`ai2-rust-env` uses CPU memory snapshots; scales down after ~3 min idle (`scaledown_window=180`). The frontend mirrors this: sleep card appears after 3 min of no activity, heartbeat pings every 60s while the user is typing or a response is streaming.
 
 - Opening `/app` triggers `GET /api/warmup` → Modal `/health` (restores snapshot + starts cage-bro).
 - First chat after idle may take ~50–90s (cold restore + agent ~44s).

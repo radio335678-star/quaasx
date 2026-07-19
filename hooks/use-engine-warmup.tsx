@@ -29,8 +29,9 @@ const EngineWarmupContext = createContext<EngineWarmupContextValue | null>(
 );
 
 const WAKE_COUNTDOWN_SEC = 7;
-const HEARTBEAT_INTERVAL_MS = 6000;
-const IDLE_SLEEP_MS = 9000;
+// Modal scaledown_window is 180s — heartbeat well inside it, sleep in sync with it.
+const HEARTBEAT_INTERVAL_MS = 60_000;
+const IDLE_SLEEP_MS = 180_000;
 
 export function EngineWarmupProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<EngineStatus>("asleep");
@@ -135,6 +136,13 @@ export function EngineWarmupProvider({ children }: { children: ReactNode }) {
     });
   }, [composerUnlocked]);
 
+  const unlockComposer = useCallback(() => {
+    clearWakeCountdownTimer();
+    setWakeCountdown(null);
+    setComposerUnlocked(true);
+    notifyWakeWaiters();
+  }, [clearWakeCountdownTimer, notifyWakeWaiters]);
+
   const startWakeCountdown = useCallback(() => {
     clearWakeCountdownTimer();
     setWakeCountdown(WAKE_COUNTDOWN_SEC);
@@ -142,15 +150,12 @@ export function EngineWarmupProvider({ children }: { children: ReactNode }) {
     wakeCountdownTimer.current = setInterval(() => {
       remaining -= 1;
       if (remaining <= 0) {
-        clearWakeCountdownTimer();
-        setWakeCountdown(null);
-        setComposerUnlocked(true);
-        notifyWakeWaiters();
+        unlockComposer();
         return;
       }
       setWakeCountdown(remaining);
     }, 1000);
-  }, [clearWakeCountdownTimer, notifyWakeWaiters]);
+  }, [clearWakeCountdownTimer, unlockComposer]);
 
   const wake = useCallback(async () => {
     if (status === "awake" || status === "degraded") {
@@ -167,17 +172,18 @@ export function EngineWarmupProvider({ children }: { children: ReactNode }) {
     clearIdleTimer();
     startWakeCountdown();
 
-    void pingWarmup();
     const healthOk = await pingWarmup();
     setStatus(healthOk ? "awake" : "degraded");
+    // Container answered — no reason to keep the user waiting on the timer.
+    unlockComposer();
     scheduleIdleSleep();
-    await waitForComposer();
   }, [
     clearIdleTimer,
     pingWarmup,
     scheduleIdleSleep,
     startWakeCountdown,
     status,
+    unlockComposer,
     waitForComposer,
   ]);
 
