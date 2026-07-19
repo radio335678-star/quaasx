@@ -18,10 +18,9 @@ test.describe("Chat Page", () => {
     await expect(page.getByTestId("send-button")).toBeVisible();
   });
 
-  test("suggested actions are visible on empty chat", async ({ page }) => {
+  test("empty chat shows greeting state", async ({ page }) => {
     await page.goto("/");
-    const suggestions = page.locator("[data-testid='suggested-actions']");
-    await expect(suggestions).toBeVisible();
+    await expect(page.getByTestId("empty-state")).toBeVisible();
   });
 
   test("can stop generation with stop button", async ({ page }) => {
