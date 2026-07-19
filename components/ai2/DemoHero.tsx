@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { HERO_DEMO } from "@/lib/ai2/demos";
+import { DEFAULT_SCOPED_WORK } from "@/lib/ai2/works";
 import type { ChatMessage } from "@/lib/types";
 
 type DemoHeroProps = {
@@ -26,13 +27,19 @@ export function DemoHero({ chatId, sendMessage, onDismiss }: DemoHeroProps) {
       "",
       `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/chat/${chatId}`
     );
+    const scope = DEFAULT_SCOPED_WORK;
+    const text = HERO_DEMO.query.includes(`@${scope.name}`)
+      ? HERO_DEMO.query
+      : `@${scope.name} ${HERO_DEMO.query}`;
     sendMessage({
       metadata: {
         createdAt: new Date().toISOString(),
         demoId: HERO_DEMO.id,
         demoKind: HERO_DEMO.kind,
+        scopedWorks: [scope.name],
+        scopedAbbrevs: [scope.abbrev],
       },
-      parts: [{ text: HERO_DEMO.query, type: "text" }],
+      parts: [{ text, type: "text" }],
       role: "user",
     });
   }, [chatId, isComposerEnabled, sendMessage, wake]);

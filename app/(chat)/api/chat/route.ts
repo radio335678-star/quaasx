@@ -10,6 +10,10 @@ import {
   callRustEnvAgent,
 } from "@/lib/ai2/rustenv-exec";
 import {
+  applyScopeLockToQuestion,
+  resolveScopedClassics,
+} from "@/lib/ai2/scope-lock";
+import {
   AI2_STREAM_LABEL,
   pickThinkingLine,
   pickWaitingLine,
@@ -89,6 +93,19 @@ function extractAudienceMode(body: PostRequestBody): AudienceMode {
   return "scholar";
 }
 
+function extractScopedMetadata(body: PostRequestBody): {
+  scopedWorks?: string[];
+  scopedAbbrevs?: string[];
+} {
+  const meta = body.message?.metadata as
+    | { scopedWorks?: string[]; scopedAbbrevs?: string[] }
+    | undefined;
+  return {
+    scopedWorks: meta?.scopedWorks,
+    scopedAbbrevs: meta?.scopedAbbrevs,
+  };
+}
+
 export async function POST(request: Request) {
   const rate = checkRateLimit(clientIp(request));
   if (!rate.allowed) {
@@ -123,10 +140,25 @@ export async function POST(request: Request) {
 
   const textId = generateUUID();
   const audienceMode = extractAudienceMode(requestBody);
-  const question = applyAudiencePrompt(
-    buildAgentQuestion(messages),
-    audienceMode
-  );
+  const baseQuestion = buildAgentQuestion(messages);
+  let question: string;
+  // Normal chat sends `message` with scoped classics; tool-approval uses `messages` only.
+  if (requestBody.message) {
+    const { scopedWorks, scopedAbbrevs } = extractScopedMetadata(requestBody);
+    const scope = resolveScopedClassics(scopedWorks, scopedAbbrevs);
+    if (!scope.ok) {
+      return new Response(JSON.stringify({ error: scope.error }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    question = applyAudiencePrompt(
+      applyScopeLockToQuestion(baseQuestion, scope.names, scope.abbrevs),
+      audienceMode
+    );
+  } else {
+    question = applyAudiencePrompt(baseQuestion, audienceMode);
+  }
   const statusSeed = question.length + audienceMode.length;
 
   const stream = createUIMessageStream({

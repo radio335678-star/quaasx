@@ -9,6 +9,7 @@ import { DemoHero } from "@/components/ai2/DemoHero";
 import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { type DemoPrompt, EXAMPLE_DEMOS } from "@/lib/ai2/demos";
+import { DEFAULT_SCOPED_WORK } from "@/lib/ai2/works";
 import type { ChatMessage } from "@/lib/types";
 import { Suggestion } from "../ai-elements/suggestion";
 import { Greeting } from "./greeting";
@@ -139,13 +140,19 @@ function PureEmptyState({ chatId, sendMessage }: EmptyStateProps) {
         "",
         `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/chat/${chatId}`
       );
+      const scope = DEFAULT_SCOPED_WORK;
+      const text = demo.query.includes(`@${scope.name}`)
+        ? demo.query
+        : `@${scope.name} ${demo.query}`;
       sendMessage({
         metadata: {
           createdAt: new Date().toISOString(),
           demoId: demo.id,
           demoKind: demo.kind,
+          scopedWorks: [scope.name],
+          scopedAbbrevs: [scope.abbrev],
         },
-        parts: [{ text: demo.query, type: "text" }],
+        parts: [{ text, type: "text" }],
         role: "user",
       });
     },

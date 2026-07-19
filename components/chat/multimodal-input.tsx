@@ -47,6 +47,7 @@ import {
   getMentionState,
   WorkMentionMenu,
 } from "./work-mention-menu";
+import { LIBRARY_WORKS } from "@/lib/ai2/works";
 import {
   MAX_SCOPED_WORKS,
   type LibraryWork,
@@ -157,6 +158,12 @@ function PureMultimodalInput({
     () => new Set(selectedWorks.map((w) => w.id)),
     [selectedWorks]
   );
+
+  const resolvedScopedWorks = useMemo(
+    () => resolveScopedWorksFromInput(input, selectedWorks).merged,
+    [input, selectedWorks]
+  );
+  const hasLibraryScope = resolvedScopedWorks.length >= 1;
 
   const addSelectedWork = useCallback((work: LibraryWork) => {
     setSelectedWorks((current) => {
@@ -336,22 +343,33 @@ function PureMultimodalInput({
   );
 
   const submitForm = useCallback(() => {
+    const { merged: resolvedWorks } = resolveScopedWorksFromInput(
+      input,
+      selectedWorks
+    );
+
+    if (resolvedWorks.length < 1) {
+      toast.error("Choose at least one classic (@) to open the library.");
+      return;
+    }
+
     window.history.pushState(
       {},
       "",
       `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/chat/${chatId}`
     );
 
-    const { merged: resolvedWorks } = resolveScopedWorksFromInput(
-      input,
-      selectedWorks
-    );
-
-    const messageText =
-      input.trim() ||
-      (resolvedWorks.length
-        ? `Consult ${resolvedWorks.map((w) => w.name).join(", ")}`
-        : "");
+    // Keep @Name mentions in the user-visible question for the LLM.
+    let messageText = input.trim();
+    if (!messageText) {
+      messageText = `Consult ${resolvedWorks.map((w) => `@${w.name}`).join(" ")}`;
+    } else {
+      for (const work of resolvedWorks) {
+        if (!messageText.includes(`@${work.name}`)) {
+          messageText = `@${work.name} ${messageText}`;
+        }
+      }
+    }
 
     sendMessage({
       parts: [
@@ -371,6 +389,7 @@ function PureMultimodalInput({
         createdAt: new Date().toISOString(),
         audienceMode,
         scopedWorks: resolvedWorks.map((w) => w.name),
+        scopedAbbrevs: resolvedWorks.map((w) => w.abbrev),
       },
     });
 
@@ -528,7 +547,15 @@ function PureMultimodalInput({
       }
       return;
     }
-    if (!input.trim() && attachments.length === 0 && selectedWorks.length === 0) {
+    if (
+      !input.trim() &&
+      attachments.length === 0 &&
+      resolvedScopedWorks.length === 0
+    ) {
+      return;
+    }
+    if (resolvedScopedWorks.length < 1) {
+      toast.error("Choose at least one classic (@) to open the library.");
       return;
     }
     if (!isComposerEnabled) {
@@ -544,7 +571,7 @@ function PureMultimodalInput({
     handleSlashSelect,
     input,
     isComposerEnabled,
-    selectedWorks.length,
+    resolvedScopedWorks.length,
     status,
     submitForm,
     wake,
@@ -729,6 +756,36 @@ function PureMultimodalInput({
             ))}
           </div>
         )}
+        {isComposerEnabled ? (
+          <div className="flex flex-col gap-2 px-3 pt-3">
+            <p className="text-[11px] leading-snug text-muted-foreground/80">
+              Choose a classic (@) to open the library — up to {MAX_SCOPED_WORKS}.
+            </p>
+            <div
+              className="flex flex-wrap gap-1.5"
+              data-testid="classic-quick-picks"
+            >
+              {LIBRARY_WORKS.map((work) => {
+                const active = selectedWorkIds.has(work.id);
+                return (
+                  <button
+                    className={cn(
+                      "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+                      active
+                        ? "border-foreground/30 bg-foreground text-background"
+                        : "border-border/50 bg-background/60 text-muted-foreground hover:border-border hover:text-foreground"
+                    )}
+                    key={work.id}
+                    onClick={() => toggleSelectedWork(work)}
+                    type="button"
+                  >
+                    {work.abbrev}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
         <WorkScopeChips
           onRemove={removeSelectedWork}
           selectedWorks={selectedWorks}
@@ -745,7 +802,9 @@ function PureMultimodalInput({
             editingMessage
               ? "Edit your message..."
               : isComposerEnabled
-                ? "Ask anything… type @ to scope a work"
+                ? hasLibraryScope
+                  ? "Ask anything about the selected classics…"
+                  : "Pick a classic above, or type @Charaka…"
                 : "Wake me up to ask a question…"
           }
           readOnly={!isComposerEnabled}
@@ -779,15 +838,16 @@ function PureMultimodalInput({
             <PromptInputSubmit
               className={cn(
                 "h-7 w-7 rounded-xl transition-all duration-200",
-                input.trim() || selectedWorks.length > 0
+                (input.trim() || hasLibraryScope) && hasLibraryScope
                   ? "bg-foreground text-background hover:opacity-85 active:scale-95"
                   : "bg-muted text-muted-foreground/25 cursor-not-allowed"
               )}
               data-testid="send-button"
               disabled={
                 !isComposerEnabled ||
-                ((!input.trim() && selectedWorks.length === 0) ||
-                  uploadQueue.length > 0)
+                !hasLibraryScope ||
+                (!input.trim() && !hasLibraryScope) ||
+                uploadQueue.length > 0
               }
               status={status}
               variant="secondary"

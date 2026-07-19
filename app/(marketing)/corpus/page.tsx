@@ -20,8 +20,13 @@ function translationNote(book: {
   }
   const t = primaryTranslation(book);
   if (t === "gold") {
-    // AH/AS/MN are Sanskrit-canonical gold (no stored English); others are English gold.
-    if (book.abbrev === "AH" || book.abbrev === "AS" || book.abbrev === "MN") {
+    // AH/AS/Sy/Ck are Sanskrit-canonical gold (no stored English); others are English gold.
+    if (
+      book.abbrev === "AH" ||
+      book.abbrev === "AS" ||
+      book.abbrev === "Sy" ||
+      book.abbrev === "Ck"
+    ) {
       return "Sanskrit gold — English from model when needed";
     }
     return "Verified English (gold)";

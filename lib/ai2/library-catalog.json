@@ -112,9 +112,9 @@
       ],
       "books": [
         {
-          "name": "Vrindamadhava (Siddhayoga)",
-          "db_text_name": "Vrindamadhava (Siddhayoga)",
-          "abbrev": "MN",
+          "name": "Siddhayoga (Vrindamadhava)",
+          "db_text_name": "Siddhayoga (Vrindamadhava)",
+          "abbrev": "Sy",
           "tier": "db",
           "total_shlokas": 7734,
           "translation_status": {
@@ -206,15 +206,15 @@
           "category": null
         },
         {
-          "name": "Chakradatta",
+          "name": "Cakradatta",
           "db_text_name": "Cakradatta",
           "abbrev": "Ck",
           "tier": "db",
           "total_shlokas": 11278,
           "translation_status": {
-            "missing": 11278
+            "gold": 11278
           },
-          "category": null
+          "category": "Chikitsa"
         }
       ],
       "corpus_editions": [
@@ -674,10 +674,10 @@
       "db_text_name": "Ashtanga Sangraha"
     },
     {
-      "name": "Madhava Nidana",
+      "name": "Siddhayoga (Vrindamadhava)",
       "group_id": "02_laghu_trayi",
       "db_ready": true,
-      "db_text_name": "Madhava Nidana"
+      "db_text_name": "Siddhayoga (Vrindamadhava)"
     },
     {
       "name": "Sharangadhara Samhita",

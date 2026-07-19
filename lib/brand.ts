@@ -40,8 +40,8 @@ export const corpusCoverage = {
     { name: "Sushruta Samhita", shlokas: 5241, translation: "gold" },
     { name: "Ashtanga Hridayam", shlokas: 15439, translation: "gold" },
     { name: "Ashtanga Sangraha", shlokas: 22_659, translation: "gold" },
-    { name: "Vrindamadhava (Siddhayoga)", shlokas: 7734, translation: "gold" },
-    { name: "Cakradatta", shlokas: 11278, translation: "missing" },
+    { name: "Siddhayoga (Vrindamadhava)", shlokas: 7734, translation: "gold" },
+    { name: "Cakradatta", shlokas: 11278, translation: "gold" },
   ],
   rawOnly: [
     "Bhavaprakash",

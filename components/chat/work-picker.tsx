@@ -31,8 +31,8 @@ type WorkPickerPopoverProps = {
   disabled?: boolean;
 };
 
-/** Work scoping UI is locked for now — + stays visible but does not open. */
-const WORK_PICKER_LOCKED = true;
+/** Six-classic picker unlocked — same list as @ mentions. */
+const WORK_PICKER_LOCKED = false;
 
 export function WorkPickerPopover({
   selectedWorks,
@@ -88,7 +88,7 @@ export function WorkPickerPopover({
           title={
             locked
               ? "Work scoping coming soon"
-              : "Scope to classical works (max 5)"
+              : `Scope to classics (max ${MAX_SCOPED_WORKS})`
           }
           type="button"
           variant="ghost"
@@ -98,7 +98,7 @@ export function WorkPickerPopover({
       </PopoverTrigger>
       <PopoverContent align="start" className="w-80 p-0" side="top">
         <Command onValueChange={setSearch} shouldFilter={false} value={search}>
-          <CommandInput placeholder="Search 35 works…" />
+          <CommandInput placeholder="Search 6 classics…" />
           <CommandList className="max-h-72">
             <CommandEmpty>No works found.</CommandEmpty>
             <CommandGroup heading={`${selectedWorks.length}/${MAX_SCOPED_WORKS} selected`}>
