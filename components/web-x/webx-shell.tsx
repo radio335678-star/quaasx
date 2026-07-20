@@ -30,7 +30,15 @@ export function WebXShell() {
     );
     injectStylesheet(WEBX_STYLE_ID, "/web-x/webx.css");
 
+    const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+    const ping = () => {
+      fetch(`${base}/api/webx/warmup`, { method: "GET" }).catch(() => {});
+    };
+    ping();
+    const heartbeat = window.setInterval(ping, 20_000);
+
     return () => {
+      window.clearInterval(heartbeat);
       removeStylesheet(WEBX_STYLE_ID);
       removeStylesheet(WEBX_FONT_ID);
     };
