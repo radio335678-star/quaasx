@@ -2,10 +2,29 @@
 export const WEBX_MODAL_PRODUCTION_URL =
   "https://quaasx--ai2-web-x-webxgateway-web.modal.run";
 
+function isLocalOrPrivateHost(hostname: string): boolean {
+  const host = hostname.toLowerCase();
+  if (host === "localhost" || host === "127.0.0.1" || host === "::1") {
+    return true;
+  }
+  if (/^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host)) {
+    return true;
+  }
+  return false;
+}
+
 export function getWebXBackendUrl(): string {
   const fromEnv = process.env.WEBX_BACKEND_URL?.replace(/\/$/, "");
   if (fromEnv) {
-    return fromEnv;
+    try {
+      const host = new URL(fromEnv).hostname;
+      if (process.env.VERCEL && isLocalOrPrivateHost(host)) {
+        return WEBX_MODAL_PRODUCTION_URL;
+      }
+      return fromEnv;
+    } catch {
+      /* fall through */
+    }
   }
   if (process.env.VERCEL) {
     return WEBX_MODAL_PRODUCTION_URL;
@@ -28,4 +47,4 @@ export function getWebXBackendHeaders(
 }
 
 export const WEBX_OFFLINE_MESSAGE =
-  "Web-X engine offline. Start the local server on your laptop (port 5000) or set WEBX_BACKEND_URL to your tunnel URL.";
+  "Web-X search is temporarily unavailable. Please try again in a moment.";

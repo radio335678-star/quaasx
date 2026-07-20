@@ -17,10 +17,9 @@ export async function GET() {
       headers: { "Content-Type": "application/json" },
     });
   } catch {
-    // Best-effort heartbeat: avoid 503 console noise while Modal cold-starts.
     return Response.json(
-      { ok: false, service: "web-x-ai2", waking: true },
-      { status: 200 }
+      { ok: false, service: "web-x-ai2" },
+      { status: 503 }
     );
   }
 }

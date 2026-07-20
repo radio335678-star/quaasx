@@ -961,6 +961,18 @@ input {
   padding-bottom: 32px;
 }
 
+.loading-view {
+  max-width: var(--results-col);
+  padding: 8px 0 24px;
+}
+
+.loading-view-text {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
 .wake-spinner {
   width: 36px;
   height: 36px;

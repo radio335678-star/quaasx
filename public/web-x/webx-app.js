@@ -26,7 +26,6 @@
     abort: null,
     aiConfigured: false,
     busy: false,
-    waking: false,
   };
 
   const el = {
@@ -171,71 +170,46 @@
     });
   }
 
-  function renderWakeCard(message) {
+  function renderLoadingView(message) {
     clearNode(el.content);
-    const card = document.createElement("div");
-    card.className = "state-card state-card--wake";
-    card.setAttribute("role", "status");
-    card.setAttribute("aria-live", "polite");
+    const wrap = document.createElement("div");
+    wrap.className = "loading-view";
+    wrap.setAttribute("role", "status");
+    wrap.setAttribute("aria-live", "polite");
 
     const spinner = document.createElement("div");
     spinner.className = "wake-spinner";
     spinner.setAttribute("aria-hidden", "true");
-    card.appendChild(spinner);
-
-    const h = document.createElement("h2");
-    text(h, "Waking up Web-X engine");
-    card.appendChild(h);
+    wrap.appendChild(spinner);
 
     const p = document.createElement("p");
-    text(p, message || "Cold start on Modal — first search may take 15–30 seconds.");
-    card.appendChild(p);
+    p.className = "loading-view-text";
+    text(p, message || "Searching the web…");
+    wrap.appendChild(p);
 
-    el.content.appendChild(card);
+    const list = document.createElement("div");
+    list.className = "skeleton-list";
+    list.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 3; i++) {
+      const card = document.createElement("div");
+      card.className = "skeleton-card";
+      ["skeleton-line skeleton-line--meta", "skeleton-line skeleton-line--title", "skeleton-line skeleton-line--body"].forEach((cls) => {
+        const line = document.createElement("div");
+        line.className = cls;
+        card.appendChild(line);
+      });
+      list.appendChild(card);
+    }
+    wrap.appendChild(list);
+    el.content.appendChild(wrap);
   }
 
-  async function wakeBackend() {
-    const maxAttempts = 30;
-    const delayMs = 2000;
+  function pingWarmup() {
+    fetch(`${API_BASE}/warmup`, { method: "GET" }).catch(() => {});
+  }
 
-    state.waking = true;
-    setStatus("Waking up Web-X engine…", true);
-    renderWakeCard("Starting the search backend. This usually takes a few seconds.");
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      if (state.abort && state.abort.signal.aborted) {
-        state.waking = false;
-        return false;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/warmup`, {
-          method: "GET",
-          signal: state.abort ? state.abort.signal : undefined,
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.ok) {
-            state.waking = false;
-            return true;
-          }
-        }
-      } catch (_) {
-        /* retry */
-      }
-
-      if (attempt < maxAttempts - 1) {
-        const secs = Math.round(((attempt + 1) * delayMs) / 1000);
-        setStatus("Waking up Web-X engine… (" + secs + "s)", true);
-        renderWakeCard(
-          "Still starting — Modal containers spin down after idle. Hang tight."
-        );
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-      }
-    }
-
-    state.waking = false;
-    return false;
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   function renderSkeleton() {
@@ -651,7 +625,7 @@
       data.error ||
       (heavy
         ? "We're experiencing heavy traffic right now. Please try again in a moment."
-        : "AI Mode is unavailable. Check your local .env setup and try again.");
+        : "AI Mode is unavailable right now. Please try again in a moment.");
     renderStateCard({
       error: true,
       title: heavy ? "Heavy traffic" : "AI Mode unavailable",
@@ -671,20 +645,6 @@
     }
   }
 
-  async function quickWarmCheck() {
-    try {
-      const res = await fetch(`${API_BASE}/warmup`, {
-        method: "GET",
-        signal: state.abort ? state.abort.signal : undefined,
-      });
-      if (!res.ok) return false;
-      const data = await res.json();
-      return Boolean(data.ok);
-    } catch (_) {
-      return false;
-    }
-  }
-
   async function postSearch(payload) {
     const response = await fetch(`${API_BASE}/search`, {
       method: "POST",
@@ -701,6 +661,24 @@
     return { response, data };
   }
 
+  async function postSearchWithRetry(payload, statusMsg) {
+    pingWarmup();
+    let result = await postSearch(payload);
+    if (result.response.status === 503) {
+      setStatus("Still working…", true);
+      renderLoadingView("This may take a little longer than usual.");
+      pingWarmup();
+      await delay(4000);
+      if (state.abort.signal.aborted) {
+        return result;
+      }
+      setStatus(statusMsg, true);
+      renderSkeleton();
+      result = await postSearch(payload);
+    }
+    return result;
+  }
+
   async function executeSearch() {
     if (!state.query || state.busy) return;
 
@@ -714,47 +692,27 @@
     showAiPanel(false);
     persist();
 
+    const statusMsg =
+      state.tab === "ai" ? "Reading the web…" : "Searching the web…";
+    setStatus(statusMsg, true);
+    renderLoadingView(statusMsg);
+
     try {
-      let warm = await quickWarmCheck();
-      if (!warm) {
-        warm = await wakeBackend();
-        if (!warm) {
-          setStatus("", false);
-          renderStateCard({
-            error: true,
-            title: "Engine unavailable",
-            message:
-              "Web-X could not wake up in time. Wait a moment and retry — cold starts can take up to a minute.",
-            retry: true,
-          });
-          return;
-        }
-      }
-
-      const statusMsg =
-        state.tab === "ai"
-          ? "Reading live web pages…"
-          : "Fetching web results…";
-      setStatus(statusMsg, true);
-      renderSkeleton();
-
       if (state.tab === "news") {
-        const { response, data } = await postSearch({
-          query: state.query,
-          tab: "news",
-        });
+        const { response, data } = await postSearchWithRetry(
+          { query: state.query, tab: "news" },
+          statusMsg
+        );
         setStatus("", false);
         if (!response.ok) {
-          if (response.status === 503) {
-            renderStateCard({
-              error: true,
-              title: "Engine waking up",
-              message: data.error || "Backend still starting. Retry in a few seconds.",
-              retry: true,
-            });
-            return;
-          }
-          renderNewsEmpty();
+          renderStateCard({
+            error: true,
+            title: "Search unavailable",
+            message:
+              data.error ||
+              "We could not complete your search right now. Please try again.",
+            retry: true,
+          });
           return;
         }
         const news = data.news || data.results || [];
@@ -770,24 +728,10 @@
         return;
       }
 
-      let { response, data } = await postSearch({
-        query: state.query,
-        tab: state.tab,
-      });
-
-      if (response.status === 503 && !data.ok) {
-        setStatus("Waking up Web-X engine…", true);
-        renderWakeCard("Search hit a cold backend — waking up and retrying.");
-        const retryWarm = await wakeBackend();
-        if (retryWarm) {
-          setStatus(statusMsg, true);
-          renderSkeleton();
-          ({ response, data } = await postSearch({
-            query: state.query,
-            tab: state.tab,
-          }));
-        }
-      }
+      const { response, data } = await postSearchWithRetry(
+        { query: state.query, tab: state.tab },
+        statusMsg
+      );
 
       setStatus("", false);
 
@@ -803,7 +747,7 @@
       if (!response.ok) {
         const msg =
           data.error ||
-          "Search failed (" + response.status + "). The engine may still be waking up.";
+          "We could not complete your search right now. Please try again.";
         throw new Error(msg);
       }
 
@@ -824,9 +768,9 @@
       const offline = typeof navigator !== "undefined" && !navigator.onLine;
       renderStateCard({
         error: true,
-        title: offline ? "You are offline" : "Search error",
+        title: offline ? "You are offline" : "Search unavailable",
         message: offline
-          ? "Reconnect and retry. Web-X-AI² needs network access."
+          ? "Reconnect and try again."
           : String(err.message || err),
         retry: true,
       });
@@ -858,8 +802,6 @@
     }
     showResults();
     setActiveTab(state.tab);
-    setStatus("Starting search…", true);
-    renderWakeCard("Connecting to Web-X engine…");
     executeSearch();
   }
 
@@ -877,8 +819,7 @@
         renderStateCard({
           error: true,
           title: "AI Mode not configured",
-          message:
-            "Add your API keys to .env in C:\\scrapling\\agentic_scraper (see .env.example).",
+          message: "AI Mode is not available right now. Try All search instead.",
           retry: false,
         });
       }

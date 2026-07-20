@@ -4,27 +4,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect } from "react";
 
-const WEBX_STYLE_ID = "webx-stylesheet";
-
-function injectStylesheet(id: string, href: string) {
-  if (document.getElementById(id)) {
-    return;
-  }
-  const link = document.createElement("link");
-  link.id = id;
-  link.rel = "stylesheet";
-  link.href = href;
-  document.head.appendChild(link);
-}
-
-function removeStylesheet(id: string) {
-  document.getElementById(id)?.remove();
-}
-
 export function WebXShell() {
   useEffect(() => {
-    injectStylesheet(WEBX_STYLE_ID, "/web-x/webx.css");
-
     const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
     const ping = () => {
       fetch(`${base}/api/webx/warmup`, { method: "GET" }).catch(() => {});
@@ -34,12 +15,12 @@ export function WebXShell() {
 
     return () => {
       window.clearInterval(heartbeat);
-      removeStylesheet(WEBX_STYLE_ID);
     };
   }, []);
 
   return (
     <div className="webx-root">
+      <link href="/web-x/webx.css" rel="stylesheet" />
       <a className="skip-link" href="#contentContainer">
         Skip to results
       </a>
@@ -346,8 +327,7 @@ export function WebXShell() {
             <h2>AI Mode</h2>
             <p>
               Web-X-AI² fetches live pages first, then answers your question from
-              those excerpts with cited sources. AI keys stay on your laptop — run
-              the local Web-X server to enable AI Mode.
+              those excerpts with cited sources.
             </p>
             <div className="ai-panel-actions">
               <button className="btn-text" id="aiPanelClose" type="button">
@@ -370,7 +350,7 @@ export function WebXShell() {
           boot?.();
         }}
         src="/web-x/webx-app.js"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
     </div>
   );
