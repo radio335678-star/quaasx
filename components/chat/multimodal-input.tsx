@@ -47,10 +47,10 @@ import {
   WorkMentionMenu,
 } from "./work-mention-menu";
 import { LIBRARY_WORKS } from "@/lib/ai2/works";
+import { ModalityPickerPopover } from "./modality-picker";
 import {
   MAX_SCOPED_WORKS,
   type LibraryWork,
-  WorkPickerPopover,
   WorkScopeChips,
 } from "./work-picker";
 import type { VisibilityType } from "./visibility-selector";
@@ -808,10 +808,8 @@ function PureMultimodalInput({
         />
         <PromptInputFooter className="px-3 pb-3">
           <PromptInputTools>
-            <WorkPickerPopover
+            <ModalityPickerPopover
               disabled={status !== "ready" && status !== "error"}
-              onToggleWork={toggleSelectedWork}
-              selectedWorks={selectedWorks}
             />
             <AttachmentsButton
               fileInputRef={fileInputRef}
