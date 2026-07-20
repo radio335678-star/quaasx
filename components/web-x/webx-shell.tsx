@@ -1,12 +1,43 @@
+"use client";
+
 import Link from "next/link";
 import Script from "next/script";
+import { useEffect } from "react";
+
+const WEBX_STYLE_ID = "webx-stylesheet";
+const WEBX_FONT_ID = "webx-fonts";
+
+function injectStylesheet(id: string, href: string) {
+  if (document.getElementById(id)) {
+    return;
+  }
+  const link = document.createElement("link");
+  link.id = id;
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}
+
+function removeStylesheet(id: string) {
+  document.getElementById(id)?.remove();
+}
 
 export function WebXShell() {
-  return (
-    <>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      <link href="/web-x/webx.css" rel="stylesheet" />
+  useEffect(() => {
+    injectStylesheet(
+      WEBX_FONT_ID,
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    );
+    injectStylesheet(WEBX_STYLE_ID, "/web-x/webx.css");
 
+    return () => {
+      removeStylesheet(WEBX_STYLE_ID);
+      removeStylesheet(WEBX_FONT_ID);
+    };
+  }, []);
+
+  return (
+    <div className="webx-root">
       <a className="skip-link" href="#contentContainer">
         Skip to results
       </a>
@@ -328,6 +359,6 @@ export function WebXShell() {
       </div>
 
       <Script src="/web-x/webx-app.js" strategy="afterInteractive" />
-    </>
+    </div>
   );
 }
