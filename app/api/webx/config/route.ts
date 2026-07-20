@@ -1,10 +1,11 @@
-import { getWebXBackendUrl } from "@/lib/webx-backend";
+import { getWebXBackendHeaders, getWebXBackendUrl } from "@/lib/webx-backend";
 
 export async function GET() {
   const backend = getWebXBackendUrl();
 
   try {
     const response = await fetch(`${backend}/api/config`, {
+      headers: getWebXBackendHeaders(),
       signal: AbortSignal.timeout(15_000),
     });
 

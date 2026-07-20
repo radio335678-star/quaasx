@@ -1,4 +1,4 @@
-import { getWebXBackendUrl, WEBX_OFFLINE_MESSAGE } from "@/lib/webx-backend";
+import { getWebXBackendHeaders, getWebXBackendUrl, WEBX_OFFLINE_MESSAGE } from "@/lib/webx-backend";
 
 export const maxDuration = 300;
 
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     const response = await fetch(`${backend}/api/search`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getWebXBackendHeaders(),
       body: await request.text(),
       signal: AbortSignal.timeout(300_000),
     });
