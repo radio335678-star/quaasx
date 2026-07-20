@@ -4,9 +4,9 @@ import { libraryCatalog, primaryTranslation, tierLabel } from "@/lib/ai2/library
 import { NcismCoverageSection } from "@/components/ncism-coverage-section";
 
 export const metadata = {
-  title: `Corpus — ${brand.name}`,
+  title: `Classical texts — ${brand.name}`,
   description:
-    "Subject-wise Ayurveda books on the AI² Modal library — DB query tier vs raw CORPUS editions.",
+    "The Samhitas and classical Ayurveda sources AI² is grounded in — organized by subject, with verse-level citations.",
 };
 
 function translationNote(book: {
@@ -16,28 +16,27 @@ function translationNote(book: {
   translation_status?: Record<string, number> | null;
 }) {
   if (book.tier !== "db") {
-    return "Raw `.txt` editions on volume";
+    return "Reference edition — deepening in progress";
   }
   const t = primaryTranslation(book);
   if (t === "gold") {
-    // AH/AS/Sy/Ck are Sanskrit-canonical gold (no stored English); others are English gold.
     if (
       book.abbrev === "AH" ||
       book.abbrev === "AS" ||
       book.abbrev === "Sy" ||
       book.abbrev === "Ck"
     ) {
-      return "Sanskrit gold — English from model when needed";
+      return "Sanskrit canonical · English when you need it";
     }
-    return "Verified English (gold)";
+    return "Verified classical translation";
   }
   if (t === "machine") {
     return "Working translation";
   }
   if (book.total_shlokas) {
-    return "Sanskrit in DB (translation pending)";
+    return "Sanskrit preserved · translation in progress";
   }
-  return "In unified DB";
+  return "Integrated into AI²";
 }
 
 export default function CorpusPage() {
@@ -52,22 +51,21 @@ export default function CorpusPage() {
   return (
     <div className="mx-auto max-w-4xl px-6 pb-24 pt-28">
       <p className="mb-3 text-muted-foreground text-sm tracking-wide uppercase">
-        Corpus
+        Classical foundation
       </p>
       <h1 className="font-semibold text-3xl tracking-tight md:text-4xl">
-        Ayurveda library by subject
+        The texts behind {brand.name}
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-        {brand.name} mounts a single Modal volume at{" "}
-        <code className="text-foreground text-sm">/data</code> — unified DB for
-        cite-first answers, plus raw classical editions grouped by Ayurveda
-        subject.
+        {brand.name} is grounded in the major Samhitas and classical sources —
+        organized by subject so answers cite real verses in Devanagari, not
+        guesswork.
       </p>
 
       <dl className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-lg border border-border/50 px-4 py-3">
           <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-            Subjects
+            Subject areas
           </dt>
           <dd className="mt-1 font-semibold text-2xl">
             {libraryCatalog.total_subjects}
@@ -75,7 +73,7 @@ export default function CorpusPage() {
         </div>
         <div className="rounded-lg border border-border/50 px-4 py-3">
           <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-            DB shlokas
+            Classical verses
           </dt>
           <dd className="mt-1 font-semibold text-2xl">
             {totalReady > 0 ? totalReady.toLocaleString() : "67,004+"}
@@ -83,7 +81,7 @@ export default function CorpusPage() {
         </div>
         <div className="rounded-lg border border-border/50 px-4 py-3">
           <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-            Raw edition files
+            Source editions
           </dt>
           <dd className="mt-1 font-semibold text-2xl">
             {libraryCatalog.total_corpus_files}
@@ -100,15 +98,12 @@ export default function CorpusPage() {
             <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
               {subject.subject}
             </p>
-            <p className="mt-1 text-muted-foreground text-xs">
-              Agent:{" "}
-              <span className="font-mono text-foreground/80">
-                {subject.agent_id}
-              </span>
-              {" · "}
-              {subject.corpus_file_count} raw file
-              {subject.corpus_file_count === 1 ? "" : "s"}
-            </p>
+            {subject.corpus_file_count > 0 ? (
+              <p className="mt-1 text-muted-foreground text-xs">
+                {subject.corpus_file_count} supporting edition
+                {subject.corpus_file_count === 1 ? "" : "s"}
+              </p>
+            ) : null}
 
             <ul className="mt-4 space-y-3">
               {subject.books.map((book) => (
@@ -139,7 +134,7 @@ export default function CorpusPage() {
             {subject.corpus_editions.length > 0 ? (
               <details className="mt-4">
                 <summary className="cursor-pointer text-muted-foreground text-sm hover:text-foreground">
-                  Edition folders on volume ({subject.corpus_editions.length})
+                  Original edition sources ({subject.corpus_editions.length})
                 </summary>
                 <ul className="mt-2 space-y-1 pl-2">
                   {subject.corpus_editions.map((ed) => (
@@ -148,7 +143,7 @@ export default function CorpusPage() {
                       key={ed.corpus_path}
                     >
                       {ed.folder}
-                      {ed.file_count > 0 ? ` — ${ed.file_count} file(s)` : ""}
+                      {ed.file_count > 0 ? ` — ${ed.file_count} part(s)` : ""}
                     </li>
                   ))}
                 </ul>

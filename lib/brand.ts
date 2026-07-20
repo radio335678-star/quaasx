@@ -54,6 +54,6 @@ export const corpusCoverage = {
 
 export const navLinks = [
   { href: "/product", label: "Product" },
-  { href: "/corpus", label: "Corpus" },
+  { href: "/corpus", label: "Classics" },
   { href: "/about", label: "About" },
 ] as const;
