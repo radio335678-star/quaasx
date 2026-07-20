@@ -25,6 +25,8 @@
     activeChip: null,
     abort: null,
     aiConfigured: false,
+    busy: false,
+    waking: false,
   };
 
   const el = {
@@ -157,6 +159,83 @@
       const close = $("#aiPanelClose");
       if (close) close.focus();
     }
+  }
+
+  function setBusy(on) {
+    state.busy = Boolean(on);
+    [el.landingForm, el.resultsForm].forEach((form) => {
+      if (!form) return;
+      form.querySelectorAll("button, input").forEach((node) => {
+        node.disabled = state.busy;
+      });
+    });
+  }
+
+  function renderWakeCard(message) {
+    clearNode(el.content);
+    const card = document.createElement("div");
+    card.className = "state-card state-card--wake";
+    card.setAttribute("role", "status");
+    card.setAttribute("aria-live", "polite");
+
+    const spinner = document.createElement("div");
+    spinner.className = "wake-spinner";
+    spinner.setAttribute("aria-hidden", "true");
+    card.appendChild(spinner);
+
+    const h = document.createElement("h2");
+    text(h, "Waking up Web-X engine");
+    card.appendChild(h);
+
+    const p = document.createElement("p");
+    text(p, message || "Cold start on Modal — first search may take 15–30 seconds.");
+    card.appendChild(p);
+
+    el.content.appendChild(card);
+  }
+
+  async function wakeBackend() {
+    const maxAttempts = 30;
+    const delayMs = 2000;
+
+    state.waking = true;
+    setStatus("Waking up Web-X engine…", true);
+    renderWakeCard("Starting the search backend. This usually takes a few seconds.");
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      if (state.abort && state.abort.signal.aborted) {
+        state.waking = false;
+        return false;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/warmup`, {
+          method: "GET",
+          signal: state.abort ? state.abort.signal : undefined,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok) {
+            state.waking = false;
+            return true;
+          }
+        }
+      } catch (_) {
+        /* retry */
+      }
+
+      if (attempt < maxAttempts - 1) {
+        const secs = Math.round(((attempt + 1) * delayMs) / 1000);
+        setStatus("Waking up Web-X engine… (" + secs + "s)", true);
+        renderWakeCard(
+          "Still starting — Modal containers spin down after idle. Hang tight."
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+
+    state.waking = false;
+    return false;
   }
 
   function renderSkeleton() {
@@ -592,37 +671,92 @@
     }
   }
 
+  async function quickWarmCheck() {
+    try {
+      const res = await fetch(`${API_BASE}/warmup`, {
+        method: "GET",
+        signal: state.abort ? state.abort.signal : undefined,
+      });
+      if (!res.ok) return false;
+      const data = await res.json();
+      return Boolean(data.ok);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function postSearch(payload) {
+    const response = await fetch(`${API_BASE}/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: state.abort.signal,
+    });
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (_) {
+      data = {};
+    }
+    return { response, data };
+  }
+
   async function executeSearch() {
-    if (!state.query) return;
+    if (!state.query || state.busy) return;
 
     if (state.abort) {
       state.abort.abort();
     }
     state.abort = new AbortController();
 
+    setBusy(true);
+    showResults();
     showAiPanel(false);
-    const statusMsg =
-      state.tab === "ai"
-        ? "Reading live web pages…"
-        : "Fetching web results…";
-    setStatus(statusMsg, true);
-    renderSkeleton();
     persist();
 
-    if (state.tab === "news") {
-      setStatus("", false);
-      try {
-        const response = await fetch(`${API_BASE}/search`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: state.query, tab: "news" }),
-          signal: state.abort.signal,
+    try {
+      let warm = await quickWarmCheck();
+      if (!warm) {
+        warm = await wakeBackend();
+        if (!warm) {
+          setStatus("", false);
+          renderStateCard({
+            error: true,
+            title: "Engine unavailable",
+            message:
+              "Web-X could not wake up in time. Wait a moment and retry — cold starts can take up to a minute.",
+            retry: true,
+          });
+          return;
+        }
+      }
+
+      const statusMsg =
+        state.tab === "ai"
+          ? "Reading live web pages…"
+          : "Fetching web results…";
+      setStatus(statusMsg, true);
+      renderSkeleton();
+
+      if (state.tab === "news") {
+        const { response, data } = await postSearch({
+          query: state.query,
+          tab: "news",
         });
+        setStatus("", false);
         if (!response.ok) {
+          if (response.status === 503) {
+            renderStateCard({
+              error: true,
+              title: "Engine waking up",
+              message: data.error || "Backend still starting. Retry in a few seconds.",
+              retry: true,
+            });
+            return;
+          }
           renderNewsEmpty();
           return;
         }
-        const data = await response.json();
         const news = data.news || data.results || [];
         if (!news.length) {
           renderNewsEmpty();
@@ -633,22 +767,28 @@
         list.className = "results-list";
         news.forEach((item, idx) => list.appendChild(renderResultCard(item, idx)));
         el.content.appendChild(list);
-      } catch (err) {
-        if (err.name === "AbortError") return;
-        renderNewsEmpty();
+        return;
       }
-      return;
-    }
 
-    try {
-      const response = await fetch(`${API_BASE}/search`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: state.query, tab: state.tab }),
-        signal: state.abort.signal,
+      let { response, data } = await postSearch({
+        query: state.query,
+        tab: state.tab,
       });
 
-      const data = await response.json();
+      if (response.status === 503 && !data.ok) {
+        setStatus("Waking up Web-X engine…", true);
+        renderWakeCard("Search hit a cold backend — waking up and retrying.");
+        const retryWarm = await wakeBackend();
+        if (retryWarm) {
+          setStatus(statusMsg, true);
+          renderSkeleton();
+          ({ response, data } = await postSearch({
+            query: state.query,
+            tab: state.tab,
+          }));
+        }
+      }
+
       setStatus("", false);
 
       if (state.tab === "ai") {
@@ -661,7 +801,10 @@
       }
 
       if (!response.ok) {
-        throw new Error("Search failed (" + response.status + ")");
+        const msg =
+          data.error ||
+          "Search failed (" + response.status + "). The engine may still be waking up.";
+        throw new Error(msg);
       }
 
       if (state.tab === "images") {
@@ -687,11 +830,14 @@
           : String(err.message || err),
         retry: true,
       });
+    } finally {
+      setBusy(false);
     }
   }
 
   function runSearch(source, opts) {
     opts = opts || {};
+    if (state.busy) return;
     let q = "";
     if (source === "landing") {
       q = el.landingInput.value.trim();
@@ -712,10 +858,13 @@
     }
     showResults();
     setActiveTab(state.tab);
+    setStatus("Starting search…", true);
+    renderWakeCard("Connecting to Web-X engine…");
     executeSearch();
   }
 
   function onTabClick(tabName) {
+    if (state.busy) return;
     if (tabName === "soon") return;
     if (tabName === "images" || tabName === "videos") {
       return;
@@ -741,6 +890,7 @@
   }
 
   function onChipClick(chipId) {
+    if (state.busy) return;
     if (chipId === "clear") {
       state.activeChip = null;
       state.query = state.baseQuery;
@@ -843,15 +993,27 @@
     if (brandHome) {
       brandHome.addEventListener("click", (e) => {
         e.preventDefault();
+        if (state.busy) return;
         showLanding();
       });
     }
   }
 
-  document.addEventListener("DOMContentLoaded", async () => {
+  let booted = false;
+
+  function boot() {
+    if (booted) return;
+    booted = true;
     bind();
     showAiPanel(false);
-    await fetchConfig();
-    restoreSession();
-  });
+    fetchConfig().then(() => restoreSession());
+  }
+
+  window.__webxBoot = boot;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();

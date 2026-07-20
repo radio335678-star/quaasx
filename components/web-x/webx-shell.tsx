@@ -69,6 +69,7 @@ export function WebXShell() {
             aria-label="Web search"
             className="search-form"
             id="landingForm"
+            onSubmit={(e) => e.preventDefault()}
             role="search"
           >
             <div className="search-pill">
@@ -183,6 +184,7 @@ export function WebXShell() {
               aria-label="Refine search"
               className="search-form"
               id="resultsForm"
+              onSubmit={(e) => e.preventDefault()}
               role="search"
             >
               <div className="results-search-pill">
@@ -360,7 +362,16 @@ export function WebXShell() {
         </main>
       </div>
 
-      <Script src="/web-x/webx-app.js" strategy="afterInteractive" />
+      <Script
+        onLoad={() => {
+          const boot = (
+            window as Window & { __webxBoot?: () => void }
+          ).__webxBoot;
+          boot?.();
+        }}
+        src="/web-x/webx-app.js"
+        strategy="afterInteractive"
+      />
     </div>
   );
 }

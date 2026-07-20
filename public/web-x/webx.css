@@ -955,6 +955,28 @@ input {
   color: var(--danger);
 }
 
+.state-card--wake {
+  text-align: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.wake-spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 16px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: webx-spin 0.85s linear infinite;
+}
+
+@keyframes webx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
