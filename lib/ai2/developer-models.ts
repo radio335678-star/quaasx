@@ -9,7 +9,11 @@ export type DeveloperModel = {
   inputPer1M: string | null;
   outputPer1M: string | null;
   context: string;
+  /** Listed on Developers API page */
   available: boolean;
+  /** Selectable in the chat composer */
+  chatSelectable: boolean;
+  unavailableReason?: string;
   badge?: string;
 };
 
@@ -26,6 +30,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     outputPer1M: "$0.80",
     context: "128K",
     available: true,
+    chatSelectable: false,
+    unavailableReason: "Coming soon",
   },
   {
     id: "pro",
@@ -38,6 +44,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     outputPer1M: "$4.80",
     context: "128K",
     available: true,
+    chatSelectable: true,
     badge: "Recommended",
   },
   {
@@ -51,6 +58,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     outputPer1M: "$14.00",
     context: "256K",
     available: true,
+    chatSelectable: false,
+    unavailableReason: "Upgrade required",
   },
   {
     id: "god",
@@ -63,8 +72,25 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     outputPer1M: null,
     context: "1M+",
     available: false,
+    chatSelectable: false,
+    unavailableReason: "Unavailable on free tier",
     badge: "Unavailable on free tier",
   },
 ];
+
+export const DEFAULT_CHAT_MODEL =
+  DEVELOPER_MODELS.find((m) => m.chatSelectable)?.slug ?? "ai2-ayu-pro";
+
+export function findChatModel(slug: string) {
+  return DEVELOPER_MODELS.find((m) => m.slug === slug);
+}
+
+export function resolveChatModel(slug: string | undefined) {
+  const model = slug ? findChatModel(slug) : undefined;
+  if (model?.chatSelectable) {
+    return model;
+  }
+  return findChatModel(DEFAULT_CHAT_MODEL)!;
+}
 
 export const DEVELOPER_API_BASE = "https://api.ai2.quaasx.com/v1";

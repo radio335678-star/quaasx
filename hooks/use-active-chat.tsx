@@ -25,7 +25,10 @@ import {
   type AudienceMode,
   isAudienceMode,
 } from "@/lib/ai2/audience-mode";
-import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
+import {
+  DEFAULT_CHAT_MODEL,
+  resolveChatModel,
+} from "@/lib/ai2/developer-models";
 import type { Vote } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
 import {
@@ -80,11 +83,23 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
 
   const chatId = chatIdFromUrl ?? newChatIdRef.current;
 
-  const [currentModelId, setCurrentModelId] = useState(DEFAULT_CHAT_MODEL);
+  const [currentModelId, setCurrentModelIdState] = useState(() => {
+    if (typeof window === "undefined") {
+      return DEFAULT_CHAT_MODEL;
+    }
+    const stored = window.localStorage.getItem("ai2-chat-model");
+    return resolveChatModel(stored ?? undefined).slug;
+  });
   const currentModelIdRef = useRef(currentModelId);
   useEffect(() => {
     currentModelIdRef.current = currentModelId;
   }, [currentModelId]);
+
+  const setCurrentModelId = useCallback((id: string) => {
+    const model = resolveChatModel(id);
+    setCurrentModelIdState(model.slug);
+    window.localStorage.setItem("ai2-chat-model", model.slug);
+  }, []);
 
   const [input, setInput] = useState("");
   const [audienceMode, setAudienceModeState] = useState<AudienceMode>(() => {

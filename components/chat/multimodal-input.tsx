@@ -20,12 +20,12 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
+import { ModelPickerPopover } from "@/components/ai2/ModelPickerPopover";
 import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
 import type { AudienceMode } from "@/lib/ai2/audience-mode";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { filterWorks } from "@/lib/ai2/works";
 import { resolveScopedWorksFromInput } from "@/lib/ai2/parse-mentions";
-import { brand } from "@/lib/brand";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
@@ -70,7 +70,7 @@ function PureMultimodalInput({
   className,
   selectedVisibilityType: _selectedVisibilityType,
   selectedModelId,
-  onModelChange: _onModelChange,
+  onModelChange,
   editingMessage,
   onCancelEdit,
   isLoading: _isLoading,
@@ -823,7 +823,11 @@ function PureMultimodalInput({
               selectedModelId={selectedModelId}
               status={status}
             />
-            <Ai2EngineBadge />
+            <ModelPickerPopover
+              disabled={!isComposerEnabled || (status !== "ready" && status !== "error")}
+              onModelChange={onModelChange}
+              selectedModelId={selectedModelId}
+            />
             {onAudienceModeChange ? (
               <AudienceModeToggle
                 onChange={onAudienceModeChange}
@@ -954,27 +958,6 @@ function PureAttachmentsButton({
 }
 
 const AttachmentsButton = memo(PureAttachmentsButton);
-
-function Ai2EngineBadge() {
-  return (
-    <div
-      className="flex h-7 max-w-[220px] items-center gap-1.5 rounded-lg px-2 text-[12px] text-muted-foreground"
-      data-testid="ai2-engine-badge"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        alt={brand.name}
-        className="size-4 rounded"
-        height={16}
-        src={brand.mark}
-        width={16}
-      />
-      <span className="truncate font-medium tracking-tight">
-        {brand.name}
-      </span>
-    </div>
-  );
-}
 
 function PureStopButton({
   stop,
