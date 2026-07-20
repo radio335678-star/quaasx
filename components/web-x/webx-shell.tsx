@@ -4,6 +4,24 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect } from "react";
 
+function BrandSymbol({ size = "lg" }: { size?: "lg" | "sm" }) {
+  return (
+    <div
+      aria-label="Web-X-AI²"
+      className={`brand-symbol brand-symbol--${size}`}
+    >
+      <span aria-hidden="true" className="brand-symbol__orbit" />
+      <span aria-hidden="true" className="brand-symbol__glow" />
+      <span className="brand-symbol__text">
+        <span className="brand-symbol__web">Web</span>
+        <span className="brand-symbol__x">-X</span>
+        <span className="brand-symbol__ai">AI²</span>
+      </span>
+      <span aria-hidden="true" className="brand-symbol__sheen" />
+    </div>
+  );
+}
+
 export function WebXShell() {
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -30,18 +48,10 @@ export function WebXShell() {
           <Link className="nav-link" href="/app">
             ← AI² Chat
           </Link>
-          <a className="nav-link" href="#about" data-ai-open>
-            About
-          </a>
-          <a className="nav-link" href="#about" data-ai-open>
-            How it works
-          </a>
         </header>
 
         <main className="landing-center" role="main">
-          <div aria-label="Web-X-AI²" className="brand-mark brand-mark--lg">
-            Web-X-AI²
-          </div>
+          <BrandSymbol size="lg" />
           <p className="brand-tagline">
             Open-web search · stealth fetch · AI Mode answers
           </p>
@@ -109,42 +119,9 @@ export function WebXShell() {
               </div>
             </div>
           </form>
-
-          <div aria-label="Quick searches" className="shortcuts-grid">
-            <button
-              className="shortcut-item"
-              data-quick="Ayurveda Sanskrit Shloka"
-              type="button"
-            >
-              <div aria-hidden="true" className="shortcut-circle">
-                A
-              </div>
-              <span>Ayurveda</span>
-            </button>
-            <button
-              className="shortcut-item"
-              data-quick="Python 3.13 features"
-              type="button"
-            >
-              <div aria-hidden="true" className="shortcut-circle">
-                P
-              </div>
-              <span>Python 3.13</span>
-            </button>
-            <button
-              className="shortcut-item"
-              data-quick="Charaka Samhita"
-              type="button"
-            >
-              <div aria-hidden="true" className="shortcut-circle">
-                C
-              </div>
-              <span>Charaka</span>
-            </button>
-          </div>
         </main>
 
-        <footer className="landing-footer" id="about">
+        <footer className="landing-footer">
           Web-X-AI² · Web Intelligence · QUAASX
         </footer>
       </div>
@@ -154,11 +131,11 @@ export function WebXShell() {
           <div className="header-top-row">
             <a
               aria-label="Web-X-AI² home"
-              className="brand-mark brand-mark--sm"
+              className="brand-home-link"
               href="/app/web-x"
               id="brandHome"
             >
-              Web-X-AI²
+              <BrandSymbol size="sm" />
             </a>
 
             <form

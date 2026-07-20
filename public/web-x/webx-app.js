@@ -878,17 +878,6 @@
       chip.addEventListener("click", () => onChipClick(chip.getAttribute("data-chip")));
     });
 
-    $$("[data-quick]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const q = btn.getAttribute("data-quick");
-        el.landingInput.value = q;
-        state.activeChip = null;
-        updateChipUI();
-        runSearch("landing");
-      });
-    });
-
     $$("[data-ai-search]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -900,19 +889,6 @@
         state.activeChip = null;
         updateChipUI();
         runSearch("landing", { tab: "ai" });
-      });
-    });
-
-    $$("[data-ai-open]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (el.results.classList.contains("is-active") || state.query) {
-          showResults();
-          showAiPanel(true);
-        } else {
-          const foot = document.getElementById("about");
-          if (foot) foot.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
       });
     });
 
