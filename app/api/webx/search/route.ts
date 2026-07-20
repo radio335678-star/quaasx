@@ -4,12 +4,13 @@ export const maxDuration = 300;
 
 export async function POST(request: Request) {
   const backend = getWebXBackendUrl();
+  const body = await request.text();
 
   try {
     const response = await fetch(`${backend}/api/search`, {
       method: "POST",
-      headers: getWebXBackendHeaders(),
-      body: await request.text(),
+      headers: getWebXBackendHeaders("application/json"),
+      body,
       signal: AbortSignal.timeout(300_000),
     });
 
