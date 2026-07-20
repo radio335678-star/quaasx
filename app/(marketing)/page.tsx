@@ -60,6 +60,12 @@ export default function HomePage() {
           </Link>
           <Link
             className="rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:border-border hover:bg-white/5"
+            href="/developers"
+          >
+            Developers
+          </Link>
+          <Link
+            className="rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:border-border hover:bg-white/5"
             href="/product"
           >
             See the Engine
