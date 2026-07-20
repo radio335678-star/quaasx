@@ -5,7 +5,6 @@ import Script from "next/script";
 import { useEffect } from "react";
 
 const WEBX_STYLE_ID = "webx-stylesheet";
-const WEBX_FONT_ID = "webx-fonts";
 
 function injectStylesheet(id: string, href: string) {
   if (document.getElementById(id)) {
@@ -24,10 +23,6 @@ function removeStylesheet(id: string) {
 
 export function WebXShell() {
   useEffect(() => {
-    injectStylesheet(
-      WEBX_FONT_ID,
-      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-    );
     injectStylesheet(WEBX_STYLE_ID, "/web-x/webx.css");
 
     const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -40,7 +35,6 @@ export function WebXShell() {
     return () => {
       window.clearInterval(heartbeat);
       removeStylesheet(WEBX_STYLE_ID);
-      removeStylesheet(WEBX_FONT_ID);
     };
   }, []);
 
@@ -82,7 +76,7 @@ export function WebXShell() {
                 aria-hidden="true"
                 fill="none"
                 height="20"
-                stroke="#70757a"
+                stroke="#8a8a8a"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
                 width="20"
