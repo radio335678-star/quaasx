@@ -1,7 +1,16 @@
+/** Modal `ai2-web-x` production gateway (used when Vercel env is unset). */
+export const WEBX_MODAL_PRODUCTION_URL =
+  "https://quaasx--ai2-web-x-webxgateway-web.modal.run";
+
 export function getWebXBackendUrl(): string {
-  return (
-    process.env.WEBX_BACKEND_URL?.replace(/\/$/, "") || "http://127.0.0.1:5000"
-  );
+  const fromEnv = process.env.WEBX_BACKEND_URL?.replace(/\/$/, "");
+  if (fromEnv) {
+    return fromEnv;
+  }
+  if (process.env.VERCEL) {
+    return WEBX_MODAL_PRODUCTION_URL;
+  }
+  return "http://127.0.0.1:5000";
 }
 
 export function getWebXBackendHeaders(
