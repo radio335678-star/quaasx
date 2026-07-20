@@ -319,6 +319,48 @@ export function WebXShell() {
         </main>
       </div>
 
+      <div
+        aria-label="Page viewer"
+        className="page-viewer"
+        hidden
+        id="pageViewer"
+        role="dialog"
+      >
+        <header className="page-viewer-bar">
+          <button className="page-viewer-btn" id="pageViewerBack" type="button">
+            ← Results
+          </button>
+          <span className="page-viewer-title" id="pageViewerTitle" />
+          <div className="page-viewer-actions">
+            <button className="page-viewer-btn" id="pageViewerExternal" type="button">
+              Open in browser ↗
+            </button>
+            <button
+              aria-label="Close page"
+              className="page-viewer-btn page-viewer-btn--icon"
+              id="pageViewerClose"
+              type="button"
+            >
+              ✕
+            </button>
+          </div>
+        </header>
+        <div className="page-viewer-body">
+          <iframe
+            className="page-viewer-frame"
+            id="pageViewerFrame"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+            title="Web page preview"
+          />
+          <div className="page-viewer-fallback" hidden id="pageViewerFallback">
+            <p>This site cannot be shown inside Web-X.</p>
+            <button className="btn-primary" id="pageViewerFallbackOpen" type="button">
+              Open in browser
+            </button>
+          </div>
+        </div>
+      </div>
+
       <Script
         onLoad={() => {
           const boot = (

@@ -26,6 +26,8 @@
     abort: null,
     aiConfigured: false,
     busy: false,
+    viewerUrl: "",
+    viewerTitle: "",
   };
 
   const el = {
@@ -41,6 +43,13 @@
     chips: document.getElementById("actionChips"),
     tabs: document.getElementById("tabsBar"),
     clearBtn: document.getElementById("clearSearchBtn"),
+    pageViewer: document.getElementById("pageViewer"),
+    pageViewerFrame: document.getElementById("pageViewerFrame"),
+    pageViewerTitle: document.getElementById("pageViewerTitle"),
+    pageViewerBack: document.getElementById("pageViewerBack"),
+    pageViewerExternal: document.getElementById("pageViewerExternal"),
+    pageViewerClose: document.getElementById("pageViewerClose"),
+    pageViewerFallback: document.getElementById("pageViewerFallback"),
   };
 
   function $(sel, root) {
@@ -70,6 +79,91 @@
     a.rel = "noopener noreferrer";
     if (className) a.className = className;
     return a;
+  }
+
+  function resultLink(href, className, label) {
+    const a = document.createElement("a");
+    a.href = safeUrl(href);
+    if (className) a.className = className;
+    text(a, label || href);
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      openPageViewer(href, label);
+    });
+    return a;
+  }
+
+  function formatBreadcrumb(url, domain) {
+    try {
+      const u = new URL(safeUrl(url));
+      const host = (domain || u.hostname).replace(/^www\./i, "");
+      let path = u.pathname;
+      if (path === "/") {
+        path = "";
+      } else if (path.length > 42) {
+        path = path.slice(0, 39) + "…";
+      }
+      return { host, path };
+    } catch (_) {
+      return { host: domain || "", path: "" };
+    }
+  }
+
+  function openPageViewer(url, title) {
+    if (!el.pageViewer || !el.pageViewerFrame) {
+      window.open(safeUrl(url), "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const safe = safeUrl(url);
+    if (safe === "#") return;
+
+    state.viewerUrl = safe;
+    state.viewerTitle = title || safe;
+
+    if (el.pageViewerTitle) {
+      text(el.pageViewerTitle, state.viewerTitle);
+    }
+    if (el.pageViewerFallback) {
+      el.pageViewerFallback.hidden = true;
+    }
+
+    el.pageViewer.hidden = false;
+    el.pageViewer.classList.add("is-open");
+    document.body.classList.add("webx-viewer-open");
+    el.pageViewerFrame.src = safe;
+
+    window.setTimeout(() => {
+      if (!el.pageViewer?.classList.contains("is-open")) return;
+      try {
+        const doc = el.pageViewerFrame.contentDocument;
+        if (doc && doc.body && doc.body.childElementCount === 0) {
+          showViewerFallback();
+        }
+      } catch (_) {
+        /* cross-origin — page likely loaded */
+      }
+    }, 2500);
+  }
+
+  function showViewerFallback() {
+    if (el.pageViewerFallback) {
+      el.pageViewerFallback.hidden = false;
+    }
+  }
+
+  function closePageViewer() {
+    if (!el.pageViewer) return;
+    el.pageViewer.classList.remove("is-open");
+    el.pageViewer.hidden = true;
+    document.body.classList.remove("webx-viewer-open");
+    if (el.pageViewerFrame) {
+      el.pageViewerFrame.src = "about:blank";
+    }
+    if (el.pageViewerFallback) {
+      el.pageViewerFallback.hidden = true;
+    }
+    state.viewerUrl = "";
   }
 
   function clearNode(node) {
@@ -373,61 +467,53 @@
     const compact = Boolean(opts.compact);
     const card = document.createElement("article");
     card.className = "card-result" + (compact ? " card-result--compact" : "");
+    const label = item.title || item.url || "Untitled";
 
-    const crumb = externalLink(item.url, "card-breadcrumb");
+    const siteRow = document.createElement("div");
+    siteRow.className = "card-site-row";
+
+    const siteLink = document.createElement("a");
+    siteLink.href = safeUrl(item.url);
+    siteLink.className = "card-site-link";
+    siteLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      openPageViewer(item.url, label);
+    });
+
     if (item.favicon) {
       const fav = document.createElement("img");
       fav.className = "favicon-img";
       fav.src = safeUrl(item.favicon);
       fav.alt = "";
-      fav.width = 18;
-      fav.height = 18;
+      fav.width = 16;
+      fav.height = 16;
       fav.addEventListener("error", () => {
         fav.style.display = "none";
       });
-      crumb.appendChild(fav);
+      siteLink.appendChild(fav);
     }
-    const urlLine = document.createElement("span");
-    urlLine.className = "card-url-line";
-    text(urlLine, formatDisplayUrl(item.url));
-    crumb.appendChild(urlLine);
-    card.appendChild(crumb);
 
-    const title = externalLink(item.url, "card-title-link");
-    text(title, item.title || item.url || "Untitled");
+    const crumbText = document.createElement("span");
+    crumbText.className = "card-site-text";
+    const bc = formatBreadcrumb(item.url, item.domain);
+    if (bc.path) {
+      text(crumbText, bc.host + " › " + bc.path.replace(/^\//, ""));
+    } else {
+      text(crumbText, bc.host);
+    }
+    siteLink.appendChild(crumbText);
+    siteRow.appendChild(siteLink);
+    card.appendChild(siteRow);
+
+    const title = resultLink(item.url, "card-title-link", label);
     card.appendChild(title);
 
-    if (item.description) {
+    const snippetText = (item.description || "").trim();
+    if (snippetText) {
       const snip = document.createElement("div");
       snip.className = "card-snippet";
-      text(snip, item.description);
+      text(snip, snippetText);
       card.appendChild(snip);
-    }
-
-    if (!compact && item.content) {
-      const toggle = document.createElement("button");
-      toggle.type = "button";
-      toggle.className = "raw-toggle-btn";
-      toggle.setAttribute("aria-expanded", "false");
-      const rawId = "raw-box-" + idx;
-      toggle.setAttribute("aria-controls", rawId);
-      text(toggle, "Cached page text");
-
-      const raw = document.createElement("pre");
-      raw.className = "raw-text-details";
-      raw.id = rawId;
-      raw.hidden = true;
-      text(raw, item.content);
-
-      toggle.addEventListener("click", () => {
-        const open = !raw.hidden;
-        raw.hidden = open;
-        toggle.setAttribute("aria-expanded", open ? "false" : "true");
-        text(toggle, open ? "Cached page text" : "Hide cached page text");
-      });
-
-      card.appendChild(toggle);
-      card.appendChild(raw);
     }
 
     return card;
@@ -590,7 +676,11 @@
 
         const linkWrap = document.createElement("div");
         linkWrap.className = "ai-source-body";
-        const a = externalLink(item.url, "ai-source-link");
+        const a = resultLink(
+          item.url,
+          "ai-source-link",
+          item.title || item.domain || "Source"
+        );
         if (item.favicon) {
           const fav = document.createElement("img");
           fav.className = "favicon-img";
@@ -899,12 +989,40 @@
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
+        if (el.pageViewer?.classList.contains("is-open")) {
+          closePageViewer();
+          return;
+        }
         showAiPanel(false);
         if (document.activeElement === el.resultsInput && el.resultsInput.value) {
           el.resultsInput.value = "";
         }
       }
     });
+
+    if (el.pageViewerBack) {
+      el.pageViewerBack.addEventListener("click", () => closePageViewer());
+    }
+    if (el.pageViewerClose) {
+      el.pageViewerClose.addEventListener("click", () => closePageViewer());
+    }
+    if (el.pageViewerExternal) {
+      el.pageViewerExternal.addEventListener("click", () => {
+        if (state.viewerUrl) {
+          window.open(state.viewerUrl, "_blank", "noopener,noreferrer");
+        }
+      });
+    }
+    if (el.pageViewerFallback) {
+      const openExternal = $("#pageViewerFallbackOpen");
+      if (openExternal) {
+        openExternal.addEventListener("click", () => {
+          if (state.viewerUrl) {
+            window.open(state.viewerUrl, "_blank", "noopener,noreferrer");
+          }
+        });
+      }
+    }
 
     const brandHome = $("#brandHome");
     if (brandHome) {
