@@ -20,12 +20,12 @@ export function NcismCoverageSection() {
   return (
     <section className="mt-16 rounded-xl border border-border/50 p-6">
       <h2 className="font-medium text-foreground text-xl">
-        NCISM syllabus alignment
+        NCISM syllabus — mapped to the engine
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground text-sm leading-relaxed">
         All {ncismCoverage.total_subjects} NCISM core subjects (20 UG + 18 PG)
-        mapped to the classical sources {brand.name} is built on — or marked
-        modern-only where classical texts do not apply.
+        aligned to what {brand.name} can reason over today — classical depth
+        where the tradition applies, modern-only where it does not.
       </p>
 
       <dl className="mt-6 grid gap-3 sm:grid-cols-4">
@@ -84,25 +84,13 @@ function NcismRow({ subject }: { subject: NcismSubject }) {
       <p className="mt-0.5 text-foreground text-sm">{subject.subject}</p>
       {subject.required_texts.length > 0 ? (
         <p className="mt-1 text-muted-foreground text-xs">
-          Classical texts: {subject.required_texts.join(" · ")}
+          Classical scope: {subject.required_texts.join(" · ")}
         </p>
       ) : (
         <p className="mt-1 text-muted-foreground text-xs">
-          Modern curriculum subject — classical Samhita sources not expected
+          Modern curriculum — outside classical Samhita scope
         </p>
       )}
-      {subject.canonical_paths.length > 0 ? (
-        <details className="mt-2">
-          <summary className="cursor-pointer text-muted-foreground text-xs hover:text-foreground">
-            Source details ({subject.canonical_paths.length})
-          </summary>
-          <ul className="mt-1 space-y-0.5 font-mono text-muted-foreground text-xs">
-            {subject.canonical_paths.slice(0, 5).map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
       {scopeHint ? (
         <Link
           className="mt-2 inline-block text-primary text-xs hover:underline"

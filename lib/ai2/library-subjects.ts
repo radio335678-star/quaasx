@@ -40,7 +40,7 @@ export type LibraryCatalog = {
 export const libraryCatalog = catalog as LibraryCatalog;
 
 export function tierLabel(tier: string): string {
-  return tier === "db" ? "Core text" : "Reference edition";
+  return tier === "db" ? "Native core" : "Expanding depth";
 }
 
 export function primaryTranslation(book: {
