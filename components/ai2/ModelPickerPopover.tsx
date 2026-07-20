@@ -29,7 +29,6 @@ export function ModelPickerPopover({
 }: ModelPickerPopoverProps) {
   const [open, setOpen] = useState(false);
   const active = resolveChatModel(selectedModelId);
-  const shortLabel = active.name.replace(/^AI²-/, "");
 
   const handleSelect = (slug: string, selectable: boolean, reason?: string) => {
     if (!selectable) {
@@ -56,12 +55,12 @@ export function ModelPickerPopover({
       <PopoverTrigger asChild>
         <Button
           className={cn(
-            "h-7 max-w-[140px] gap-1.5 rounded-lg border border-border/40 px-2 text-[11px] text-muted-foreground/80 hover:text-foreground",
+            "h-7 max-w-[160px] gap-1.5 rounded-lg border border-border/40 px-2 text-[11px] text-muted-foreground/80 hover:text-foreground",
             disabled && "cursor-not-allowed opacity-50"
           )}
           data-testid="model-picker-button"
           disabled={disabled}
-          title="Choose AI² model"
+          title="Model and thinking level"
           type="button"
           variant="ghost"
         >
@@ -73,12 +72,18 @@ export function ModelPickerPopover({
             src={brand.mark}
             width={14}
           />
-          <span className="truncate font-medium tracking-tight">{shortLabel}</span>
+          <span className="truncate font-medium tracking-tight">
+            {active.audienceLabel}
+          </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-80 p-2" side="top">
-        <p className="px-2 pb-2 font-medium text-foreground text-xs">
-          AI² models
+      <PopoverContent align="start" className="w-[min(100vw-2rem,22rem)] p-2" side="top">
+        <p className="px-2 pb-1 font-medium text-foreground text-xs">
+          Model · thinking level
+        </p>
+        <p className="px-2 pb-2 text-[11px] text-muted-foreground leading-snug">
+          Patient, Scholar, and Clinician map to depth of classical reasoning.
+          Only Scholar (Medium) is live on the free tier.
         </p>
         <ul className="space-y-1">
           {models.map((model) => {
@@ -119,11 +124,14 @@ export function ModelPickerPopover({
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-1.5">
                       <span className="font-medium text-foreground text-[12px]">
-                        {model.name}
+                        {model.audienceLabel}
                       </span>
                       <span className="rounded bg-muted/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                        Thinking · {model.thinking}
+                        {model.thinking} thinking
                       </span>
+                    </span>
+                    <span className="mt-0.5 block font-mono text-[10px] text-muted-foreground/80">
+                      {model.name}
                     </span>
                     <span className="mt-0.5 block text-[11px] text-muted-foreground leading-snug">
                       {model.description}

@@ -19,10 +19,9 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
-import { AudienceModeToggle } from "@/components/ai2/AudienceModeToggle";
 import { ModelPickerPopover } from "@/components/ai2/ModelPickerPopover";
 import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
-import type { AudienceMode } from "@/lib/ai2/audience-mode";
+import { audienceModeForModel } from "@/lib/ai2/developer-models";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { filterWorks } from "@/lib/ai2/works";
 import { resolveScopedWorksFromInput } from "@/lib/ai2/parse-mentions";
@@ -76,8 +75,6 @@ function PureMultimodalInput({
   isLoading: _isLoading,
   collapsed = false,
   onExpandComposer,
-  audienceMode = "scholar",
-  onAudienceModeChange,
 }: {
   chatId: string;
   input: string;
@@ -100,8 +97,6 @@ function PureMultimodalInput({
   isLoading?: boolean;
   collapsed?: boolean;
   onExpandComposer?: () => void;
-  audienceMode?: AudienceMode;
-  onAudienceModeChange?: (mode: AudienceMode) => void;
 }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
@@ -387,7 +382,7 @@ function PureMultimodalInput({
       role: "user",
       metadata: {
         createdAt: new Date().toISOString(),
-        audienceMode,
+        audienceMode: audienceModeForModel(selectedModelId),
         scopedWorks: resolvedWorks.map((w) => w.name),
         scopedAbbrevs: resolvedWorks.map((w) => w.abbrev),
       },
@@ -410,7 +405,7 @@ function PureMultimodalInput({
     setLocalStorageInput,
     width,
     chatId,
-    audienceMode,
+    selectedModelId,
     selectedWorks,
   ]);
 
@@ -828,12 +823,6 @@ function PureMultimodalInput({
               onModelChange={onModelChange}
               selectedModelId={selectedModelId}
             />
-            {onAudienceModeChange ? (
-              <AudienceModeToggle
-                onChange={onAudienceModeChange}
-                value={audienceMode}
-              />
-            ) : null}
           </PromptInputTools>
 
           {status === "submitted" ? (
@@ -894,9 +883,6 @@ export const MultimodalInput = memo(
       return false;
     }
     if (prevProps.collapsed !== nextProps.collapsed) {
-      return false;
-    }
-    if (prevProps.audienceMode !== nextProps.audienceMode) {
       return false;
     }
 

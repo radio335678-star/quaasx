@@ -1,9 +1,15 @@
+import type { AudienceMode } from "./audience-mode";
+
 export type DeveloperModelTier = "flash" | "pro" | "max" | "god";
 
 export type DeveloperModel = {
   id: DeveloperModelTier;
   name: string;
   slug: string;
+  /** UI label: Patient, Scholar, Clinician, GOD mode */
+  audienceLabel: string;
+  /** Backend audience prompt when this tier is active */
+  audienceMode: AudienceMode;
   thinking: string;
   description: string;
   inputPer1M: string | null;
@@ -23,6 +29,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     id: "flash",
     name: "AI²-ayu-flash",
     slug: "ai2-ayu-flash",
+    audienceLabel: "Patient",
+    audienceMode: "patient",
     thinking: "Low",
     description:
       "Fast cite-first answers for consumer apps, triage flows, and high-volume chat.",
@@ -37,6 +45,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     id: "pro",
     name: "AI²-ayu-pro",
     slug: "ai2-ayu-pro",
+    audienceLabel: "Scholar",
+    audienceMode: "scholar",
     thinking: "Medium",
     description:
       "Balanced classical reasoning with cross-Acharya scope — default for clinical assistants.",
@@ -51,6 +61,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     id: "max",
     name: "AI²-ayu-max",
     slug: "ai2-ayu-max",
+    audienceLabel: "Clinician",
+    audienceMode: "clinician",
     thinking: "Extra high",
     description:
       "Deep shloka synthesis, multi-text compare, and long-context scholarly workflows.",
@@ -65,6 +77,8 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     id: "god",
     name: "AI² — GOD mode",
     slug: "ai2-ayu-god",
+    audienceLabel: "GOD mode",
+    audienceMode: "scholar",
     thinking: "Maximum",
     description:
       "Memory-intensive, highest-performance classical intelligence — reserved for enterprise and research partners.",
@@ -91,6 +105,10 @@ export function resolveChatModel(slug: string | undefined) {
     return model;
   }
   return findChatModel(DEFAULT_CHAT_MODEL)!;
+}
+
+export function audienceModeForModel(slug: string | undefined): AudienceMode {
+  return resolveChatModel(slug).audienceMode;
 }
 
 export const DEVELOPER_API_BASE = "https://api.ai2.quaasx.com/v1";
