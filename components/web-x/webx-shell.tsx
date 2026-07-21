@@ -5,6 +5,17 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { AI2_PUBLIC_URL } from "@/lib/webx-public";
 
+function BetaBadge({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`webx-beta-badge${className ? ` ${className}` : ""}`}
+      title="Web-X is in beta"
+    >
+      Beta
+    </span>
+  );
+}
+
 function BrandSymbol({ size = "lg" }: { size?: "lg" | "sm" }) {
   return (
     <div
@@ -40,6 +51,7 @@ export function WebXShell() {
   return (
     <div className="webx-root">
       <link href="/web-x/webx.css" rel="stylesheet" />
+      <BetaBadge className="webx-beta-badge--fixed" />
       <a className="skip-link" href="#contentContainer">
         Skip to results
       </a>
@@ -52,7 +64,10 @@ export function WebXShell() {
         </header>
 
         <main className="landing-center" role="main">
-          <BrandSymbol size="lg" />
+          <div className="landing-brand-wrap">
+            <BrandSymbol size="lg" />
+            <BetaBadge className="webx-beta-badge--inline" />
+          </div>
           <p className="brand-tagline">
             Open-web search · stealth fetch · AI Mode answers
           </p>
@@ -123,7 +138,8 @@ export function WebXShell() {
         </main>
 
         <footer className="landing-footer">
-          Web-X-AI² · Web Intelligence · QUAASX
+          <BetaBadge className="webx-beta-badge--footer" />
+          <span>Web-X-AI² · Web Intelligence · QUAASX</span>
         </footer>
       </div>
 
@@ -138,6 +154,7 @@ export function WebXShell() {
             >
               <BrandSymbol size="sm" />
             </a>
+            <BetaBadge className="webx-beta-badge--header" />
 
             <form
               aria-label="Refine search"
@@ -283,25 +300,7 @@ export function WebXShell() {
         </header>
 
         <main className="results-body" role="main">
-          <div aria-label="Refine query" className="action-chips" id="actionChips">
-            <button className="chip" data-chip="overview" type="button">
-              Overview
-            </button>
-            <button className="chip" data-chip="usage" type="button">
-              Usage examples
-            </button>
-            <button className="chip" data-chip="similar" type="button">
-              Similar words
-            </button>
-            <button className="chip" data-chip="latest" type="button">
-              Latest release
-            </button>
-            <button className="chip chip-clear" data-chip="clear" type="button">
-              Clear refine
-            </button>
-          </div>
-
-          <div aria-label="AI Mode info" className="ai-panel" id="aiPanel" role="region">
+          <div className="ai-panel" hidden id="aiPanel">
             <h2>AI Mode</h2>
             <p>
               Web-X-AI² fetches live pages first, then answers your question from
@@ -331,6 +330,7 @@ export function WebXShell() {
           <button className="page-viewer-btn" id="pageViewerBack" type="button">
             ← Results
           </button>
+          <BetaBadge className="webx-beta-badge--viewer" />
           <span className="page-viewer-title" id="pageViewerTitle" />
           <div className="page-viewer-actions">
             <button className="page-viewer-btn" id="pageViewerExternal" type="button">

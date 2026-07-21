@@ -11,23 +11,15 @@
   const STORAGE_KEY = "webx_last_query";
   const STORAGE_TAB = "webx_last_tab";
 
-  const CHIP_REFINES = {
-    overview: "overview",
-    usage: "usage examples",
-    similar: "similar",
-    latest: "latest release",
-  };
-
   const state = {
     query: "",
-    baseQuery: "",
     tab: "all",
-    activeChip: null,
     abort: null,
     aiConfigured: false,
     busy: false,
     viewerUrl: "",
     viewerTitle: "",
+    searchSeq: 0,
   };
 
   const el = {
@@ -40,7 +32,6 @@
     content: document.getElementById("contentContainer"),
     status: document.getElementById("statusBar"),
     aiPanel: document.getElementById("aiPanel"),
-    chips: document.getElementById("actionChips"),
     tabs: document.getElementById("tabsBar"),
     clearBtn: document.getElementById("clearSearchBtn"),
     pageViewer: document.getElementById("pageViewer"),
@@ -203,7 +194,6 @@
       const t = sessionStorage.getItem(STORAGE_TAB);
       if (q) {
         state.query = q;
-        state.baseQuery = q;
         el.landingInput.value = q;
         el.resultsInput.value = q;
         if (t && ["all", "images", "videos", "news", "ai"].includes(t)) {
@@ -221,26 +211,21 @@
   function setActiveTab(tabName) {
     state.tab = tabName;
     $$(".tab-item[data-tab]", el.tabs).forEach((btn) => {
-      const active = btn.getAttribute("data-tab") === tabName;
+      const id = btn.getAttribute("data-tab");
+      const active = id === tabName;
       btn.classList.toggle("active", active);
+      btn.classList.toggle("is-loading", active && state.busy);
       btn.setAttribute("aria-selected", active ? "true" : "false");
     });
   }
 
-  function buildQueryFromChip(chipId) {
-    const base = state.baseQuery || state.query;
-    if (!chipId || !CHIP_REFINES[chipId]) return base;
-    const suffix = CHIP_REFINES[chipId];
-    const lower = base.toLowerCase();
-    if (lower.includes(suffix.toLowerCase())) return base;
-    return base + " " + suffix;
-  }
-
-  function updateChipUI() {
-    $$(".chip[data-chip]", el.chips).forEach((chip) => {
-      const id = chip.getAttribute("data-chip");
-      chip.classList.toggle("is-active", id === state.activeChip);
-    });
+  function cancelInFlightSearch() {
+    state.searchSeq += 1;
+    if (state.abort) {
+      state.abort.abort();
+      state.abort = null;
+    }
+    setBusy(false);
   }
 
   function showAiPanel(show) {
@@ -256,6 +241,10 @@
 
   function setBusy(on) {
     state.busy = Boolean(on);
+    $$(".tab-item[data-tab]", el.tabs).forEach((btn) => {
+      const active = btn.getAttribute("data-tab") === state.tab;
+      btn.classList.toggle("is-loading", active && state.busy);
+    });
     [el.landingForm, el.resultsForm].forEach((form) => {
       if (!form) return;
       form.querySelectorAll("button, input").forEach((node) => {
@@ -278,7 +267,7 @@
 
     const p = document.createElement("p");
     p.className = "loading-view-text";
-    text(p, message || "Searching the web…");
+    text(p, message || "Web-X is searching the web…");
     wrap.appendChild(p);
 
     const list = document.createElement("div");
@@ -751,7 +740,7 @@
     return { response, data };
   }
 
-  async function postSearchWithRetry(payload, statusMsg) {
+  async function postSearchWithRetry(payload, statusMsg, seq) {
     pingWarmup();
     let result = await postSearch(payload);
     if (result.response.status === 503) {
@@ -759,7 +748,7 @@
       renderLoadingView("This may take a little longer than usual.");
       pingWarmup();
       await delay(4000);
-      if (state.abort.signal.aborted) {
+      if (state.abort?.signal.aborted || isStaleSearch(seq)) {
         return result;
       }
       setStatus(statusMsg, true);
@@ -769,8 +758,14 @@
     return result;
   }
 
+  function isStaleSearch(seq) {
+    return seq !== state.searchSeq;
+  }
+
   async function executeSearch() {
-    if (!state.query || state.busy) return;
+    if (!state.query) return;
+
+    const seq = ++state.searchSeq;
 
     if (state.abort) {
       state.abort.abort();
@@ -783,7 +778,9 @@
     persist();
 
     const statusMsg =
-      state.tab === "ai" ? "Reading the web…" : "Searching the web…";
+      state.tab === "ai"
+        ? "Web-X AI Mode is reading the web…"
+        : "Web-X is searching the web…";
     setStatus(statusMsg, true);
     renderLoadingView(statusMsg);
 
@@ -791,8 +788,10 @@
       if (state.tab === "news") {
         const { response, data } = await postSearchWithRetry(
           { query: state.query, tab: "news" },
-          statusMsg
+          statusMsg,
+          seq
         );
+        if (isStaleSearch(seq)) return;
         setStatus("", false);
         if (!response.ok) {
           renderStateCard({
@@ -820,9 +819,11 @@
 
       const { response, data } = await postSearchWithRetry(
         { query: state.query, tab: state.tab },
-        statusMsg
+        statusMsg,
+        seq
       );
 
+      if (isStaleSearch(seq)) return;
       setStatus("", false);
 
       if (state.tab === "ai") {
@@ -849,7 +850,7 @@
         renderAllView(data);
       }
     } catch (err) {
-      if (err.name === "AbortError") return;
+      if (err.name === "AbortError" || isStaleSearch(seq)) return;
       setStatus("", false);
       if (state.tab === "ai") {
         renderAiError({ error: String(err.message || err) }, 502);
@@ -865,13 +866,17 @@
         retry: true,
       });
     } finally {
-      setBusy(false);
+      if (seq === state.searchSeq) {
+        setBusy(false);
+      }
     }
   }
 
   function runSearch(source, opts) {
     opts = opts || {};
-    if (state.busy) return;
+    if (state.busy) {
+      cancelInFlightSearch();
+    }
     let q = "";
     if (source === "landing") {
       q = el.landingInput.value.trim();
@@ -882,11 +887,7 @@
     }
     if (!q) return;
 
-    state.baseQuery = q;
-    state.query = buildQueryFromChip(state.activeChip);
-    if (state.activeChip) {
-      el.resultsInput.value = state.query;
-    }
+    state.query = q;
     if (opts.tab) {
       state.tab = opts.tab;
     }
@@ -896,11 +897,13 @@
   }
 
   function onTabClick(tabName) {
-    if (state.busy) return;
-    if (tabName === "soon") return;
-    if (tabName === "images" || tabName === "videos") {
+    if (tabName === "soon" || tabName === "images" || tabName === "videos") {
       return;
     }
+
+    setActiveTab(tabName);
+    cancelInFlightSearch();
+
     if (tabName === "ai" && !state.aiConfigured) {
       showResults();
       setActiveTab("ai");
@@ -915,28 +918,15 @@
       }
       return;
     }
-    setActiveTab(tabName);
-    showAiPanel(false);
-    if (state.query) executeSearch();
-  }
 
-  function onChipClick(chipId) {
-    if (state.busy) return;
-    if (chipId === "clear") {
-      state.activeChip = null;
-      state.query = state.baseQuery;
-      el.resultsInput.value = state.baseQuery;
-      el.landingInput.value = state.baseQuery;
-      updateChipUI();
-      if (state.baseQuery) executeSearch();
-      return;
+    showAiPanel(false);
+    persist();
+    if (state.query) {
+      executeSearch();
+    } else {
+      clearNode(el.content);
+      setStatus("", false);
     }
-    state.activeChip = state.activeChip === chipId ? null : chipId;
-    updateChipUI();
-    if (!state.baseQuery) return;
-    state.query = buildQueryFromChip(state.activeChip);
-    el.resultsInput.value = state.query;
-    executeSearch();
   }
 
   function bind() {
@@ -947,9 +937,6 @@
 
     el.resultsForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      state.baseQuery = el.resultsInput.value.trim();
-      state.activeChip = null;
-      updateChipUI();
       runSearch("results");
     });
 
@@ -964,10 +951,6 @@
       btn.addEventListener("click", () => onTabClick(btn.getAttribute("data-tab")));
     });
 
-    $$(".chip[data-chip]", el.chips).forEach((chip) => {
-      chip.addEventListener("click", () => onChipClick(chip.getAttribute("data-chip")));
-    });
-
     $$("[data-ai-search]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -976,8 +959,6 @@
           el.landingInput.focus();
           return;
         }
-        state.activeChip = null;
-        updateChipUI();
         runSearch("landing", { tab: "ai" });
       });
     });

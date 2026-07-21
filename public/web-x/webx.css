@@ -38,6 +38,10 @@
   --max: 1100px;
   --results-col: 650px;
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --webx-beta: #60a5fa;
+  --webx-beta-bright: #93c5fd;
+  --webx-beta-glow: rgba(96, 165, 250, 0.55);
+  --webx-beta-soft: rgba(59, 130, 246, 0.14);
 
   box-sizing: border-box;
   font-family: var(--font);
@@ -53,6 +57,107 @@
   padding-right: var(--safe-right);
   isolation: isolate;
   position: relative;
+}
+
+.webx-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(59, 130, 246, 0.2), transparent 62%),
+    radial-gradient(ellipse 45% 35% at 100% 0%, rgba(96, 165, 250, 0.14), transparent 55%),
+    radial-gradient(ellipse 40% 30% at 0% 100%, rgba(37, 99, 235, 0.1), transparent 50%);
+}
+
+.webx-root > *:not(.webx-beta-badge--fixed) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Beta badge ---------- */
+.webx-beta-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 11px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #dbeafe;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.35) 0%,
+    rgba(59, 130, 246, 0.22) 100%
+  );
+  border: 1px solid rgba(147, 197, 253, 0.5);
+  border-radius: var(--radius-pill);
+  box-shadow:
+    0 0 10px var(--webx-beta-glow),
+    0 0 22px rgba(59, 130, 246, 0.28),
+    inset 0 0 10px rgba(147, 197, 253, 0.12);
+  animation: webx-beta-pulse 2.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.webx-beta-badge--fixed {
+  position: fixed;
+  top: calc(var(--safe-top) + 12px);
+  right: calc(var(--safe-right) + 12px);
+  z-index: 1001;
+}
+
+.webx-beta-badge--inline {
+  margin-top: -0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.webx-beta-badge--header {
+  font-size: 0.55rem;
+  padding: 3px 8px;
+  margin-left: -4px;
+}
+
+.webx-beta-badge--footer {
+  margin-bottom: 8px;
+}
+
+.webx-beta-badge--viewer {
+  font-size: 0.55rem;
+  padding: 3px 8px;
+}
+
+.landing-brand-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+@keyframes webx-beta-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 10px var(--webx-beta-glow),
+      0 0 22px rgba(59, 130, 246, 0.28),
+      inset 0 0 10px rgba(147, 197, 253, 0.12);
+    border-color: rgba(147, 197, 253, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 16px rgba(96, 165, 250, 0.75),
+      0 0 32px rgba(59, 130, 246, 0.42),
+      inset 0 0 14px rgba(191, 219, 254, 0.2);
+    border-color: rgba(191, 219, 254, 0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .webx-beta-badge {
+    animation: none;
+  }
 }
 
 .webx-root *,
@@ -538,6 +643,10 @@ input {
 }
 
 .landing-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   padding: 16px;
   text-align: center;
   font-size: 0.75rem;
@@ -628,16 +737,21 @@ input {
   background: none;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
-  color: inherit;
+  color: var(--muted);
   font: inherit;
   min-height: 44px;
   border-radius: 0;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .tab-item.active {
   color: var(--ai2-chrome);
   border-bottom-color: var(--ai2-silver);
   font-weight: 600;
+}
+
+.tab-item.is-loading {
+  opacity: 0.85;
 }
 
 .tab-item:hover:not(.active):not(:disabled) {
@@ -678,48 +792,6 @@ input {
   .brand-mark--sm {
     font-size: 1.6rem;
   }
-}
-
-/* ---------- Chips ---------- */
-.action-chips {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 2px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.action-chips::-webkit-scrollbar {
-  display: none;
-}
-
-.chip {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 8px 14px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  min-height: 36px;
-}
-
-.chip:hover {
-  background: var(--surface-2);
-}
-
-.chip.is-active {
-  background: var(--accent-soft);
-  border-color: var(--ai2-silver);
-  color: var(--ai2-chrome);
-}
-
-.chip-clear {
-  background: transparent;
-  border-style: dashed;
 }
 
 /* ---------- Status / AI panel ---------- */
