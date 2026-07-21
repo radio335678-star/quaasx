@@ -247,6 +247,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
         metadata: {
           createdAt: new Date().toISOString(),
           audienceMode: audienceModeForModel(currentModelIdRef.current),
+          modelSlug: currentModelIdRef.current,
         },
       });
     }

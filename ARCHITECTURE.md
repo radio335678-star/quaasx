@@ -9,9 +9,20 @@
 
 | Product | Public URL | Frontend host | Backend host | Backend runtime |
 |---------|------------|---------------|--------------|-----------------|
-| **AI² Chat** | `https://ai2.quaasx108.com` | Vercel (this repo) | Modal `ai2-rust-env` | Serverless; cold starts ~50–90s after idle |
+| **AI² Chat** | `https://ai2.quaasx108.com` | Vercel (this repo) | Modal + Kamatera Linga (by tier) | See three-tier table below |
 | **Web-X Search** | `https://webx.quaasx108.com` | Vercel (same project) | Kamatera VPS | Always-on FastAPI on `api.webx.quaasx108.com` |
 | **Web-X API** | `https://api.webx.quaasx108.com` | — | Kamatera `74.113.234.141` | Caddy → `127.0.0.1:8787` |
+
+### Chat tiers
+
+| Tier | Slug | Pipeline |
+|------|------|----------|
+| Patient (Low) | `ai2-ayu-flash` | Kamatera Ling-2.6-flash only (OR web_search → Web-X fallback) |
+| Scholar (Medium) | `ai2-ayu-pro` | Parallel Modal Linga DB + Kamatera Linga web → Linga merge |
+| Clinician (Extra high) | `ai2-ayu-max` | Modal DeepSeek v4 flash library-only |
+| GOD | `ai2-ayu-god` | Locked |
+
+Router: `lib/ai2/rustenv-exec.ts` → `runChatPipeline`. Env: `AI2_BACKEND_URL`, `WEBX_BACKEND_URL`, `AI2_WEBX_BRIDGE_SECRET`.
 
 **This Git repo:** [`github.com/radio335678-star/quaasx`](https://github.com/radio335678-star/quaasx) — root = `frontend/`  
 **Sibling on disk (not in git):** `../backend/` (Modal + Kamatera deploy), `../data/` (corpus DB)

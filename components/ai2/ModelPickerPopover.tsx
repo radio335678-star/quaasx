@@ -82,8 +82,8 @@ export function ModelPickerPopover({
           Model · thinking level
         </p>
         <p className="px-2 pb-2 text-[11px] text-muted-foreground leading-snug">
-          Patient, Scholar, and Clinician map to depth of classical reasoning.
-          Only Scholar (Medium) is live on the free tier.
+          Patient (web-fast), Scholar (library + web), Clinician (library-deep).
+          GOD mode stays locked on free tier.
         </p>
         <ul className="space-y-1">
           {models.map((model) => {

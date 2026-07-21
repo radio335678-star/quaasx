@@ -376,6 +376,7 @@ function PureMultimodalInput({
       metadata: {
         createdAt: new Date().toISOString(),
         audienceMode: audienceModeForModel(selectedModelId),
+        modelSlug: selectedModelId,
         scopedWorks: resolvedWorks.map((w) => w.name),
         scopedAbbrevs: resolvedWorks.map((w) => w.abbrev),
       },

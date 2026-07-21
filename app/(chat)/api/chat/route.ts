@@ -5,9 +5,10 @@ import {
 import type { AudienceMode } from "@/lib/ai2/audience-mode";
 import { isAudienceMode } from "@/lib/ai2/audience-mode";
 import { applyAudiencePrompt } from "@/lib/ai2/audience-prompts";
+import { DEFAULT_CHAT_MODEL } from "@/lib/ai2/developer-models";
 import {
   buildAgentQuestion,
-  callRustEnvAgent,
+  runChatPipeline,
 } from "@/lib/ai2/rustenv-exec";
 import {
   applyScopeLockToQuestion,
@@ -85,12 +86,19 @@ function buildBackendMessages(body: PostRequestBody): Array<{
 }
 
 function extractAudienceMode(body: PostRequestBody): AudienceMode {
-  // Normal chat sends `message` with metadata; `messages` is tool-approval only (no metadata).
   const fromMessage = body.message?.metadata?.audienceMode;
   if (fromMessage && isAudienceMode(fromMessage)) {
     return fromMessage;
   }
   return "scholar";
+}
+
+function extractModelSlug(body: PostRequestBody): string {
+  const slug = body.message?.metadata?.modelSlug;
+  if (typeof slug === "string" && slug.trim()) {
+    return slug.trim();
+  }
+  return DEFAULT_CHAT_MODEL;
 }
 
 function extractScopedMetadata(body: PostRequestBody): {
@@ -140,9 +148,9 @@ export async function POST(request: Request) {
 
   const textId = generateUUID();
   const audienceMode = extractAudienceMode(requestBody);
+  const modelSlug = extractModelSlug(requestBody);
   const baseQuestion = buildAgentQuestion(messages);
   let question: string;
-  // Normal chat sends `message` with scoped classics; tool-approval uses `messages` only.
   if (requestBody.message) {
     const { scopedWorks, scopedAbbrevs } = extractScopedMetadata(requestBody);
     const scope = resolveScopedClassics(scopedWorks, scopedAbbrevs);
@@ -159,14 +167,14 @@ export async function POST(request: Request) {
   } else {
     question = applyAudiencePrompt(baseQuestion, audienceMode);
   }
-  const statusSeed = question.length + audienceMode.length;
+  const statusSeed = question.length + audienceMode.length + modelSlug.length;
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       writer.write({
         data: {
           message: pickWaitingLine(statusSeed),
-          modelId: "ai2",
+          modelId: modelSlug,
           modelName: AI2_STREAM_LABEL,
           phase: "waiting",
         },
@@ -178,7 +186,7 @@ export async function POST(request: Request) {
         writer.write({
           data: {
             message: pickThinkingLine(statusSeed + 1),
-            modelId: "ai2",
+            modelId: modelSlug,
             modelName: AI2_STREAM_LABEL,
             phase: "thinking",
           },
@@ -186,7 +194,11 @@ export async function POST(request: Request) {
           type: "data-waiting-status",
         });
 
-        const { answer } = await callRustEnvAgent(BACKEND_URL, question);
+        const { answer } = await runChatPipeline(
+          BACKEND_URL,
+          question,
+          modelSlug
+        );
 
         writer.write({ type: "text-start", id: textId });
         writer.write({

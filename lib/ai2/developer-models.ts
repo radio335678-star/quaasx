@@ -2,6 +2,9 @@ import type { AudienceMode } from "./audience-mode";
 
 export type DeveloperModelTier = "flash" | "pro" | "max" | "god";
 
+/** Chat pipeline routing key (matches model slug → backend). */
+export type ChatPipeline = "flash_kamatera" | "pro_parallel" | "max_deepseek";
+
 export type DeveloperModel = {
   id: DeveloperModelTier;
   name: string;
@@ -19,6 +22,8 @@ export type DeveloperModel = {
   available: boolean;
   /** Selectable in the chat composer */
   chatSelectable: boolean;
+  /** Server-side routing pipeline */
+  pipeline: ChatPipeline | null;
   unavailableReason?: string;
   badge?: string;
 };
@@ -33,13 +38,13 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "patient",
     thinking: "Low",
     description:
-      "Fast cite-first answers for consumer apps, triage flows, and high-volume chat.",
+      "Fast web agent — Ling-2.6-flash on Kamatera (OpenRouter search → Web-X fallback). No Modal.",
     inputPer1M: "$0.20",
     outputPer1M: "$0.80",
     context: "128K",
     available: true,
-    chatSelectable: false,
-    unavailableReason: "Coming soon",
+    chatSelectable: true,
+    pipeline: "flash_kamatera",
   },
   {
     id: "pro",
@@ -49,12 +54,13 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Medium",
     description:
-      "Balanced classical reasoning with cross-Acharya scope — default for clinical assistants.",
+      "Parallel Linga DB (Modal) + Linga web (Kamatera), then Linga merge — classical + live web.",
     inputPer1M: "$1.20",
     outputPer1M: "$4.80",
     context: "128K",
     available: true,
     chatSelectable: true,
+    pipeline: "pro_parallel",
     badge: "Recommended",
   },
   {
@@ -65,13 +71,13 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "clinician",
     thinking: "Extra high",
     description:
-      "Deep shloka synthesis, multi-text compare, and long-context scholarly workflows.",
+      "DeepSeek v4 flash on Modal — classical library only, no Web-X.",
     inputPer1M: "$3.50",
     outputPer1M: "$14.00",
     context: "256K",
     available: true,
-    chatSelectable: false,
-    unavailableReason: "Upgrade required",
+    chatSelectable: true,
+    pipeline: "max_deepseek",
   },
   {
     id: "god",
@@ -87,13 +93,20 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     context: "1M+",
     available: false,
     chatSelectable: false,
+    pipeline: null,
     unavailableReason: "Unavailable on free tier",
     badge: "Unavailable on free tier",
   },
 ];
 
 export const DEFAULT_CHAT_MODEL =
-  DEVELOPER_MODELS.find((m) => m.chatSelectable)?.slug ?? "ai2-ayu-pro";
+  DEVELOPER_MODELS.find((m) => m.slug === "ai2-ayu-pro" && m.chatSelectable)
+    ?.slug ??
+  DEVELOPER_MODELS.find((m) => m.chatSelectable)?.slug ??
+  "ai2-ayu-pro";
+
+export const LINGA_MODEL = "inclusionai/ling-2.6-flash";
+export const DEEPSEEK_MODEL = "deepseek/deepseek-v4-flash";
 
 export function findChatModel(slug: string) {
   return DEVELOPER_MODELS.find((m) => m.slug === slug);
@@ -109,6 +122,10 @@ export function resolveChatModel(slug: string | undefined) {
 
 export function audienceModeForModel(slug: string | undefined): AudienceMode {
   return resolveChatModel(slug).audienceMode;
+}
+
+export function pipelineForModel(slug: string | undefined): ChatPipeline {
+  return resolveChatModel(slug).pipeline ?? "pro_parallel";
 }
 
 export const DEVELOPER_API_BASE = "https://api.ai2.quaasx.com/v1";
