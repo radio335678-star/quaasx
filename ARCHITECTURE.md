@@ -157,6 +157,9 @@ Next.js 16: use **`proxy.ts` only** — do not add `middleware.ts`.
 | Web-X 401 | Sync `WEBX_API_SECRET` Vercel ↔ Kamatera |
 | AI² slow first reply | Modal cold start; `/api/warmup` |
 | Tabs stuck | `webx-app.js` `searchSeq` + abort stale searches |
+| AI² web prefetch skipped | Set Kamatera + Modal `AI2_WEBX_BRIDGE_SECRET` (`webx-bridge`) |
+
+**Private bridge:** Modal `agent_run.py` → Kamatera `/api/internal/agent/scrape` → `/data/webx_cache/` → sufficiency router. See root `ARCHITECTURE.md`.
 
 ---
 
@@ -165,6 +168,7 @@ Next.js 16: use **`proxy.ts` only** — do not add `middleware.ts`.
 1. UI / routing → this repo, `git push`
 2. AI² agent → Modal `deploy_ai2_rustenv.py`
 3. Web-X SERP/AI Mode → `../backend/webx_engine.py` + Kamatera deploy
-4. Citations → query `../data/ai2_unified.db` per `AGENTS.md`
+4. Private web bridge → internal Kamatera routes + Modal `webx-bridge` secret (not Vercel)
+5. Citations → query `../data/ai2_unified.db` per `AGENTS.md`
 
 *Last updated: 2026-07-21*

@@ -2,8 +2,6 @@
 
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { memo } from "react";
-import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
-import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import type { ChatMessage } from "@/lib/types";
 import { Greeting } from "./greeting";
 import type { VisibilityType } from "./visibility-selector";
@@ -15,8 +13,6 @@ type EmptyStateProps = {
 };
 
 function PureEmptyState(_props: EmptyStateProps) {
-  const { isComposerEnabled } = useEngineWarmup();
-
   return (
     <div
       className="relative flex h-full min-h-0 w-full flex-col"
@@ -28,7 +24,6 @@ function PureEmptyState(_props: EmptyStateProps) {
       >
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-3 pb-6 pt-4 sm:gap-6 sm:px-4 sm:pb-8 sm:pt-6 md:pt-8">
           <Greeting />
-          {!isComposerEnabled ? <SleepWakeCard /> : null}
         </div>
       </div>
     </div>

@@ -20,7 +20,6 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { ModelPickerPopover } from "@/components/ai2/ModelPickerPopover";
-import { SleepWakeCard } from "@/components/ai2/SleepWakeCard";
 import { audienceModeForModel } from "@/lib/ai2/developer-models";
 import { useEngineWarmup } from "@/hooks/use-engine-warmup";
 import { filterWorks } from "@/lib/ai2/works";
@@ -102,16 +101,14 @@ function PureMultimodalInput({
   const { setTheme, resolvedTheme } = useTheme();
   const {
     heartbeat,
-    isComposerEnabled,
     markIdle,
     markTyping,
-    wake,
   } = useEngineWarmup();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
   const hasAutoFocused = useRef(false);
   useEffect(() => {
-    if (!isComposerEnabled || hasAutoFocused.current || !width) {
+    if (hasAutoFocused.current || !width) {
       return;
     }
     const timer = setTimeout(() => {
@@ -119,7 +116,7 @@ function PureMultimodalInput({
       hasAutoFocused.current = true;
     }, 100);
     return () => clearTimeout(timer);
-  }, [isComposerEnabled, width]);
+  }, [width]);
 
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
     "input",
@@ -208,10 +205,8 @@ function PureMultimodalInput({
       const val = event.target.value;
       setInput(val);
       syncWorksFromText(val);
-      if (isComposerEnabled) {
-        markTyping();
-        heartbeat();
-      }
+      markTyping();
+      heartbeat();
       const cursor = event.target.selectionStart ?? val.length;
       const mention = getMentionState(val, cursor);
 
@@ -233,15 +228,13 @@ function PureMultimodalInput({
         setSlashOpen(false);
       }
     },
-    [heartbeat, isComposerEnabled, markTyping, setInput, syncWorksFromText]
+    [heartbeat, markTyping, setInput, syncWorksFromText]
   );
 
   const handleTextareaFocus = useCallback(() => {
     onExpandComposer?.();
-    if (isComposerEnabled) {
-      markTyping();
-    }
-  }, [isComposerEnabled, markTyping, onExpandComposer]);
+    markTyping();
+  }, [markTyping, onExpandComposer]);
 
   const handleTextareaBlur = useCallback(() => {
     if (!input.trim()) {
@@ -553,9 +546,6 @@ function PureMultimodalInput({
       toast.error("Choose at least one classic (@) to open the library.");
       return;
     }
-    if (!isComposerEnabled) {
-      await wake();
-    }
     if (status === "ready" || status === "error") {
       submitForm();
     } else {
@@ -565,11 +555,9 @@ function PureMultimodalInput({
     attachments.length,
     handleSlashSelect,
     input,
-    isComposerEnabled,
     resolvedScopedWorks.length,
     status,
     submitForm,
-    wake,
   ]);
 
   const handleTextareaKeyDown = useCallback(
@@ -672,9 +660,6 @@ function PureMultimodalInput({
             : "relative opacity-100"
         )}
       >
-      {!isComposerEnabled && messages.length > 0 ? (
-        <SleepWakeCard className="mb-1" compact />
-      ) : null}
       {editingMessage && onCancelEdit ? (
         <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
           <span>Editing message</span>
@@ -718,10 +703,7 @@ function PureMultimodalInput({
       </div>
 
       <PromptInput
-        className={cn(
-          "[&>div]:rounded-2xl [&>div]:border [&>div]:border-border/30 [&>div]:bg-card/70 [&>div]:shadow-[var(--shadow-composer)] [&>div]:transition-shadow [&>div]:duration-300 [&>div]:focus-within:shadow-[var(--shadow-composer-focus)]",
-          !isComposerEnabled && "pointer-events-none opacity-50"
-        )}
+        className="[&:>div]:rounded-2xl [&>div]:border [&>div]:border-border/30 [&>div]:bg-card/70 [&>div]:shadow-[var(--shadow-composer)] [&>div]:transition-shadow [&>div]:duration-300 [&>div]:focus-within:shadow-[var(--shadow-composer-focus)]"
         onSubmit={handlePromptSubmit}
       >
         {(attachments.length > 0 || uploadQueue.length > 0) && (
@@ -751,36 +733,34 @@ function PureMultimodalInput({
             ))}
           </div>
         )}
-        {isComposerEnabled ? (
-          <div className="flex flex-col gap-2 px-3 pt-3">
-            <p className="text-[11px] leading-snug text-muted-foreground/80">
-              Choose a classic (@) to open the library — up to {MAX_SCOPED_WORKS}.
-            </p>
-            <div
-              className="flex flex-wrap gap-1.5"
-              data-testid="classic-quick-picks"
-            >
-              {LIBRARY_WORKS.map((work) => {
-                const active = selectedWorkIds.has(work.id);
-                return (
-                  <button
-                    className={cn(
-                      "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
-                      active
-                        ? "border-foreground/30 bg-foreground text-background"
-                        : "border-border/50 bg-background/60 text-muted-foreground hover:border-border hover:text-foreground"
-                    )}
-                    key={work.id}
-                    onClick={() => toggleSelectedWork(work)}
-                    type="button"
-                  >
-                    {work.abbrev}
-                  </button>
-                );
-              })}
-            </div>
+        <div className="flex flex-col gap-2 px-3 pt-3">
+          <p className="text-[11px] leading-snug text-muted-foreground/80">
+            Choose a classic (@) to open the library — up to {MAX_SCOPED_WORKS}.
+          </p>
+          <div
+            className="flex flex-wrap gap-1.5"
+            data-testid="classic-quick-picks"
+          >
+            {LIBRARY_WORKS.map((work) => {
+              const active = selectedWorkIds.has(work.id);
+              return (
+                <button
+                  className={cn(
+                    "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+                    active
+                      ? "border-foreground/30 bg-foreground text-background"
+                      : "border-border/50 bg-background/60 text-muted-foreground hover:border-border hover:text-foreground"
+                  )}
+                  key={work.id}
+                  onClick={() => toggleSelectedWork(work)}
+                  type="button"
+                >
+                  {work.abbrev}
+                </button>
+              );
+            })}
           </div>
-        ) : null}
+        </div>
         <WorkScopeChips
           onRemove={removeSelectedWork}
           selectedWorks={selectedWorks}
@@ -788,7 +768,6 @@ function PureMultimodalInput({
         <PromptInputTextarea
           className="min-h-16 text-[13px] leading-relaxed px-4 pt-3.5 pb-1.5 placeholder:text-muted-foreground/35 sm:min-h-20"
           data-testid="multimodal-input"
-          disabled={!isComposerEnabled}
           onBlur={handleTextareaBlur}
           onChange={handleInput}
           onFocus={handleTextareaFocus}
@@ -796,13 +775,10 @@ function PureMultimodalInput({
           placeholder={
             editingMessage
               ? "Edit your message..."
-              : isComposerEnabled
-                ? hasLibraryScope
-                  ? "Ask anything about the selected classics…"
-                  : "Pick a classic above, or type @Charaka…"
-                : "Wake me up to ask a question…"
+              : hasLibraryScope
+                ? "Ask anything about the selected classics…"
+                : "Pick a classic above, or type @Charaka…"
           }
-          readOnly={!isComposerEnabled}
           ref={textareaRef}
           value={input}
         />
@@ -817,7 +793,7 @@ function PureMultimodalInput({
               status={status}
             />
             <ModelPickerPopover
-              disabled={!isComposerEnabled || (status !== "ready" && status !== "error")}
+              disabled={status !== "ready" && status !== "error"}
               onModelChange={onModelChange}
               selectedModelId={selectedModelId}
             />
@@ -835,7 +811,6 @@ function PureMultimodalInput({
               )}
               data-testid="send-button"
               disabled={
-                !isComposerEnabled ||
                 !hasLibraryScope ||
                 (!input.trim() && !hasLibraryScope) ||
                 uploadQueue.length > 0
