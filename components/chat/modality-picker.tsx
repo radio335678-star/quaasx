@@ -10,7 +10,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -18,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { WEBX_PUBLIC_URL } from "@/lib/webx-public";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -77,7 +77,6 @@ type ModalityPickerPopoverProps = {
 
 export function ModalityPickerPopover({ disabled }: ModalityPickerPopoverProps) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const handleSelect = (option: ModalityOption) => {
     if (!option.available) {
@@ -86,7 +85,7 @@ export function ModalityPickerPopover({ disabled }: ModalityPickerPopoverProps) 
     }
     setOpen(false);
     if (option.id === "web") {
-      router.push("/app/web-x");
+      window.location.assign(WEBX_PUBLIC_URL);
     }
   };
 

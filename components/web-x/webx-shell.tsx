@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Script from "next/script";
 import { useEffect } from "react";
+import { AI2_PUBLIC_URL } from "@/lib/webx-public";
 
 function BrandSymbol({ size = "lg" }: { size?: "lg" | "sm" }) {
   return (
@@ -45,9 +46,9 @@ export function WebXShell() {
 
       <div className="landing-view" id="landingView">
         <header className="top-nav" role="banner">
-          <Link className="nav-link" href="/app">
+          <a className="nav-link" href={`${AI2_PUBLIC_URL}/app`}>
             ← AI² Chat
-          </Link>
+          </a>
         </header>
 
         <main className="landing-center" role="main">
@@ -132,7 +133,7 @@ export function WebXShell() {
             <a
               aria-label="Web-X-AI² home"
               className="brand-home-link"
-              href="/app/web-x"
+              href="/"
               id="brandHome"
             >
               <BrandSymbol size="sm" />

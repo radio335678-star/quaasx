@@ -1,4 +1,6 @@
-/** Modal `ai2-web-x` production gateway (used when Vercel env is unset). */
+/** Kamatera always-on API (production). Modal kept as legacy fallback. */
+export const WEBX_KAMATERA_API_URL = "https://api.webx.quaasx108.com";
+
 export const WEBX_MODAL_PRODUCTION_URL =
   "https://quaasx--ai2-web-x-webxgateway-web.modal.run";
 
@@ -19,7 +21,7 @@ export function getWebXBackendUrl(): string {
     try {
       const host = new URL(fromEnv).hostname;
       if (process.env.VERCEL && isLocalOrPrivateHost(host)) {
-        return WEBX_MODAL_PRODUCTION_URL;
+        return WEBX_KAMATERA_API_URL;
       }
       return fromEnv;
     } catch {
@@ -27,7 +29,7 @@ export function getWebXBackendUrl(): string {
     }
   }
   if (process.env.VERCEL) {
-    return WEBX_MODAL_PRODUCTION_URL;
+    return WEBX_KAMATERA_API_URL;
   }
   return "http://127.0.0.1:5000";
 }
