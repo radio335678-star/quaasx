@@ -38,7 +38,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "patient",
     thinking: "Low",
     description:
-      "Fast web agent — Ling-2.6-flash on Kamatera (OpenRouter search → Web-X fallback). No Modal.",
+      "Low-thinking Flash — pure Kamatera Web-X Scrapling agent (max 3 calls). No Modal.",
     inputPer1M: "$0.20",
     outputPer1M: "$0.80",
     context: "128K",
