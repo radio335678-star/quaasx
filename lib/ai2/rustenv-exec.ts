@@ -61,6 +61,10 @@ export function sanitizeNativeAnswer(text: string): string {
   }
 
   t = t.replace(
+    /<(?:use_mdl_tool|tool_call|function_call)[^>]*>[\s\S]*?<\/(?:use_mdl_tool|tool_call|function_call)>/gi,
+    ""
+  );
+  t = t.replace(
     /^(?:(?:we need to|let me|i(?:'ll| will)|i(?:'m| am) (?:going to |now )?(?:search|look|fetch|check|query)|searching|looking up|fetching|querying|based on (?:my |the )?(?:search|web|database|tools?)|from (?:the )?(?:web |online )?search|openrouter|scrapling|web-?x|(?:consulting|opening|checking) (?:the )?(?:database|library|charaka|sushruta))[^\n]*(?:\n(?!\n|\*\*|##)[^\n]*)*)+/is,
     ""
   );
