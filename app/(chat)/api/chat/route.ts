@@ -5,7 +5,10 @@ import {
 import type { AudienceMode } from "@/lib/ai2/audience-mode";
 import { isAudienceMode } from "@/lib/ai2/audience-mode";
 import { applyAudiencePrompt } from "@/lib/ai2/audience-prompts";
-import { DEFAULT_CHAT_MODEL } from "@/lib/ai2/developer-models";
+import {
+  DEFAULT_CHAT_MODEL,
+  pipelineForModel,
+} from "@/lib/ai2/developer-models";
 import {
   buildAgentQuestion,
   runChatPipeline,
@@ -149,6 +152,7 @@ export async function POST(request: Request) {
   const textId = generateUUID();
   const audienceMode = extractAudienceMode(requestBody);
   const modelSlug = extractModelSlug(requestBody);
+  const isFlash = pipelineForModel(modelSlug) === "flash_kamatera";
   const baseQuestion = buildAgentQuestion(messages);
   let question: string;
   if (requestBody.message) {
@@ -160,12 +164,17 @@ export async function POST(request: Request) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    question = applyAudiencePrompt(
-      applyScopeLockToQuestion(baseQuestion, scope.names, scope.abbrevs),
-      audienceMode
-    );
+    // Flash is web-native: keep @-scope for UI, but do not inject DB SCOPE LOCK.
+    const scopedQuestion = isFlash
+      ? baseQuestion
+      : applyScopeLockToQuestion(baseQuestion, scope.names, scope.abbrevs);
+    question = applyAudiencePrompt(scopedQuestion, audienceMode, 8000, {
+      nativeWeb: isFlash,
+    });
   } else {
-    question = applyAudiencePrompt(baseQuestion, audienceMode);
+    question = applyAudiencePrompt(baseQuestion, audienceMode, 8000, {
+      nativeWeb: isFlash,
+    });
   }
   const statusSeed = question.length + audienceMode.length + modelSlug.length;
 

@@ -1,18 +1,17 @@
-/** User-facing status lines while AI² responds — no DB/tool jargon. */
+/** User-facing status lines while AI² responds — native assistant tone. */
 
 const WAITING_LINES = [
-  "Consulting the classical tradition…",
-  "Opening the samhitas…",
-  "Listening to your question…",
+  "Thinking…",
+  "Reading your question…",
+  "Composing a clear answer…",
 ] as const;
 
 const THINKING_LINES = [
-  "Tracing the answer through ancient texts…",
-  "Weaving Sanskrit evidence into plain words…",
-  "Cross-reading Charaka, Sushruta, and Ashtanga…",
-  "Finding the verses that fit your question…",
-  "Rendering Sanskrit gold into clear English…",
-  "Synthesizing a grounded reply…",
+  "Gathering a careful reply…",
+  "Putting this in plain words…",
+  "Checking what fits your question…",
+  "Shaping a grounded answer…",
+  "Almost ready…",
 ] as const;
 
 export function pickWaitingLine(seed = 0): string {

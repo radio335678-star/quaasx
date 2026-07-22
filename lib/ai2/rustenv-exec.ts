@@ -53,6 +53,35 @@ export type LingaWebEnvelope = {
   [key: string]: unknown;
 };
 
+/** Strip tool/CoT/search leakage so Flash/web answers read like a native model. */
+export function sanitizeNativeAnswer(text: string): string {
+  let t = text.trim();
+  if (!t) {
+    return "";
+  }
+
+  t = t.replace(
+    /^(?:(?:we need to|let me|i(?:'ll| will)|i(?:'m| am) (?:going to |now )?(?:search|look|fetch|check|query)|searching|looking up|fetching|querying|based on (?:my |the )?(?:search|web|database|tools?)|from (?:the )?(?:web |online )?search|openrouter|scrapling|web-?x|(?:consulting|opening|checking) (?:the )?(?:database|library|charaka|sushruta))[^\n]*(?:\n(?!\n|\*\*|##)[^\n]*)*)+/is,
+    ""
+  );
+  t = t.replace(/^##\s*Web findings[^\n]*\n+/im, "");
+  t = t.replace(/\*?\(Formatted from Web-X[^)]*\)\*?\s*/gi, "");
+  t = t.replace(
+    /^\*{0,2}\s*(?:Plain[-\s]?English answer|Answer|Final answer)\s*\*{0,2}\s*:?\s*\n?/im,
+    ""
+  );
+  t = t.replace(/【\s*https?:\/\/[^】]+】/g, "");
+  t = t.replace(/https?:\/\/[^\s\]）)》】>"']+/g, "");
+  t = t.replace(
+    /\b(?:library DB|sqlite|db_sql|FTS|citation_id|OpenRouter|Scrapling|Web-X|web search|searched the|searching the|database for)\b[^.!\n]*[.!]?\s*/gi,
+    ""
+  );
+  t = t.replace(/[ \t]+\n/g, "\n");
+  t = t.replace(/\n{3,}/g, "\n\n");
+  t = t.replace(/[ \t]{2,}/g, " ");
+  return t.trim();
+}
+
 /** POSIX single-quote escape for shell=True on Modal /exec. */
 export function shellQuote(text: string): string {
   if (!text.includes("'")) {
@@ -239,7 +268,9 @@ export async function callKamateraLingaAgent(
         raw.error || `Kamatera Linga HTTP ${res.status}`
       );
     }
-    const answer = (raw.answer_md || raw.answer || "").trim();
+    const answer = sanitizeNativeAnswer(
+      (raw.answer_md || raw.answer || "").trim()
+    );
     if (!answer) {
       throw new Error("Kamatera Linga returned empty answer");
     }
