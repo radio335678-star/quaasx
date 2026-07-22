@@ -55,12 +55,12 @@ export function ModelPickerPopover({
       <PopoverTrigger asChild>
         <Button
           className={cn(
-            "h-7 max-w-[160px] gap-1.5 rounded-lg border border-border/40 px-2 text-[11px] text-muted-foreground/80 hover:text-foreground",
+            "h-7 max-w-[180px] gap-1.5 rounded-lg border border-border/40 px-2 text-[11px] text-muted-foreground/80 hover:text-foreground",
             disabled && "cursor-not-allowed opacity-50"
           )}
           data-testid="model-picker-button"
           disabled={disabled}
-          title="Model and thinking level"
+          title={`${active.name} · ${active.audienceLabel}`}
           type="button"
           variant="ghost"
         >
@@ -73,17 +73,13 @@ export function ModelPickerPopover({
             width={14}
           />
           <span className="truncate font-medium tracking-tight">
-            {active.audienceLabel}
+            {active.name}
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[min(100vw-2rem,22rem)] p-2" side="top">
-        <p className="px-2 pb-1 font-medium text-foreground text-xs">
-          Model · thinking level
-        </p>
-        <p className="px-2 pb-2 text-[11px] text-muted-foreground leading-snug">
-          Patient (web-fast), Scholar (library + web), Clinician (library-deep).
-          GOD mode stays locked on free tier.
+      <PopoverContent align="start" className="w-[min(100vw-2rem,20rem)] p-2" side="top">
+        <p className="px-2 pb-2 font-medium text-foreground text-xs">
+          Select model
         </p>
         <ul className="space-y-1">
           {models.map((model) => {
@@ -122,19 +118,11 @@ export function ModelPickerPopover({
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-1.5">
-                      <span className="font-medium text-foreground text-[12px]">
-                        {model.audienceLabel}
-                      </span>
-                      <span className="rounded bg-muted/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                        {model.thinking} thinking
-                      </span>
-                    </span>
-                    <span className="mt-0.5 block font-mono text-[10px] text-muted-foreground/80">
+                    <span className="block font-medium text-foreground text-[13px] tracking-tight">
                       {model.name}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-muted-foreground leading-snug">
-                      {model.description}
+                    <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                      {model.audienceLabel}
                     </span>
                     {locked && model.unavailableReason ? (
                       <span className="mt-1 block text-[10px] text-muted-foreground/70">
