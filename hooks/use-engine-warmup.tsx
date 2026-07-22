@@ -74,7 +74,9 @@ export function EngineWarmupProvider({ children }: { children: ReactNode }) {
 
   const markIdle = useCallback(() => {}, []);
 
-  const wake = refreshStatus;
+  const wake = useCallback(async (): Promise<void> => {
+    await refreshStatus();
+  }, [refreshStatus]);
   const runWarmup = wake;
 
   useEffect(() => {
