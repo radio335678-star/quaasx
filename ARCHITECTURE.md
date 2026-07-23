@@ -17,10 +17,10 @@
 
 | Tier | Slug | Pipeline |
 |------|------|----------|
-| Patient (Low) | `ai2-ayu-flash` | Kamatera Ling-2.6-flash only (OR web_search → Web-X fallback) |
-| Scholar (Medium) | `ai2-ayu-pro` | Parallel Modal Linga DB + Kamatera Linga web → Linga merge |
-| Clinician (Extra high) | `ai2-ayu-max` | Modal DeepSeek v4 flash library-only |
-| GOD | `ai2-ayu-god` | Locked |
+| Patient (Low) | `ai2-ayu-flash` | Kamatera Scrapling + `deepseek/deepseek-v3.2` (effort=low) |
+| Scholar (Medium) | `ai2-ayu-pro` | Parallel Modal V3.2 DB + Kamatera Scrapling → V3.2 merge |
+| Clinician (Extra high) | `ai2-ayu-max` | Modal `stepfun/step-3.5-flash` library-only (effort=high) |
+| GOD (Maximum) | `ai2-ayu-god` | Modal `deepseek/deepseek-v4-pro` library-only (effort=xhigh) |
 
 Router: `lib/ai2/rustenv-exec.ts` → `runChatPipeline`. Env: `AI2_BACKEND_URL`, `WEBX_BACKEND_URL`, `AI2_WEBX_BRIDGE_SECRET`.
 

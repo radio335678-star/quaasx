@@ -3,7 +3,14 @@ import type { AudienceMode } from "./audience-mode";
 export type DeveloperModelTier = "flash" | "pro" | "max" | "god";
 
 /** Chat pipeline routing key (matches model slug → backend). */
-export type ChatPipeline = "flash_kamatera" | "pro_parallel" | "max_deepseek";
+export type ChatPipeline =
+  | "flash_kamatera"
+  | "pro_parallel"
+  | "max_db"
+  | "god_db";
+
+/** OpenRouter reasoning.effort values (never send "max" — OR rejects it). */
+export type ReasoningEffort = "low" | "medium" | "high" | "xhigh";
 
 export type DeveloperModel = {
   id: DeveloperModelTier;
@@ -24,9 +31,25 @@ export type DeveloperModel = {
   chatSelectable: boolean;
   /** Server-side routing pipeline */
   pipeline: ChatPipeline | null;
+  /** OpenRouter model slug for this tier */
+  openRouterModel: string;
+  /** OpenRouter reasoning.effort (exclude=true in backends) */
+  reasoningEffort: ReasoningEffort;
   unavailableReason?: string;
   badge?: string;
 };
+
+/** Flash + Pro LLM (OpenRouter). */
+export const FLASH_PRO_MODEL = "deepseek/deepseek-v3.2";
+/** Max (extra-high) Modal DB-only. */
+export const MAX_MODEL = "stepfun/step-3.5-flash";
+/** GOD mode Modal DB-only. */
+export const GOD_MODEL = "deepseek/deepseek-v4-pro";
+
+/** @deprecated Use FLASH_PRO_MODEL */
+export const LINGA_MODEL = FLASH_PRO_MODEL;
+/** @deprecated Use MAX_MODEL / GOD_MODEL */
+export const DEEPSEEK_MODEL = MAX_MODEL;
 
 /** Public model catalog for the Developers page (token pricing is indicative). */
 export const DEVELOPER_MODELS: DeveloperModel[] = [
@@ -38,13 +61,15 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "patient",
     thinking: "Low",
     description:
-      "Low-thinking Flash — pure Kamatera Web-X Scrapling agent (max 3 calls). No Modal.",
-    inputPer1M: "$0.20",
-    outputPer1M: "$0.80",
+      "Low thinking — DeepSeek V3.2 on Kamatera Web-X Scrapling (max 3 calls). No Modal.",
+    inputPer1M: "$0.25",
+    outputPer1M: "$0.40",
     context: "128K",
     available: true,
     chatSelectable: true,
     pipeline: "flash_kamatera",
+    openRouterModel: FLASH_PRO_MODEL,
+    reasoningEffort: "low",
   },
   {
     id: "pro",
@@ -54,13 +79,15 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Medium",
     description:
-      "Parallel Linga DB (Modal) + Linga web (Kamatera), then Linga merge — classical + live web.",
-    inputPer1M: "$1.20",
-    outputPer1M: "$4.80",
+      "Medium thinking — DeepSeek V3.2 parallel: Modal classical DB + Kamatera Scrapling web, then merge.",
+    inputPer1M: "$0.25",
+    outputPer1M: "$0.40",
     context: "128K",
     available: true,
     chatSelectable: true,
     pipeline: "pro_parallel",
+    openRouterModel: FLASH_PRO_MODEL,
+    reasoningEffort: "medium",
     badge: "Recommended",
   },
   {
@@ -71,13 +98,15 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "clinician",
     thinking: "Extra high",
     description:
-      "DeepSeek v4 flash on Modal — classical library only, no Web-X.",
-    inputPer1M: "$3.50",
-    outputPer1M: "$14.00",
+      "Extra-high thinking — Step 3.5 Flash on Modal classical library only (no Web-X).",
+    inputPer1M: "$0.10",
+    outputPer1M: "$0.30",
     context: "256K",
     available: true,
     chatSelectable: true,
-    pipeline: "max_deepseek",
+    pipeline: "max_db",
+    openRouterModel: MAX_MODEL,
+    reasoningEffort: "high",
   },
   {
     id: "god",
@@ -87,15 +116,16 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Maximum",
     description:
-      "Memory-intensive, highest-performance classical intelligence — reserved for enterprise and research partners.",
-    inputPer1M: null,
-    outputPer1M: null,
-    context: "1M+",
-    available: false,
-    chatSelectable: false,
-    pipeline: null,
-    unavailableReason: "Unavailable on free tier",
-    badge: "Unavailable on free tier",
+      "Maximum thinking — DeepSeek V4-Pro on Modal classical library only (1M context).",
+    inputPer1M: "$1.20",
+    outputPer1M: "$4.80",
+    context: "1M",
+    available: true,
+    chatSelectable: true,
+    pipeline: "god_db",
+    openRouterModel: GOD_MODEL,
+    reasoningEffort: "xhigh",
+    badge: "GOD",
   },
 ];
 
@@ -104,9 +134,6 @@ export const DEFAULT_CHAT_MODEL =
     ?.slug ??
   DEVELOPER_MODELS.find((m) => m.chatSelectable)?.slug ??
   "ai2-ayu-pro";
-
-export const LINGA_MODEL = "inclusionai/ling-2.6-flash";
-export const DEEPSEEK_MODEL = "deepseek/deepseek-v4-flash";
 
 export function findChatModel(slug: string) {
   return DEVELOPER_MODELS.find((m) => m.slug === slug);

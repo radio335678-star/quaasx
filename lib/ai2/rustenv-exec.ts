@@ -1,17 +1,20 @@
 /** Call ai2-rust-env Modal and Kamatera Linga agent by chat pipeline. */
 
 import {
-  LINGA_MODEL,
+  FLASH_PRO_MODEL,
+  GOD_MODEL,
+  MAX_MODEL,
   type ChatPipeline,
   pipelineForModel,
+  resolveChatModel,
 } from "@/lib/ai2/developer-models";
 
 const MAX_QUESTION_CHARS = 8000;
-const AGENT_SCRIPT = "python3 /workspace/agent_run.py";
 const EXEC_TIMEOUT_MS = 240_000;
 const LINGA_WEB_TIMEOUT_MS = 45_000;
 const LINGA_DB_TIMEOUT_MS = 120_000;
 const LINGA_MERGE_TIMEOUT_MS = 90_000;
+const GOD_TIMEOUT_MS = 300_000;
 
 export type ChatTurn = { role: string; content: string };
 
@@ -165,6 +168,7 @@ export async function callRustEnvAgent(
   opts?: {
     pipeline?: string;
     model?: string;
+    reasoningEffort?: string;
     dbPack?: unknown;
     webPack?: unknown;
     timeoutMs?: number;
@@ -179,7 +183,14 @@ export async function callRustEnvAgent(
     envExports.push(`AI2_RUSTENV_LLM_MODEL=${opts.model}`);
     envExports.push(`AI2_LLM_MODEL=${opts.model}`);
   }
-  if (pipeline === "linga_db" || pipeline === "deepseek_db") {
+  if (opts?.reasoningEffort) {
+    envExports.push(`AI2_REASONING_EFFORT=${opts.reasoningEffort}`);
+  }
+  if (
+    pipeline === "linga_db" ||
+    pipeline === "deepseek_db" ||
+    pipeline === "db_only"
+  ) {
     envExports.push("AI2_WEB_PREFETCH=off");
   }
   if (opts?.dbPack !== undefined) {
@@ -286,9 +297,10 @@ export async function callKamateraLingaAgent(
 
 /**
  * Route by chat model pipeline:
- * - flash_kamatera: Kamatera Linga only
- * - pro_parallel: Modal Linga DB + Kamatera Linga web → Linga merge
- * - max_deepseek: Modal DeepSeek DB-only
+ * - flash_kamatera: Kamatera Scrapling + DeepSeek V3.2 (low)
+ * - pro_parallel: Modal V3.2 DB + Kamatera web → V3.2 merge (medium)
+ * - max_db: Modal Step 3.5 Flash DB-only (high)
+ * - god_db: Modal DeepSeek V4-Pro DB-only (xhigh)
  */
 export async function runChatPipeline(
   modalUrl: string,
@@ -296,25 +308,42 @@ export async function runChatPipeline(
   modelSlug: string | undefined
 ): Promise<{ answer: string; pipeline: ChatPipeline }> {
   const pipeline = pipelineForModel(modelSlug);
+  const catalog = resolveChatModel(modelSlug);
 
   if (pipeline === "flash_kamatera") {
     const { answer } = await callKamateraLingaAgent(question);
     return { answer, pipeline };
   }
 
-  if (pipeline === "max_deepseek") {
+  if (pipeline === "max_db") {
     const { answer } = await callRustEnvAgent(modalUrl, question, {
       pipeline: "deepseek_db",
+      model: catalog.openRouterModel || MAX_MODEL,
+      reasoningEffort: catalog.reasoningEffort || "high",
       timeoutMs: EXEC_TIMEOUT_MS,
     });
     return { answer, pipeline };
   }
 
-  // pro_parallel
+  if (pipeline === "god_db") {
+    const { answer } = await callRustEnvAgent(modalUrl, question, {
+      pipeline: "deepseek_db",
+      model: catalog.openRouterModel || GOD_MODEL,
+      reasoningEffort: catalog.reasoningEffort || "xhigh",
+      timeoutMs: GOD_TIMEOUT_MS,
+    });
+    return { answer, pipeline };
+  }
+
+  // pro_parallel — DeepSeek V3.2 on Modal DB + merge; Kamatera Scrapling for web
+  const proModel = catalog.openRouterModel || FLASH_PRO_MODEL;
+  const proEffort = catalog.reasoningEffort || "medium";
+
   const [dbSettled, webSettled] = await Promise.allSettled([
     callRustEnvAgent(modalUrl, question, {
       pipeline: "linga_db",
-      model: LINGA_MODEL,
+      model: proModel,
+      reasoningEffort: proEffort,
       timeoutMs: LINGA_DB_TIMEOUT_MS,
     }),
     callKamateraLingaAgent(question),
@@ -352,7 +381,8 @@ export async function runChatPipeline(
   try {
     const { answer } = await callRustEnvAgent(modalUrl, question, {
       pipeline: "linga_merge",
-      model: LINGA_MODEL,
+      model: proModel,
+      reasoningEffort: proEffort,
       dbPack,
       webPack,
       timeoutMs: LINGA_MERGE_TIMEOUT_MS,
