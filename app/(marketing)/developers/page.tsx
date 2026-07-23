@@ -183,8 +183,8 @@ export default function DevelopersPage() {
             body: "Pay per input and output token. Flash for volume; max for depth; GOD mode for partners.",
           },
           {
-            title: "Hybrid Engine",
-            body: `${brand.equation} — proprietary ${brand.fullName}, not a generic LLM wrapper.`,
+            title: "Cite-first classical core",
+            body: `${brand.equation} — proprietary ${brand.name}, not a generic LLM wrapper.`,
           },
         ].map((item) => (
           <div key={item.title}>
@@ -205,9 +205,9 @@ export default function DevelopersPage() {
         </Link>
         <Link
           className="inline-flex justify-center rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40"
-          href="/corpus"
+          href="/benchmark"
         >
-          Hybrid Engine overview
+          Benchmark validation
         </Link>
       </div>
     </div>

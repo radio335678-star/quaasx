@@ -60,6 +60,12 @@ export default function HomePage() {
           </Link>
           <Link
             className="rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:border-border hover:bg-white/5"
+            href="/benchmark"
+          >
+            Benchmark Validation
+          </Link>
+          <Link
+            className="rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:border-border hover:bg-white/5"
             href="/developers"
           >
             Developers
@@ -69,6 +75,27 @@ export default function HomePage() {
             href="/product"
           >
             See the Engine
+          </Link>
+        </motion.div>
+
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-12 max-w-md border-t border-border/40 pt-8"
+          initial={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.55, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="font-medium text-foreground text-sm tracking-tight">
+            Bhasha Bench Ayur v1 — 92.8%
+          </p>
+          <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+            Third-party doctor validation is now open — free for credentialed
+            clinicians across Ayurveda and allied medical fields.
+          </p>
+          <Link
+            className="mt-3 inline-block text-foreground text-sm underline-offset-4 transition-colors hover:underline"
+            href="/benchmark"
+          >
+            How to join →
           </Link>
         </motion.div>
       </motion.div>

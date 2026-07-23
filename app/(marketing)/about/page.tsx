@@ -17,9 +17,9 @@ export default function AboutPage() {
         {brand.company}
       </h1>
       <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
-        We build {brand.name} — the Hybrid Engine that unites ancient Ayurvedic
-        intelligence with modern AI — so the global Ayurveda community can ask
-        any classical question and receive grounded, cite-first answers.
+        We build {brand.name} — classical Ayurvedic intelligence united with
+        modern AI — so the global Ayurveda community can ask any classical
+        question and receive grounded, cite-first answers.
       </p>
 
       <div className="mt-12 flex justify-center rounded-xl border border-border/40 bg-black px-8 py-10">
@@ -46,12 +46,18 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="mt-14">
+      <div className="mt-14 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Link
           className="inline-flex rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90"
           href={brand.appPath}
         >
           Open {brand.name}
+        </Link>
+        <Link
+          className="inline-flex rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40"
+          href="/benchmark"
+        >
+          Benchmark validation
         </Link>
       </div>
     </div>
