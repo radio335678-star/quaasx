@@ -10,7 +10,6 @@ import { CrossAcharyaBar } from "./CrossAcharyaBar";
 import { ExamModePanel } from "./ExamModePanel";
 import { RetrievalTrace } from "./RetrievalTrace";
 import { SampraptiMap } from "./SampraptiMap";
-import { ScopedWorksBar } from "./ScopedWorksBar";
 import { ShlokaCard } from "./ShlokaCard";
 import { TreatmentPlanPanel } from "./TreatmentPlanPanel";
 
@@ -186,9 +185,6 @@ export function AdaptiveAnswer({
         <p className="text-sm font-medium text-muted-foreground">
           {layout.headline}
         </p>
-      ) : null}
-      {layout.scoped_works?.length ? (
-        <ScopedWorksBar variant="answer" works={layout.scoped_works} />
       ) : null}
       <p className="text-[11px] leading-relaxed text-muted-foreground/80">
         {layout.clinical_caution ??

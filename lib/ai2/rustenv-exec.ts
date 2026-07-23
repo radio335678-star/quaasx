@@ -1,4 +1,4 @@
-/** Call ai2-rust-env Modal and Kamatera Linga agent by chat pipeline. */
+/** Call ai2-rust-env Modal by chat pipeline (Flash / Pro / Max / GOD). */
 
 import {
   FLASH_PRO_MODEL,
@@ -11,10 +11,9 @@ import {
 
 const MAX_QUESTION_CHARS = 8000;
 const EXEC_TIMEOUT_MS = 240_000;
-const LINGA_WEB_TIMEOUT_MS = 45_000;
-const LINGA_DB_TIMEOUT_MS = 120_000;
-const LINGA_MERGE_TIMEOUT_MS = 90_000;
+const PRO_TIMEOUT_MS = 180_000;
 const GOD_TIMEOUT_MS = 300_000;
+const FLASH_TIMEOUT_MS = 90_000;
 
 export type ChatTurn = { role: string; content: string };
 
@@ -39,24 +38,7 @@ type AgentResult = {
   [key: string]: unknown;
 };
 
-export type LingaWebEnvelope = {
-  ok?: boolean;
-  answer_md?: string;
-  answer?: string;
-  error?: string;
-  sources?: Array<Record<string, unknown>>;
-  web_backend?: string;
-  sufficient?: boolean;
-  needs_classical_db?: boolean;
-  confidence?: number;
-  model?: string;
-  linga_ms?: number;
-  scrape_ms?: number;
-  tools_used?: string[];
-  [key: string]: unknown;
-};
-
-/** Strip tool/CoT/search leakage so Flash/web answers read like a native model. */
+/** Strip tool/CoT/search leakage so answers read like a native model. */
 export function sanitizeNativeAnswer(text: string): string {
   let t = text.trim();
   if (!t) {
@@ -189,7 +171,9 @@ export async function callRustEnvAgent(
   if (
     pipeline === "linga_db" ||
     pipeline === "deepseek_db" ||
-    pipeline === "db_only"
+    pipeline === "db_only" ||
+    pipeline === "knowledge_only" ||
+    pipeline === "pro_full"
   ) {
     envExports.push("AI2_WEB_PREFETCH=off");
   }
@@ -254,53 +238,12 @@ export async function callRustEnvAgent(
   return { answer, raw: agent };
 }
 
-export async function callKamateraLingaAgent(
-  question: string
-): Promise<{ answer: string; raw: LingaWebEnvelope }> {
-  const base = (
-    process.env.WEBX_BACKEND_URL || "https://api.webx.quaasx108.com"
-  ).replace(/\/$/, "");
-  const secret = (process.env.AI2_WEBX_BRIDGE_SECRET || "").trim();
-  if (!secret) {
-    throw new Error("AI2_WEBX_BRIDGE_SECRET not configured on Vercel");
-  }
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), LINGA_WEB_TIMEOUT_MS);
-  try {
-    const res = await fetch(`${base}/api/internal/agent/run`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-AI2-Bridge-Secret": secret,
-      },
-      body: JSON.stringify({ query: question, max_pages: 3 }),
-      signal: controller.signal,
-    });
-    const raw = (await res.json()) as LingaWebEnvelope;
-    if (!res.ok || !raw.ok) {
-      throw new Error(
-        raw.error || `Kamatera Linga HTTP ${res.status}`
-      );
-    }
-    const answer = sanitizeNativeAnswer(
-      (raw.answer_md || raw.answer || "").trim()
-    );
-    if (!answer) {
-      throw new Error("Kamatera Linga returned empty answer");
-    }
-    return { answer, raw };
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 /**
  * Route by chat model pipeline:
- * - flash_kamatera: Kamatera Scrapling + DeepSeek V3.2 (low)
- * - pro_parallel: Modal V3.2 DB + Kamatera web → V3.2 merge (medium)
- * - max_db: Modal Step 3.5 Flash DB-only (high)
- * - god_db: Modal DeepSeek V4-Pro DB-only (xhigh)
+ * - knowledge_only: Modal DeepSeek V3.2, no tools (Flash)
+ * - pro_full: Modal V3.2 classical DB + OpenRouter paid web_search/web_fetch
+ * - max_db: Modal Step 3.5 Flash DB-only
+ * - god_db: Modal DeepSeek V4-Pro DB-only
  */
 export async function runChatPipeline(
   modalUrl: string,
@@ -310,8 +253,23 @@ export async function runChatPipeline(
   const pipeline = pipelineForModel(modelSlug);
   const catalog = resolveChatModel(modelSlug);
 
-  if (pipeline === "flash_kamatera") {
-    const { answer } = await callKamateraLingaAgent(question);
+  if (pipeline === "knowledge_only") {
+    const { answer } = await callRustEnvAgent(modalUrl, question, {
+      pipeline: "knowledge_only",
+      model: catalog.openRouterModel || FLASH_PRO_MODEL,
+      reasoningEffort: catalog.reasoningEffort || "low",
+      timeoutMs: FLASH_TIMEOUT_MS,
+    });
+    return { answer: sanitizeNativeAnswer(answer) || answer, pipeline };
+  }
+
+  if (pipeline === "pro_full") {
+    const { answer } = await callRustEnvAgent(modalUrl, question, {
+      pipeline: "pro_full",
+      model: catalog.openRouterModel || FLASH_PRO_MODEL,
+      reasoningEffort: catalog.reasoningEffort || "medium",
+      timeoutMs: PRO_TIMEOUT_MS,
+    });
     return { answer, pipeline };
   }
 
@@ -335,64 +293,12 @@ export async function runChatPipeline(
     return { answer, pipeline };
   }
 
-  // pro_parallel — DeepSeek V3.2 on Modal DB + merge; Kamatera Scrapling for web
-  const proModel = catalog.openRouterModel || FLASH_PRO_MODEL;
-  const proEffort = catalog.reasoningEffort || "medium";
-
-  const [dbSettled, webSettled] = await Promise.allSettled([
-    callRustEnvAgent(modalUrl, question, {
-      pipeline: "linga_db",
-      model: proModel,
-      reasoningEffort: proEffort,
-      timeoutMs: LINGA_DB_TIMEOUT_MS,
-    }),
-    callKamateraLingaAgent(question),
-  ]);
-
-  const dbOk = dbSettled.status === "fulfilled" ? dbSettled.value : null;
-  const webOk = webSettled.status === "fulfilled" ? webSettled.value : null;
-
-  if (!dbOk && webOk) {
-    return { answer: webOk.answer, pipeline };
-  }
-  if (dbOk && !webOk) {
-    return { answer: dbOk.answer, pipeline };
-  }
-  if (!dbOk && !webOk) {
-    const dbErr =
-      dbSettled.status === "rejected"
-        ? String(dbSettled.reason)
-        : "db failed";
-    const webErr =
-      webSettled.status === "rejected"
-        ? String(webSettled.reason)
-        : "web failed";
-    throw new Error(`Pro parallel failed — db: ${dbErr}; web: ${webErr}`);
-  }
-
-  const dbPack = {
-    answer: dbOk!.answer,
-    model: dbOk!.raw.model,
-    steps: dbOk!.raw.steps,
-    ok: true,
-  };
-  const webPack = webOk!.raw;
-
-  try {
-    const { answer } = await callRustEnvAgent(modalUrl, question, {
-      pipeline: "linga_merge",
-      model: proModel,
-      reasoningEffort: proEffort,
-      dbPack,
-      webPack,
-      timeoutMs: LINGA_MERGE_TIMEOUT_MS,
-    });
-    return { answer, pipeline };
-  } catch {
-    // Degraded: concatenate if merge fails
-    return {
-      answer: `${dbOk!.answer}\n\n---\n\n## Web research\n\n${webOk!.answer}`,
-      pipeline,
-    };
-  }
+  // Fallback: Pro-style single Modal agent
+  const { answer } = await callRustEnvAgent(modalUrl, question, {
+    pipeline: "pro_full",
+    model: catalog.openRouterModel || FLASH_PRO_MODEL,
+    reasoningEffort: catalog.reasoningEffort || "medium",
+    timeoutMs: PRO_TIMEOUT_MS,
+  });
+  return { answer, pipeline: "pro_full" };
 }

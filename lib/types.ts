@@ -15,8 +15,8 @@ export const messageMetadataSchema = z.object({
   audienceMode: z.enum(["patient", "scholar", "clinician"]).optional(),
   /** Chat model slug for server-side pipeline routing (flash / pro / max). */
   modelSlug: z.string().optional(),
-  scopedWorks: z.array(z.string()).min(1).max(3).optional(),
-  scopedAbbrevs: z.array(z.string()).min(1).max(3).optional(),
+  scopedWorks: z.array(z.string()).max(3).optional(),
+  scopedAbbrevs: z.array(z.string()).max(3).optional(),
 });
 
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;

@@ -9,7 +9,7 @@
 
 | Product | Public URL | Frontend host | Backend host | Backend runtime |
 |---------|------------|---------------|--------------|-----------------|
-| **AI² Chat** | `https://ai2.quaasx108.com` | Vercel (this repo) | Modal + Kamatera Linga (by tier) | See three-tier table below |
+| **AI² Chat** | `https://ai2.quaasx108.com` | Vercel (this repo) | Modal `ai2-rust-env` | Modal warm 1×CPU |
 | **Web-X Search** | `https://webx.quaasx108.com` | Vercel (same project) | Kamatera VPS | Always-on FastAPI on `api.webx.quaasx108.com` |
 | **Web-X API** | `https://api.webx.quaasx108.com` | — | Kamatera `74.113.234.141` | Caddy → `127.0.0.1:8787` |
 
@@ -17,12 +17,12 @@
 
 | Tier | Slug | Pipeline |
 |------|------|----------|
-| Patient (Low) | `ai2-ayu-flash` | Kamatera Scrapling + `deepseek/deepseek-v3.2` (effort=low) |
-| Scholar (Medium) | `ai2-ayu-pro` | Parallel Modal V3.2 DB + Kamatera Scrapling → V3.2 merge |
+| Patient (Low) | `ai2-ayu-flash` | Modal `knowledge_only` — `deepseek/deepseek-v3.2` (effort=low), no tools |
+| Scholar (Medium) | `ai2-ayu-pro` | Modal `pro_full` — V3.2 classical DB + OpenRouter paid web_search/web_fetch |
 | Clinician (Extra high) | `ai2-ayu-max` | Modal `stepfun/step-3.5-flash` library-only (effort=high) |
 | GOD (Maximum) | `ai2-ayu-god` | Modal `deepseek/deepseek-v4-pro` library-only (effort=xhigh) |
 
-Router: `lib/ai2/rustenv-exec.ts` → `runChatPipeline`. Env: `AI2_BACKEND_URL`, `WEBX_BACKEND_URL`, `AI2_WEBX_BRIDGE_SECRET`.
+Router: `lib/ai2/rustenv-exec.ts` → `runChatPipeline`. Env: `AI2_BACKEND_URL`.
 
 **This Git repo:** [`github.com/radio335678-star/quaasx`](https://github.com/radio335678-star/quaasx) — root = `frontend/`  
 **Sibling on disk (not in git):** `../backend/` (Modal + Kamatera deploy), `../data/` (corpus DB)

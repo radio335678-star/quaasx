@@ -152,28 +152,34 @@ export async function POST(request: Request) {
   const textId = generateUUID();
   const audienceMode = extractAudienceMode(requestBody);
   const modelSlug = extractModelSlug(requestBody);
-  const isFlash = pipelineForModel(modelSlug) === "flash_kamatera";
+  const isFlash = pipelineForModel(modelSlug) === "knowledge_only";
   const baseQuestion = buildAgentQuestion(messages);
   let question: string;
   if (requestBody.message) {
     const { scopedWorks, scopedAbbrevs } = extractScopedMetadata(requestBody);
-    const scope = resolveScopedClassics(scopedWorks, scopedAbbrevs);
-    if (!scope.ok) {
-      return new Response(JSON.stringify({ error: scope.error }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
+    // Flash: knowledge-only — no @ scope required, no SCOPE LOCK.
+    if (isFlash) {
+      question = applyAudiencePrompt(baseQuestion, audienceMode, 8000, {
+        nativeKnowledge: true,
       });
+    } else {
+      const scope = resolveScopedClassics(scopedWorks, scopedAbbrevs);
+      if (!scope.ok) {
+        return new Response(JSON.stringify({ error: scope.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      const scopedQuestion = applyScopeLockToQuestion(
+        baseQuestion,
+        scope.names,
+        scope.abbrevs
+      );
+      question = applyAudiencePrompt(scopedQuestion, audienceMode, 8000);
     }
-    // Flash is web-native: keep @-scope for UI, but do not inject DB SCOPE LOCK.
-    const scopedQuestion = isFlash
-      ? baseQuestion
-      : applyScopeLockToQuestion(baseQuestion, scope.names, scope.abbrevs);
-    question = applyAudiencePrompt(scopedQuestion, audienceMode, 8000, {
-      nativeWeb: isFlash,
-    });
   } else {
     question = applyAudiencePrompt(baseQuestion, audienceMode, 8000, {
-      nativeWeb: isFlash,
+      nativeKnowledge: isFlash,
     });
   }
   const statusSeed = question.length + audienceMode.length + modelSlug.length;

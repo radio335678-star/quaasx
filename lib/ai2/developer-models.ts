@@ -4,8 +4,8 @@ export type DeveloperModelTier = "flash" | "pro" | "max" | "god";
 
 /** Chat pipeline routing key (matches model slug → backend). */
 export type ChatPipeline =
-  | "flash_kamatera"
-  | "pro_parallel"
+  | "knowledge_only"
+  | "pro_full"
   | "max_db"
   | "god_db";
 
@@ -61,13 +61,13 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "patient",
     thinking: "Low",
     description:
-      "Low thinking — DeepSeek V3.2 on Kamatera Web-X Scrapling (max 3 calls). No Modal.",
+      "Low thinking — DeepSeek V3.2 knowledge-only on Modal (no tools, no web).",
     inputPer1M: "$0.25",
     outputPer1M: "$0.40",
     context: "128K",
     available: true,
     chatSelectable: true,
-    pipeline: "flash_kamatera",
+    pipeline: "knowledge_only",
     openRouterModel: FLASH_PRO_MODEL,
     reasoningEffort: "low",
   },
@@ -79,13 +79,13 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Medium",
     description:
-      "Medium thinking — DeepSeek V3.2 parallel: Modal classical DB + Kamatera Scrapling web, then merge.",
+      "Medium thinking — DeepSeek V3.2 on Modal: classical DB + OpenRouter paid web search/fetch.",
     inputPer1M: "$0.25",
     outputPer1M: "$0.40",
     context: "128K",
     available: true,
     chatSelectable: true,
-    pipeline: "pro_parallel",
+    pipeline: "pro_full",
     openRouterModel: FLASH_PRO_MODEL,
     reasoningEffort: "medium",
     badge: "Recommended",
@@ -152,7 +152,7 @@ export function audienceModeForModel(slug: string | undefined): AudienceMode {
 }
 
 export function pipelineForModel(slug: string | undefined): ChatPipeline {
-  return resolveChatModel(slug).pipeline ?? "pro_parallel";
+  return resolveChatModel(slug).pipeline ?? "pro_full";
 }
 
 export const DEVELOPER_API_BASE = "https://api.ai2.quaasx.com/v1";

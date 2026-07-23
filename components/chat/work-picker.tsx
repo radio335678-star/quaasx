@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import {
   LIBRARY_WORKS,
   MAX_SCOPED_WORKS,
@@ -30,7 +30,6 @@ export function WorkScopeChips({
           className="inline-flex max-w-full items-center gap-1 rounded-lg border border-border/40 bg-muted/40 px-2 py-0.5 text-[11px] text-foreground/80"
           key={work.id}
         >
-          <BookOpenIcon className="size-3 shrink-0 text-muted-foreground/50" />
           <span className="truncate">@{work.name}</span>
           <button
             aria-label={`Remove ${work.name}`}

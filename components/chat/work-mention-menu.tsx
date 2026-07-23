@@ -1,6 +1,5 @@
 "use client";
 
-import { BookOpenIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import {
   filterWorks,
@@ -54,16 +53,12 @@ function WorkMentionMenuItem({
       onMouseDown={handleMouseDown}
       type="button"
     >
-      <div className="flex size-6 shrink-0 items-center justify-center text-muted-foreground/60">
-        <BookOpenIcon className="size-3.5" />
-      </div>
       <div className="min-w-0 flex-1">
         <span className="block truncate text-[13px] text-foreground">
           @{work.name}
         </span>
         <span className="block truncate text-[11px] text-muted-foreground/50">
           {work.shortGroup}
-          {work.dbReady ? " · DB" : " · CORPUS"}
         </span>
       </div>
     </button>
@@ -99,7 +94,7 @@ export function WorkMentionMenu({
       ref={menuRef}
     >
       <div className="px-4 py-2.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/40">
-        Scope search · {LIBRARY_WORKS.length} works · max 5
+        Classics · {LIBRARY_WORKS.length} · max 5
       </div>
       <div className="max-h-64 overflow-y-auto pb-1 no-scrollbar">
         {filtered.map((work, index) => (

@@ -1,7 +1,7 @@
 import type { AudienceMode } from "./audience-mode";
 
 /**
- * Frontend-only audience tuning for ai2-rust-env / Kamatera Flash.
+ * Frontend-only audience tuning for ai2-rust-env.
  * Modal agent keeps AGENT_PROMPT.md (scholar baseline); we steer via the user question string.
  */
 
@@ -15,7 +15,7 @@ Answer for a lay reader, not a vaidya or student.
 - Emphasize safety: classical context only, not personal medical advice; say when evidence is thin.
 - Same cite-first rules: confirm rows in the library DB; prefer translation_status=gold (including Sanskrit-canonical AH/AS/Sy/Ck); never invent citation IDs.`;
 
-/** Flash / web-native patient voice — no DB or search jargon. */
+/** Flash / knowledge-only patient voice — no DB or tool jargon. */
 const PATIENT_NATIVE_INSTRUCTIONS = `[Audience: Patient mode]
 
 Answer like a native AI assistant for a lay reader.
@@ -38,10 +38,12 @@ Answer for a practicing Ayurveda clinician (BAMS-level), not an exam scholar.
 
 export function audienceInstructions(
   mode: AudienceMode,
-  opts?: { nativeWeb?: boolean }
+  opts?: { nativeKnowledge?: boolean; nativeWeb?: boolean }
 ): string | null {
   if (mode === "patient") {
-    return opts?.nativeWeb ? PATIENT_NATIVE_INSTRUCTIONS : PATIENT_INSTRUCTIONS;
+    return opts?.nativeKnowledge || opts?.nativeWeb
+      ? PATIENT_NATIVE_INSTRUCTIONS
+      : PATIENT_INSTRUCTIONS;
   }
   if (mode === "clinician") {
     return CLINICIAN_INSTRUCTIONS;
@@ -54,7 +56,7 @@ export function applyAudiencePrompt(
   question: string,
   mode: AudienceMode,
   maxChars = 8000,
-  opts?: { nativeWeb?: boolean }
+  opts?: { nativeKnowledge?: boolean; nativeWeb?: boolean }
 ): string {
   const trimmed = question.trim();
   if (!trimmed || mode === "scholar") {

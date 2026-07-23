@@ -336,8 +336,9 @@ function PureMultimodalInput({
       selectedWorks
     );
 
-    if (resolvedWorks.length < 1) {
-      toast.error("Choose at least one classic (@) to open the library.");
+    const isFlash = selectedModelId === "ai2-ayu-flash";
+    if (!isFlash && resolvedWorks.length < 1) {
+      toast.error("Choose at least one classic (@) for Pro / Max / GOD.");
       return;
     }
 
@@ -350,6 +351,10 @@ function PureMultimodalInput({
     // Keep @Name mentions in the user-visible question for the LLM.
     let messageText = input.trim();
     if (!messageText) {
+      if (resolvedWorks.length === 0) {
+        toast.error("Type a question to continue.");
+        return;
+      }
       messageText = `Consult ${resolvedWorks.map((w) => `@${w.name}`).join(" ")}`;
     } else {
       for (const work of resolvedWorks) {
@@ -543,8 +548,8 @@ function PureMultimodalInput({
     ) {
       return;
     }
-    if (resolvedScopedWorks.length < 1) {
-      toast.error("Choose at least one classic (@) to open the library.");
+    if (resolvedScopedWorks.length < 1 && selectedModelId !== "ai2-ayu-flash") {
+      toast.error("Choose at least one classic (@) for Pro / Max / GOD.");
       return;
     }
     if (status === "ready" || status === "error") {
@@ -557,6 +562,7 @@ function PureMultimodalInput({
     handleSlashSelect,
     input,
     resolvedScopedWorks.length,
+    selectedModelId,
     status,
     submitForm,
   ]);
@@ -736,7 +742,8 @@ function PureMultimodalInput({
         )}
         <div className="flex flex-col gap-2 px-3 pt-3">
           <p className="text-[11px] leading-snug text-muted-foreground/80">
-            Choose a classic (@) to open the library — up to {MAX_SCOPED_WORKS}.
+            Optional: mention a classic with @ — up to {MAX_SCOPED_WORKS} for
+            Pro / Max / GOD.
           </p>
           <div
             className="flex flex-wrap gap-1.5"
