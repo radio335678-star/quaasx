@@ -329,6 +329,54 @@ textarea:focus-visible {
   }
 }
 
+@keyframes status-listen {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes status-think {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  40% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  80% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes status-stream {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
 @keyframes glow-pulse {
   0%,
   100% {
@@ -379,6 +427,18 @@ textarea:focus-visible {
 
 @utility thinking-dot {
   animation: thinking-dot 1.4s ease-in-out infinite;
+}
+
+@utility animate-status-listen {
+  animation: status-listen 2.4s ease-in-out infinite;
+}
+
+@utility animate-status-think {
+  animation: status-think 1.1s ease-in-out infinite;
+}
+
+@utility animate-status-stream {
+  animation: status-stream 0.7s ease-in-out infinite;
 }
 
 @utility composer-glow {

@@ -105,9 +105,9 @@ function ChatShellInner() {
             isReadonly={isReadonly}
             selectedVisibilityType={visibilityType}
           />
-          <EngineStatusBar />
 
           <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-background md:rounded-tl-[12px] md:border-t md:border-l md:border-border/40">
+            <EngineStatusBar chatStatus={status} />
             <Messages
               addToolApprovalResponse={addToolApprovalResponse}
               chatId={chatId}
