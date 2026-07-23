@@ -3,6 +3,7 @@
 import { useCallback, useId, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ChevronDownIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -10,9 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAccessRoleOptional } from "@/hooks/use-access-role";
@@ -51,12 +49,23 @@ export function Ai2AccessMenu({
   const passkeyId = useId();
   const { role, enterAsFree, enterAsValidator } = useAccessRoleOptional();
   const [open, setOpen] = useState(false);
+  const [showValidator, setShowValidator] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const handleOpenChange = useCallback((next: boolean) => {
+    setOpen(next);
+    if (!next) {
+      setShowValidator(false);
+      setPasskey("");
+    }
+  }, []);
 
   const afterRole = useCallback(
     (next: "free" | "validator") => {
       setOpen(false);
+      setShowValidator(false);
+      setPasskey("");
       onRoleChanged?.();
       window.dispatchEvent(
         new CustomEvent("ai2-access-role", { detail: { role: next } })
@@ -91,7 +100,6 @@ export function Ai2AccessMenu({
     setBusy(true);
     try {
       await enterAsValidator(passkey.trim());
-      setPasskey("");
       toast.success("Validator access granted — GOD mode enabled");
       afterRole("validator");
     } catch (error) {
@@ -104,7 +112,7 @@ export function Ai2AccessMenu({
   }, [afterRole, enterAsValidator, passkey]);
 
   return (
-    <DropdownMenu onOpenChange={setOpen} open={open}>
+    <DropdownMenu onOpenChange={handleOpenChange} open={open}>
       <DropdownMenuTrigger asChild>
         {children ? (
           <button
@@ -139,7 +147,8 @@ export function Ai2AccessMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={align}
-        className="w-[min(100vw-2rem,18rem)]"
+        className="!w-[min(calc(100vw-1.5rem),20rem)] max-w-[calc(100vw-1.5rem)] min-w-0 p-1"
+        collisionPadding={12}
         side={side}
         sideOffset={6}
       >
@@ -166,53 +175,78 @@ export function Ai2AccessMenu({
         >
           Enter as free user
         </DropdownMenuItem>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger disabled={busy}>
-            I am a validator for benchmark
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="w-[min(100vw-2rem,18rem)] p-0">
-            <div className="space-y-3 p-3">
-              <div>
-                <label
-                  className="mb-1.5 block text-[11px] font-medium text-muted-foreground"
-                  htmlFor={passkeyId}
-                >
-                  Enter your pass-key
-                </label>
-                <div className="flex gap-1.5">
-                  <input
-                    autoComplete="off"
-                    className="h-8 min-w-0 flex-1 rounded-md border border-border/60 bg-background px-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                    disabled={busy}
-                    id={passkeyId}
-                    onChange={(e) => setPasskey(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        void handleValidatorSubmit();
-                      }
-                    }}
-                    placeholder="Pass-key"
-                    type="password"
-                    value={passkey}
-                  />
-                  <button
-                    className="h-8 shrink-0 rounded-md bg-primary px-2.5 text-[11px] font-medium text-primary-foreground disabled:opacity-50"
-                    disabled={busy}
-                    onClick={() => void handleValidatorSubmit()}
-                    type="button"
-                  >
-                    Unlock
-                  </button>
-                </div>
-              </div>
+
+        {/* Inline expand — Sub menus clip off the right edge on mobile */}
+        <div className="px-1 py-0.5">
+          <button
+            aria-expanded={showValidator}
+            className={cn(
+              "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm outline-none transition-colors",
+              showValidator
+                ? "bg-accent text-accent-foreground"
+                : "hover:bg-accent hover:text-accent-foreground",
+              busy && "pointer-events-none opacity-50"
+            )}
+            disabled={busy}
+            onClick={() => setShowValidator((v) => !v)}
+            type="button"
+          >
+            <span className="min-w-0 flex-1 leading-snug">
+              I am a validator for benchmark
+            </span>
+            <ChevronDownIcon
+              className={cn(
+                "size-4 shrink-0 opacity-60 transition-transform",
+                showValidator && "rotate-180"
+              )}
+            />
+          </button>
+
+          {showValidator ? (
+            <div
+              className="mt-1 space-y-2.5 rounded-lg border border-border/50 bg-muted/30 p-3"
+              data-testid="ai2-validator-passkey-panel"
+            >
+              <label
+                className="block text-[11px] font-medium text-muted-foreground"
+                htmlFor={passkeyId}
+              >
+                Enter your pass-key
+              </label>
+              <input
+                autoComplete="off"
+                autoFocus
+                className="h-10 w-full min-w-0 rounded-md border border-border/60 bg-background px-3 text-base outline-none focus-visible:ring-1 focus-visible:ring-ring sm:h-9 sm:text-sm"
+                disabled={busy}
+                id={passkeyId}
+                inputMode="numeric"
+                onChange={(e) => setPasskey(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void handleValidatorSubmit();
+                  }
+                }}
+                placeholder="Pass-key"
+                type="password"
+                value={passkey}
+              />
+              <button
+                className="flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground disabled:opacity-50 sm:h-9"
+                disabled={busy}
+                onClick={() => void handleValidatorSubmit()}
+                type="button"
+              >
+                Unlock GOD mode
+              </button>
               <p className="text-[11px] leading-snug text-muted-foreground">
-                Benchmark validators unlock GOD mode with a pass-key. Apply if
-                you do not have access yet.
+                Validators unlock GOD mode with a pass-key. Apply if you do not
+                have access yet.
               </p>
             </div>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
+          ) : null}
+        </div>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="text-muted-foreground text-xs">
           <Link href="/benchmark#apply" onClick={() => setOpen(false)}>
