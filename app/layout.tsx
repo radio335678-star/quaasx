@@ -6,6 +6,7 @@ import { brand } from "@/lib/brand";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { AccessRoleProvider } from "@/hooks/use-access-role";
 
 export const metadata: Metadata = {
   description: brand.description,
@@ -88,7 +89,9 @@ export default function RootLayout({
           <SessionProvider
             basePath={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
           >
-            <TooltipProvider>{children}</TooltipProvider>
+            <AccessRoleProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </AccessRoleProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

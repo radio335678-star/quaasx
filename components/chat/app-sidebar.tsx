@@ -5,7 +5,6 @@ import {
   PenSquareIcon,
   TrashIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { User } from "next-auth";
 import { useCallback, useState } from "react";
@@ -16,6 +15,7 @@ import {
   SidebarHistory,
 } from "@/components/chat/sidebar-history";
 import { SidebarUserNav } from "@/components/chat/sidebar-user-nav";
+import { Ai2AccessMenu } from "@/components/brand/Ai2AccessMenu";
 import { deleteAllLocalChats } from "@/lib/local-chat-history";
 import {
   Sidebar,
@@ -31,7 +31,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { brand } from "@/lib/brand";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,21 +82,15 @@ export function AppSidebar({ user }: { user: User | undefined }) {
           <SidebarMenu>
             <SidebarMenuItem className="flex flex-row items-center justify-between">
               <div className="group/logo relative flex items-center justify-center">
-                <SidebarMenuButton
-                  asChild
-                  className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0"
-                  tooltip={brand.name}
-                >
-                  <Link href="/app" onClick={closeMobile}>
-                    <img
-                      alt={brand.name}
-                      className="size-5 rounded-md"
-                      height={20}
-                      src={brand.mark}
-                      width={20}
-                    />
-                  </Link>
-                </SidebarMenuButton>
+                <div className="flex size-8 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0">
+                  <Ai2AccessMenu
+                    className="size-8"
+                    imgClassName="size-5 rounded-md"
+                    onRoleChanged={closeMobile}
+                    side="right"
+                    size={20}
+                  />
+                </div>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <SidebarMenuButton

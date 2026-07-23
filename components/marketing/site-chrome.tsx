@@ -1,23 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { Ai2AccessMenu } from "@/components/brand/Ai2AccessMenu";
 import { brand, navLinks } from "@/lib/brand";
 
 export function MarketingNav() {
   return (
     <header className="absolute inset-x-0 top-0 z-20">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link className="flex items-center gap-2.5" href="/">
-          {/* SVG mark — use img to avoid Next Image SVG restrictions */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={brand.name}
-            className="size-8 rounded-lg"
-            height={32}
-            src={brand.mark}
-            width={32}
-          />
-          <span className="sr-only">{brand.name}</span>
-        </Link>
+        <Ai2AccessMenu
+          className="rounded-lg"
+          imgClassName="size-8 rounded-lg"
+          size={32}
+        />
 
         <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (

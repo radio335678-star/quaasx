@@ -69,6 +69,9 @@ function isPublicPath(pathname: string) {
   if (pathname === "/api/chat" || pathname.startsWith("/api/chat/")) {
     return true;
   }
+  if (pathname === "/api/access" || pathname.startsWith("/api/access/")) {
+    return true;
+  }
   if (pathname === "/api/webx" || pathname.startsWith("/api/webx/")) {
     return true;
   }

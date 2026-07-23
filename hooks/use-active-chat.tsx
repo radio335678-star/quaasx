@@ -26,6 +26,8 @@ import {
   audienceModeForModel,
   resolveChatModel,
 } from "@/lib/ai2/developer-models";
+import { useAccessRoleOptional } from "@/hooks/use-access-role";
+import { clampModelSlug } from "@/lib/ai2/access-role";
 import type { Vote } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
 import {
@@ -78,6 +80,8 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
 
   const chatId = chatIdFromUrl ?? newChatIdRef.current;
 
+  const { role, clampSlug } = useAccessRoleOptional();
+
   const [currentModelId, setCurrentModelIdState] = useState(() => {
     if (typeof window === "undefined") {
       return DEFAULT_CHAT_MODEL;
@@ -90,11 +94,41 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
     currentModelIdRef.current = currentModelId;
   }, [currentModelId]);
 
-  const setCurrentModelId = useCallback((id: string) => {
-    const model = resolveChatModel(id);
-    setCurrentModelIdState(model.slug);
-    window.localStorage.setItem("ai2-chat-model", model.slug);
-  }, []);
+  const setCurrentModelId = useCallback(
+    (id: string) => {
+      const allowed = clampSlug(id);
+      const model = resolveChatModel(allowed);
+      setCurrentModelIdState(model.slug);
+      window.localStorage.setItem("ai2-chat-model", model.slug);
+    },
+    [clampSlug]
+  );
+
+  // When access role changes (menu or cookie), clamp the active model.
+  useEffect(() => {
+    const allowed = clampModelSlug(role, currentModelIdRef.current);
+    if (allowed !== currentModelIdRef.current) {
+      const model = resolveChatModel(allowed);
+      setCurrentModelIdState(model.slug);
+      window.localStorage.setItem("ai2-chat-model", model.slug);
+    }
+
+    const onRoleEvent = (event: Event) => {
+      const detail = (event as CustomEvent<{ role?: string }>).detail;
+      const nextRole =
+        detail?.role === "validator" || detail?.role === "free"
+          ? detail.role
+          : role;
+      const next = clampModelSlug(nextRole, currentModelIdRef.current);
+      if (next !== currentModelIdRef.current) {
+        const model = resolveChatModel(next);
+        setCurrentModelIdState(model.slug);
+        window.localStorage.setItem("ai2-chat-model", model.slug);
+      }
+    };
+    window.addEventListener("ai2-access-role", onRoleEvent);
+    return () => window.removeEventListener("ai2-access-role", onRoleEvent);
+  }, [role]);
 
   const [input, setInput] = useState("");
 

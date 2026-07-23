@@ -8,10 +8,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAccessRoleOptional } from "@/hooks/use-access-role";
 import {
   DEVELOPER_MODELS,
   resolveChatModel,
 } from "@/lib/ai2/developer-models";
+import {
+  isModelAllowedForRole,
+  modelLockReason,
+} from "@/lib/ai2/access-role";
 import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -28,6 +33,7 @@ export function ModelPickerPopover({
   disabled,
 }: ModelPickerPopoverProps) {
   const [open, setOpen] = useState(false);
+  const { role } = useAccessRoleOptional();
   const active = resolveChatModel(selectedModelId);
 
   const handleSelect = (slug: string, selectable: boolean, reason?: string) => {
@@ -80,11 +86,19 @@ export function ModelPickerPopover({
       <PopoverContent align="start" className="w-[min(100vw-2rem,20rem)] p-2" side="top">
         <p className="px-2 pb-2 font-medium text-foreground text-xs">
           Select model
+          <span className="ml-1.5 font-normal text-muted-foreground">
+            · {role === "validator" ? "validator" : "free"}
+          </span>
         </p>
         <ul className="space-y-1">
           {models.map((model) => {
             const selected = active.slug === model.slug;
-            const locked = !model.chatSelectable;
+            const roleLocked = !isModelAllowedForRole(role, model.slug);
+            const catalogLocked = !model.chatSelectable;
+            const locked = roleLocked || catalogLocked;
+            const reason = roleLocked
+              ? modelLockReason(role, model.slug)
+              : model.unavailableReason;
             return (
               <li key={model.id}>
                 <button
@@ -97,11 +111,7 @@ export function ModelPickerPopover({
                   )}
                   data-testid={`model-option-${model.slug}`}
                   onClick={() =>
-                    handleSelect(
-                      model.slug,
-                      model.chatSelectable,
-                      model.unavailableReason
-                    )
+                    handleSelect(model.slug, !locked, reason)
                   }
                   type="button"
                 >
@@ -124,9 +134,9 @@ export function ModelPickerPopover({
                     <span className="mt-0.5 block text-[11px] text-muted-foreground">
                       {model.audienceLabel}
                     </span>
-                    {locked && model.unavailableReason ? (
+                    {locked && reason ? (
                       <span className="mt-1 block text-[10px] text-muted-foreground/70">
-                        {model.unavailableReason}
+                        {reason}
                       </span>
                     ) : null}
                   </span>

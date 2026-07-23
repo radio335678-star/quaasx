@@ -1,4 +1,5 @@
 import { MarketingFooter, MarketingNav } from "@/components/marketing/site-chrome";
+import { Toaster } from "sonner";
 
 export default function MarketingLayout({
   children,
@@ -10,6 +11,14 @@ export default function MarketingLayout({
       <MarketingNav />
       <main>{children}</main>
       <MarketingFooter />
+      <Toaster
+        position="top-center"
+        theme="dark"
+        toastOptions={{
+          className:
+            "!bg-card !text-foreground !border-border/50 !shadow-[var(--shadow-float)]",
+        }}
+      />
     </div>
   );
 }

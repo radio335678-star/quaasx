@@ -1,8 +1,8 @@
 "use client";
 
 import { PanelLeftIcon } from "lucide-react";
-import Link from "next/link";
 import { memo } from "react";
+import { Ai2AccessMenu } from "@/components/brand/Ai2AccessMenu";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { brand } from "@/lib/brand";
@@ -34,21 +34,9 @@ function PureChatHeader({
         <PanelLeftIcon className="size-4" />
       </Button>
 
-      <Link
-        aria-label={brand.name}
-        className="flex items-center rounded-lg px-1 md:hidden"
-        href="/app"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt=""
-          aria-hidden
-          className="size-6 rounded-md"
-          height={24}
-          src={brand.mark}
-          width={24}
-        />
-      </Link>
+      <div className="flex items-center rounded-lg px-1 md:hidden">
+        <Ai2AccessMenu imgClassName="size-6 rounded-md" size={24} />
+      </div>
 
       {!isReadonly && process.env.NEXT_PUBLIC_ENABLE_SERVER_SYNC === "true" ? (
         <VisibilitySelector

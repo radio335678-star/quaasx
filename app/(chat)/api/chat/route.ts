@@ -10,6 +10,14 @@ import {
   pipelineForModel,
 } from "@/lib/ai2/developer-models";
 import {
+  ACCESS_COOKIE_NAME,
+  decodeAccessCookie,
+} from "@/lib/ai2/access-cookie";
+import {
+  isModelAllowedForRole,
+  modelLockReason,
+} from "@/lib/ai2/access-role";
+import {
   buildAgentQuestion,
   runChatPipeline,
 } from "@/lib/ai2/rustenv-exec";
@@ -25,6 +33,7 @@ import {
 import { ChatbotError } from "@/lib/errors";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { generateUUID } from "@/lib/utils";
+import { cookies } from "next/headers";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
 
 export const maxDuration = 300;
@@ -152,6 +161,18 @@ export async function POST(request: Request) {
   const textId = generateUUID();
   const audienceMode = extractAudienceMode(requestBody);
   const modelSlug = extractModelSlug(requestBody);
+  const jar = await cookies();
+  const accessRole = decodeAccessCookie(jar.get(ACCESS_COOKIE_NAME)?.value);
+  if (!isModelAllowedForRole(accessRole, modelSlug)) {
+    return new Response(
+      JSON.stringify({
+        error:
+          modelLockReason(accessRole, modelSlug) ??
+          "This model is not available for your access role",
+      }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
+  }
   const isFlash = pipelineForModel(modelSlug) === "knowledge_only";
   const baseQuestion = buildAgentQuestion(messages);
   let question: string;
