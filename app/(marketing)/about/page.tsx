@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: `About — ${brand.company}`,
-  description: `${brand.name} by ${brand.company}.`,
-};
+export const metadata = buildPageMetadata({
+  title: `About ${brand.company} — Builders of AI² Ayurveda AI`,
+  description: `${brand.name} (${brand.spokenName}) by ${brand.company}: classical Ayurvedic intelligence united with modern AI for cite-first answers.`,
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

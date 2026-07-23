@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
+import { buildPageMetadata } from "@/lib/seo";
 
 const APPLY_MAIL = "info@quaasx108.com";
 const APPLY_SUBJECT = encodeURIComponent(
@@ -24,11 +25,12 @@ const APPLY_BODY = encodeURIComponent(
 );
 const APPLY_HREF = `mailto:${APPLY_MAIL}?subject=${APPLY_SUBJECT}&body=${APPLY_BODY}`;
 
-export const metadata = {
-  title: `Bhasha Bench Ayur v1 — 92.8% · Benchmark Validation — ${brand.name}`,
+export const metadata = buildPageMetadata({
+  title: `Bhasha Bench Ayur 92.8% — AI² Benchmark Validation`,
   description:
-    "Bhasha Bench Ayur v1 scored 92.8%. Free third-party validation is open to graduated doctors across Ayurveda, allopathy, Siddha, Unani, and homeopathy. Apply via info@quaasx108.com.",
-};
+    "Bhasha Bench Ayur v1 scored 92.8%. Free third-party validation for graduated doctors (Ayurveda, allopathy, Siddha, Unani, homeopathy). Apply at info@quaasx108.com.",
+  path: "/benchmark",
+});
 
 export default function BenchmarkPage() {
   return (

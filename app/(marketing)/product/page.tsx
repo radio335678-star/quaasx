@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: `${brand.fullName} — Product`,
-  description: brand.claim,
-};
+export const metadata = buildPageMetadata({
+  title: `${brand.fullName} — Cite-First Classical Ayurveda AI Product`,
+  description: `${brand.claim} Explore Charaka, Sushruta, Ashtanga, and more with grounded Sanskrit citations.`,
+  path: "/product",
+});
 
 export default function ProductPage() {
   return (

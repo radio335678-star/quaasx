@@ -3,23 +3,34 @@ import { Geist, Geist_Mono, Noto_Serif_Devanagari } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { brand } from "@/lib/brand";
+import { buildPageMetadata, siteJsonLd, SITE_URL } from "@/lib/seo";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { AccessRoleProvider } from "@/hooks/use-access-role";
 
 export const metadata: Metadata = {
-  description: brand.description,
-  metadataBase: new URL(brand.metadataBase),
-  title: brand.title,
+  ...buildPageMetadata({
+    title: brand.title,
+    description: brand.description,
+    path: "/",
+  }),
   icons: {
-    icon: "/brand/ai2-mark.svg",
+    icon: [
+      { url: "/brand/ai2-mark.svg", type: "image/svg+xml" },
+      { url: "/brand/ai2-logo.png", type: "image/png" },
+    ],
     apple: "/brand/ai2-logo.png",
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport = {
   maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 const geist = Geist({
@@ -65,6 +76,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = siteJsonLd();
+
   return (
     <html
       className={`${geist.variable} ${geistMono.variable} ${notoDevanagari.variable}`}
@@ -72,11 +85,19 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link href={`${SITE_URL}/llms.txt`} rel="llms-txt" />
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: theme color bootstrap
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
           }}
+        />
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD for Google
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+          type="application/ld+json"
         />
       </head>
       <body className="antialiased">

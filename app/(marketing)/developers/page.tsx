@@ -5,12 +5,14 @@ import {
   DEVELOPER_API_BASE,
   DEVELOPER_MODELS,
 } from "@/lib/ai2/developer-models";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: `Developers — ${brand.name}`,
+export const metadata = buildPageMetadata({
+  title: `Developers — ${brand.name} Ayurveda AI API (Flash, Pro, Max, GOD)`,
   description:
-    "AI² API keys and token pricing for Ayurveda apps — AI²-ayu-flash, pro, max, and GOD mode.",
-};
+    "AI² API for Ayurveda apps: AI²-ayu-flash, pro, max, and GOD mode — cite-first classical intelligence, token pricing, and six-classic scope.",
+  path: "/developers",
+});
 
 export default function DevelopersPage() {
   return (

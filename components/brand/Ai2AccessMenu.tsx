@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAccessRoleOptional } from "@/hooks/use-access-role";
-import { ACTIVE_VALIDATORS } from "@/lib/ai2/access-role";
 import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
@@ -54,9 +53,6 @@ export function Ai2AccessMenu({
   const [open, setOpen] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [busy, setBusy] = useState(false);
-  const [expandedValidatorId, setExpandedValidatorId] = useState<string | null>(
-    null
-  );
 
   const afterRole = useCallback(
     (next: "free" | "validator") => {
@@ -210,48 +206,10 @@ export function Ai2AccessMenu({
                   </button>
                 </div>
               </div>
-              <div>
-                <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-                  Validators currently active
-                </p>
-                <ul className="space-y-1">
-                  {ACTIVE_VALIDATORS.map((v) => {
-                    const expanded = expandedValidatorId === v.id;
-                    return (
-                      <li key={v.id}>
-                        <button
-                          className={cn(
-                            "flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-muted/60",
-                            expanded && "bg-muted/50"
-                          )}
-                          onClick={() =>
-                            setExpandedValidatorId(expanded ? null : v.id)
-                          }
-                          type="button"
-                        >
-                          <span
-                            aria-hidden
-                            className="mt-1.5 size-2 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)] animate-pulse"
-                          />
-                          <span className="min-w-0 flex-1">
-                            <span
-                              className={cn(
-                                "block text-[12px] text-foreground",
-                                expanded && "font-semibold tracking-tight"
-                              )}
-                            >
-                              {v.name}
-                            </span>
-                            <span className="block text-[11px] text-muted-foreground">
-                              {v.specialty}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                Benchmark validators unlock GOD mode with a pass-key. Apply if
+                you do not have access yet.
+              </p>
             </div>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

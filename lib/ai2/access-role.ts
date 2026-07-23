@@ -8,26 +8,6 @@ export const ACCESS_COOKIE_MAX_AGE_S = 60 * 60 * 24 * 30; // 30 days
 export const GOD_MODEL_SLUG = "ai2-ayu-god";
 export const FREE_DEFAULT_MODEL_SLUG = "ai2-ayu-pro";
 
-export type ActiveValidator = {
-  id: string;
-  name: string;
-  specialty: string;
-};
-
-/** Public roster — names only; no credentials. */
-export const ACTIVE_VALIDATORS: ActiveValidator[] = [
-  {
-    id: "samudri",
-    name: "Dr M D Samudri",
-    specialty: "Shalya Tantra",
-  },
-  {
-    id: "samai",
-    name: "Dr Samai M A",
-    specialty: "Kayachikitsa",
-  },
-];
-
 export function isAccessRole(value: unknown): value is AccessRole {
   return value === "free" || value === "validator";
 }

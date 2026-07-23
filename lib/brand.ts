@@ -8,9 +8,9 @@ export const brand = {
   fullName: "AI² Hybrid Engine",
   company: "QUAASX 108 PVT LTD",
   companyShort: "QUAASX",
-  title: "AI² — Ancient Intelligence × Artificial Intelligence",
+  title: "AI² — Best Classical Ayurveda AI | Cite-First Sanskrit Answers",
   description:
-    "Grounded classical answers with Sanskrit citations — built by QUAASX 108 PVT LTD.",
+    "AI² Hybrid Engine: the cite-first classical Ayurveda AI — Sanskrit shlokas, Charaka, Sushruta, Ashtanga, cross-text clarity. Built by QUAASX 108 PVT LTD. Try free.",
   tagline: "Ancient Intelligence × Artificial Intelligence",
   headline: "Classical Ayurveda. Grounded answers.",
   equation: "Ancient Intelligence × Artificial Intelligence",
@@ -20,7 +20,7 @@ export const brand = {
     "AI² is a research assistant. Verify classical citations before clinical use.",
   claim:
     "Cite-first classical answers — Sanskrit, transliteration, English, and cross-text clarity.",
-  metadataBase: "https://ai2.quaasx.com",
+  metadataBase: "https://ai2.quaasx108.com",
   appPath: "/app",
   logo: "/brand/ai2-logo.png",
   mark: "/brand/ai2-mark.svg",

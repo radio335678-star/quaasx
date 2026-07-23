@@ -1,0 +1,21 @@
+# AI² (AI Square) — llms.txt
+# https://ai2.quaasx108.com
+
+> AI² Hybrid Engine by QUAASX 108 PVT LTD: cite-first classical Ayurveda AI with Sanskrit, transliteration, English, and cross-text grounding.
+
+## Primary
+
+- [Home](https://ai2.quaasx108.com/): Product overview — Ancient Intelligence × Artificial Intelligence
+- [Product](https://ai2.quaasx108.com/product): AI² Hybrid Engine capabilities
+- [Benchmark](https://ai2.quaasx108.com/benchmark): Bhasha Bench Ayur v1 — 92.8%; validator apply
+- [Developers](https://ai2.quaasx108.com/developers): API models (flash, pro, max, GOD)
+- [About](https://ai2.quaasx108.com/about): QUAASX 108 PVT LTD
+
+## Product summary
+
+AI² answers Ayurveda questions with classical citations from Charaka Samhita, Sushruta Samhita, Ashtanga Hridayam, Ashtanga Sangraha, Siddhayoga, and Cakradatta. Not medical advice — research assistant with clinical caution.
+
+## Contact
+
+- Email: info@quaasx108.com
+- Company: QUAASX 108 PVT LTD
