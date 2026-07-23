@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
 
 export const metadata = {
@@ -57,12 +57,7 @@ export default function ProductPage() {
       </div>
 
       <div className="mt-14">
-        <Link
-          className="inline-flex rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90"
-          href={brand.appPath}
-        >
-          Open {brand.name}
-        </Link>
+        <Ai2OpenCta />
       </div>
     </div>
   );

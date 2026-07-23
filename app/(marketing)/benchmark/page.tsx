@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
 
 const APPLY_MAIL = "info@quaasx108.com";
@@ -186,12 +186,7 @@ export default function BenchmarkPage() {
           >
             Apply by email
           </a>
-          <Link
-            className="inline-flex justify-center rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40"
-            href={brand.appPath}
-          >
-            Open {brand.name}
-          </Link>
+          <Ai2OpenCta variant="outline" />
         </div>
       </section>
 
@@ -229,12 +224,7 @@ export default function BenchmarkPage() {
         >
           Request free validation access
         </a>
-        <Link
-          className="inline-flex justify-center rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40"
-          href={brand.appPath}
-        >
-          Open {brand.name}
-        </Link>
+        <Ai2OpenCta variant="outline" />
       </section>
     </div>
   );

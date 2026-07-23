@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -20,7 +21,7 @@ import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 type Ai2AccessMenuProps = {
-  /** Pixel size of the mark */
+  /** Pixel size of the mark (logo trigger only) */
   size?: number;
   className?: string;
   imgClassName?: string;
@@ -28,6 +29,12 @@ type Ai2AccessMenuProps = {
   side?: "top" | "right" | "bottom" | "left";
   /** Called after a successful role change (e.g. close mobile sidebar) */
   onRoleChanged?: () => void;
+  /** Custom trigger (e.g. Open AI² button). Defaults to brand mark. */
+  children?: ReactNode;
+  /** After free/validator success, go to chat app. Default false for logo. */
+  navigateToApp?: boolean;
+  /** Optional app path override (default brand.appPath) */
+  appHref?: string;
 };
 
 export function Ai2AccessMenu({
@@ -37,7 +44,12 @@ export function Ai2AccessMenu({
   align = "start",
   side = "bottom",
   onRoleChanged,
+  children,
+  navigateToApp = false,
+  appHref = brand.appPath,
 }: Ai2AccessMenuProps) {
+  const router = useRouter();
+  const passkeyId = useId();
   const { role, enterAsFree, enterAsValidator } = useAccessRoleOptional();
   const [open, setOpen] = useState(false);
   const [passkey, setPasskey] = useState("");
@@ -46,16 +58,26 @@ export function Ai2AccessMenu({
     null
   );
 
+  const afterRole = useCallback(
+    (next: "free" | "validator") => {
+      setOpen(false);
+      onRoleChanged?.();
+      window.dispatchEvent(
+        new CustomEvent("ai2-access-role", { detail: { role: next } })
+      );
+      if (navigateToApp) {
+        router.push(appHref);
+      }
+    },
+    [appHref, navigateToApp, onRoleChanged, router]
+  );
+
   const handleFree = useCallback(async () => {
     setBusy(true);
     try {
       await enterAsFree();
       toast.success("Entered as free user — Flash, Pro, and Max available");
-      setOpen(false);
-      onRoleChanged?.();
-      window.dispatchEvent(
-        new CustomEvent("ai2-access-role", { detail: { role: "free" } })
-      );
+      afterRole("free");
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Could not enter as free user"
@@ -63,7 +85,7 @@ export function Ai2AccessMenu({
     } finally {
       setBusy(false);
     }
-  }, [enterAsFree, onRoleChanged]);
+  }, [afterRole, enterAsFree]);
 
   const handleValidatorSubmit = useCallback(async () => {
     if (!passkey.trim()) {
@@ -75,11 +97,7 @@ export function Ai2AccessMenu({
       await enterAsValidator(passkey.trim());
       setPasskey("");
       toast.success("Validator access granted — GOD mode enabled");
-      setOpen(false);
-      onRoleChanged?.();
-      window.dispatchEvent(
-        new CustomEvent("ai2-access-role", { detail: { role: "validator" } })
-      );
+      afterRole("validator");
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Invalid pass-key"
@@ -87,31 +105,41 @@ export function Ai2AccessMenu({
     } finally {
       setBusy(false);
     }
-  }, [enterAsValidator, onRoleChanged, passkey]);
+  }, [afterRole, enterAsValidator, passkey]);
 
   return (
     <DropdownMenu onOpenChange={setOpen} open={open}>
       <DropdownMenuTrigger asChild>
-        <button
-          aria-label={`${brand.name} access menu`}
-          className={cn(
-            "inline-flex items-center justify-center rounded-md outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring",
-            className
-          )}
-          data-testid="ai2-access-menu-trigger"
-          type="button"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={brand.name}
-            className={cn("rounded-md", imgClassName)}
-            height={size}
-            src={brand.mark}
-            style={{ width: size, height: size }}
-            width={size}
-          />
-          <span className="sr-only">{brand.name}</span>
-        </button>
+        {children ? (
+          <button
+            className={cn(className)}
+            data-testid="ai2-access-cta-trigger"
+            type="button"
+          >
+            {children}
+          </button>
+        ) : (
+          <button
+            aria-label={`${brand.name} access menu`}
+            className={cn(
+              "inline-flex items-center justify-center rounded-md outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring",
+              className
+            )}
+            data-testid="ai2-access-menu-trigger"
+            type="button"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={brand.name}
+              className={cn("rounded-md", imgClassName)}
+              height={size}
+              src={brand.mark}
+              style={{ width: size, height: size }}
+              width={size}
+            />
+            <span className="sr-only">{brand.name}</span>
+          </button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={align}
@@ -151,7 +179,7 @@ export function Ai2AccessMenu({
               <div>
                 <label
                   className="mb-1.5 block text-[11px] font-medium text-muted-foreground"
-                  htmlFor="ai2-validator-passkey"
+                  htmlFor={passkeyId}
                 >
                   Enter your pass-key
                 </label>
@@ -160,7 +188,7 @@ export function Ai2AccessMenu({
                     autoComplete="off"
                     className="h-8 min-w-0 flex-1 rounded-md border border-border/60 bg-background px-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     disabled={busy}
-                    id="ai2-validator-passkey"
+                    id={passkeyId}
                     onChange={(e) => setPasskey(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -235,5 +263,49 @@ export function Ai2AccessMenu({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+const PRIMARY_CTA =
+  "inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90";
+const PRIMARY_CTA_NAV =
+  "rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90";
+const PRIMARY_CTA_NAV_MOBILE =
+  "rounded-md bg-primary px-3 py-2 font-medium text-primary-foreground text-sm";
+const OUTLINE_CTA =
+  "inline-flex items-center justify-center rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40";
+
+type Ai2OpenCtaProps = {
+  /** Button label */
+  label?: string;
+  variant?: "primary" | "outline" | "nav" | "navMobile";
+  className?: string;
+  align?: "start" | "center" | "end";
+};
+
+/** Open / Try AI² CTA — same free vs validator menu as the brand mark. */
+export function Ai2OpenCta({
+  label = `Open ${brand.name}`,
+  variant = "primary",
+  className,
+  align = "start",
+}: Ai2OpenCtaProps) {
+  const base =
+    variant === "outline"
+      ? OUTLINE_CTA
+      : variant === "nav"
+        ? PRIMARY_CTA_NAV
+        : variant === "navMobile"
+          ? PRIMARY_CTA_NAV_MOBILE
+          : PRIMARY_CTA;
+
+  return (
+    <Ai2AccessMenu
+      align={align}
+      className={cn(base, className)}
+      navigateToApp
+    >
+      {label}
+    </Ai2AccessMenu>
   );
 }

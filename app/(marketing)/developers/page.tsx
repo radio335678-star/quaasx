@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
 import {
   DEVELOPER_API_BASE,
@@ -197,12 +198,7 @@ export default function DevelopersPage() {
       </div>
 
       <div className="mt-14 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Link
-          className="inline-flex justify-center rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90"
-          href={brand.appPath}
-        >
-          Try {brand.name} free
-        </Link>
+        <Ai2OpenCta label={`Try ${brand.name} free`} />
         <Link
           className="inline-flex justify-center rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:bg-muted/40"
           href="/benchmark"

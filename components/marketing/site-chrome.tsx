@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Ai2AccessMenu } from "@/components/brand/Ai2AccessMenu";
+import { Ai2AccessMenu, Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand, navLinks } from "@/lib/brand";
 
 export function MarketingNav() {
@@ -25,12 +25,7 @@ export function MarketingNav() {
               {link.label}
             </Link>
           ))}
-          <Link
-            className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90"
-            href={brand.appPath}
-          >
-            Open {brand.name}
-          </Link>
+          <Ai2OpenCta align="end" variant="nav" />
         </div>
 
         <div className="flex items-center gap-3 md:hidden">
@@ -43,12 +38,7 @@ export function MarketingNav() {
               {link.label}
             </Link>
           ))}
-          <Link
-            className="rounded-md bg-primary px-3 py-2 font-medium text-primary-foreground text-sm"
-            href={brand.appPath}
-          >
-            Open
-          </Link>
+          <Ai2OpenCta label="Open" variant="navMobile" />
         </div>
       </nav>
     </header>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { Ai2OpenCta } from "@/components/brand/Ai2AccessMenu";
 import { brand } from "@/lib/brand";
 
 export default function HomePage() {
@@ -52,12 +53,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 12 }}
           transition={{ delay: 0.42, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Link
-            className="rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90"
-            href={brand.appPath}
-          >
-            Open {brand.name}
-          </Link>
+          <Ai2OpenCta className="rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground text-sm transition-opacity hover:opacity-90" />
           <Link
             className="rounded-md border border-border/60 px-6 py-3 font-medium text-foreground text-sm transition-colors hover:border-border hover:bg-white/5"
             href="/benchmark"
