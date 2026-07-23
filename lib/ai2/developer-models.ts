@@ -42,7 +42,7 @@ export type DeveloperModel = {
 /** Flash + Pro LLM (OpenRouter). */
 export const FLASH_PRO_MODEL = "deepseek/deepseek-v3.2";
 /** Max (extra-high) Modal DB-only. */
-export const MAX_MODEL = "stepfun/step-3.5-flash";
+export const MAX_MODEL = "deepseek/deepseek-v4-flash";
 /** GOD mode Modal DB-only. */
 export const GOD_MODEL = "deepseek/deepseek-v4-pro";
 
@@ -79,7 +79,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Medium",
     description:
-      "Medium thinking — DeepSeek V3.2 on Modal: classical DB + OpenRouter paid web search/fetch.",
+      "Medium thinking — DeepSeek V3.2 Pro: routes knowledge / classical DB / web (≤2), early-stop, forced final.",
     inputPer1M: "$0.25",
     outputPer1M: "$0.40",
     context: "128K",
@@ -98,10 +98,10 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "clinician",
     thinking: "Extra high",
     description:
-      "Extra-high thinking — Step 3.5 Flash on Modal classical library only (no Web-X).",
-    inputPer1M: "$0.10",
-    outputPer1M: "$0.30",
-    context: "256K",
+      "Extra-high thinking — DeepSeek V4 Flash on Modal classical library only (no Web-X).",
+    inputPer1M: "$0.14",
+    outputPer1M: "$0.28",
+    context: "1M",
     available: true,
     chatSelectable: true,
     pipeline: "max_db",

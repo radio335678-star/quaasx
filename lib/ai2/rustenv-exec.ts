@@ -242,7 +242,7 @@ export async function callRustEnvAgent(
  * Route by chat model pipeline:
  * - knowledge_only: Modal DeepSeek V3.2, no tools (Flash)
  * - pro_full: Modal V3.2 classical DB + OpenRouter paid web_search/web_fetch
- * - max_db: Modal Step 3.5 Flash DB-only
+ * - max_db: Modal DeepSeek V4 Flash DB-only
  * - god_db: Modal DeepSeek V4-Pro DB-only
  */
 export async function runChatPipeline(
