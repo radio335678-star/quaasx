@@ -61,7 +61,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "patient",
     thinking: "Low",
     description:
-      "Low thinking — DeepSeek V3.2 knowledge-only on Modal (no tools, no web).",
+      "Fast native AI² for everyday Ayurveda questions — clear answers, light reasoning, built for volume.",
     inputPer1M: "$0.25",
     outputPer1M: "$0.40",
     context: "128K",
@@ -79,7 +79,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Medium",
     description:
-      "Medium thinking — DeepSeek V3.2 Pro: routes knowledge / classical DB / web (≤2), early-stop, forced final.",
+      "Balanced native AI² for study and scholarship — cite-first classical depth with selective modern context.",
     inputPer1M: "$0.25",
     outputPer1M: "$0.40",
     context: "128K",
@@ -98,7 +98,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "clinician",
     thinking: "Extra high",
     description:
-      "Extra-high thinking — DeepSeek V4 Flash on Modal classical library only (no Web-X).",
+      "Deep native AI² for clinical study — high-depth classical reasoning over the proprietary library.",
     inputPer1M: "$0.14",
     outputPer1M: "$0.28",
     context: "1M",
@@ -116,7 +116,7 @@ export const DEVELOPER_MODELS: DeveloperModel[] = [
     audienceMode: "scholar",
     thinking: "Maximum",
     description:
-      "Maximum thinking — DeepSeek V4-Pro on Modal classical library only (1M context).",
+      "Maximum-depth native AI² for partners — fullest classical synthesis and long-context reasoning.",
     inputPer1M: "$1.20",
     outputPer1M: "$4.80",
     context: "1M",

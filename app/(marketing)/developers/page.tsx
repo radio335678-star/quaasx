@@ -33,8 +33,9 @@ export default function DevelopersPage() {
       <section className="mt-12">
         <h2 className="font-medium text-foreground text-xl">Models</h2>
         <p className="mt-2 text-muted-foreground text-sm">
-          Per-million-token pricing (USD). Thinking depth controls internal
-          classical reasoning before the model responds.
+          Native {brand.name} model family. Thinking depth controls how deeply
+          the engine reasons before it responds — no third-party model names
+          exposed in your product.
         </p>
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-border/50">
